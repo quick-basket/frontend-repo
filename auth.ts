@@ -1,10 +1,10 @@
 import Credentials from "next-auth/providers/credentials";
 import {JWT} from "@auth/core/jwt";
-import NextAuth, {Account, Profile, User, Session } from "next-auth";
+import NextAuth, {Account, Profile, User, Session} from "next-auth";
 import {cookies} from "next/headers";
 import {jwtDecode} from "jwt-decode";
 import GoogleProvider from "next-auth/providers/google"
-import AuthAPI from "@/api/auth/authAPI";
+import AuthAPI, {GoogleLoginBody} from "@/api/auth/authAPI";
 
 interface DecodedToken {
     userId: number;
@@ -50,22 +50,18 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
         })
     ],
     callbacks: {
-        async signIn({ user, account, profile, email, credentials }) {
+        async signIn({user, account, profile, email, credentials}) {
             // Fetch JWT from backend if user is already registered
             if (account?.provider === 'google' && profile?.email) {
                 try {
-                    // Check if the email exists in the database
-                    const emailExists = await AuthAPI.checkEmail(profile.email);
-
-                    if (!emailExists.data) {
-                        console.log('Email does not exist in the database. Redirecting to registration.');
-                        // Redirect user to registration or handle accordingly
-                        return '/registration'  // Prevent sign-in
+                    const loginBody = {
+                        email: profile.email,
+                        name: profile?.name,
+                        googleId: profile?.sub,
+                        imageUrl: profile?.picture
                     }
-
-                    // If email exists, proceed to generate the JWT
-                    const data = await AuthAPI.generateToken(profile.email, profile.name!, profile.sub!)
-                    user.token = data.data; // Store the JWT in the user object
+                    const response = await AuthAPI.loginWithGoogle(loginBody)
+                    user.token = response.data.token;
 
                     const useCookies = cookies();
                     useCookies.set("sid", user.token, {
@@ -93,20 +89,24 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
 
             if (user) {
                 if (account?.provider === 'google') {
+                    token.accessToken = user.token
+                    const decoded = jwtDecode<DecodedToken>(user.token);
                     token.id = profile?.sub
                     token.email = profile?.email
+                    token.scope = decoded.scope
                 } else {
                     token.accessToken = user.token
-                    const decoded = JSON.parse(atob(user.token.split('.')[1]))
+                    const decoded = jwtDecode<DecodedToken>(user.token);
                     token.id = decoded.userId
                     token.email = decoded.sub
                     token.scope = decoded.scope
                 }
             }
+            console.log("JWT CALLBACK token", token)
             return token;
         },
-        async session({session, token}: { session: Session; token: JWT } )  {
-            if (token){
+        async session({session, token}: { session: Session; token: JWT }) {
+            if (token) {
                 session.user = {
                     ...session.user,
                     id: token.sub as string,

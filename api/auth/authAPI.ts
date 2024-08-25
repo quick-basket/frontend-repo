@@ -1,6 +1,14 @@
 import {config} from "@/constants/url";
 import {axiosInstance} from "@/utils/axiosInstance";
 
+export interface GoogleLoginBody {
+    email: string;
+    name: string | null | undefined;
+    googleId: string | null | undefined;
+    imageUrl: any;
+}
+
+
 class AuthAPI {
     async checkEmail(email: string) {
         const response = await axiosInstance.get(config.endpoints.auth.checkEmail, {
@@ -23,6 +31,11 @@ class AuthAPI {
             email: username,
             password: password,
         });
+        return response.data;
+    }
+
+    async loginWithGoogle(body: GoogleLoginBody) {
+        const response = await axiosInstance.post(config.endpoints.auth.loginGoogle, body)
         return response.data;
     }
 }
