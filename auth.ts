@@ -4,6 +4,7 @@ import NextAuth, {Account, Profile, User, Session } from "next-auth";
 import {cookies} from "next/headers";
 import {jwtDecode} from "jwt-decode";
 import GoogleProvider from "next-auth/providers/google"
+import AuthAPI from "@/api/auth/authAPI";
 
 interface DecodedToken {
     userId: number;
@@ -21,20 +22,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 password: {label: "Password", type: "password"},
             },
             async authorize(credentials): Promise<User | null> {
-                const res = await fetch("http://localhost:8080/api/v1/auth/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: credentials?.username,
-                        password: credentials?.password,
-                    }),
-                });
+                const user = await AuthAPI.loginWithCredentials(credentials?.username as string, credentials?.password as string);
 
-                if (!res.ok) return null;
-
-                const user = await res.json();
                 if (!user) {
                     throw new Error("User not found.");
                 }
@@ -62,47 +51,20 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
     ],
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            console.log('SIGN IN CALLBACK user', JSON.stringify(user, null, 2));
-            console.log('SIGN IN CALLBACK account', JSON.stringify(account, null, 2));
-            console.log('SIGN IN CALLBACK profile', JSON.stringify(profile, null, 2));
             // Fetch JWT from backend if user is already registered
             if (account?.provider === 'google' && profile?.email) {
                 try {
                     // Check if the email exists in the database
-                    const checkEmailResponse = await fetch(`http://localhost:8080/api/v1/auth/check-email?email=${profile.email}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    });
-
-                    const emailExists = await checkEmailResponse.json();
-                    console.log('EMAIL EXISTS', emailExists);
+                    const emailExists = await AuthAPI.checkEmail(profile.email);
 
                     if (!emailExists.data) {
                         console.log('Email does not exist in the database. Redirecting to registration.');
                         // Redirect user to registration or handle accordingly
-                        return '/'  // Prevent sign-in
+                        return '/registration'  // Prevent sign-in
                     }
 
                     // If email exists, proceed to generate the JWT
-                    const response = await fetch('http://localhost:8080/api/v1/auth/generate-token', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            email: profile.email,
-                            name: profile.name,
-                            googleId: profile.sub,
-                        }),
-                    });
-
-                    if (!response.ok) {
-                        console.error('Failed to generate JWT from backend');
-                    }
-
-                    const data = await response.json();
+                    const data = await AuthAPI.generateToken(profile.email, profile.name!, profile.sub!)
                     user.token = data.data; // Store the JWT in the user object
 
                     const useCookies = cookies();
@@ -141,13 +103,9 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     token.scope = decoded.scope
                 }
             }
-            console.log('JWT CALLBACK user', JSON.stringify(user, null, 2));
-            console.log('JWT CALLBACK account', JSON.stringify(account, null, 2));
-            console.log('JWT CALLBACK profile', JSON.stringify(profile, null, 2));
             return token;
         },
         async session({session, token}: { session: Session; token: JWT } )  {
-            console.log('SESSION CALLBACK token', JSON.stringify(token, null, 2));
             if (token){
                 session.user = {
                     ...session.user,
@@ -155,7 +113,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     email: token.email as string,
                     scope: token.scope as string,
                 };
-                console.log('SESSION CALLBACK session', JSON.stringify(session, null, 2));
             } else {
                 console.log("session not transferring")
             }
