@@ -8,6 +8,8 @@ export const config = {
             checkEmail: "/auth/check-email",
             generateToken: "/auth/generate-token",
             loginGoogle: "/auth/google-signin",
+            verifyCode: "/auth/verify",
+            setPassword: "/auth/set-password",
         }
     }
 }

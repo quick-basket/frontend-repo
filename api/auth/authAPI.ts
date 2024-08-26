@@ -1,6 +1,6 @@
 import {config} from "@/constants/url";
 import {axiosInstance} from "@/utils/axiosInstance";
-import axios from "axios";
+import axios, {isAxiosError} from "axios";
 
 export interface GoogleLoginBody {
     email: string;
@@ -58,7 +58,36 @@ class AuthAPI {
                 }
                 throw new Error(error.response.data.message || 'Registration failed');
             } else {
+                console.log("ERROR", error)
                 throw new Error('An unexpected error occurred');
+            }
+        }
+    }
+
+    async verifyCode(code: string | null) {
+        try {
+            const response = await axiosInstance.get(config.endpoints.auth.verifyCode, {
+                params: {token: code}
+            })
+            return response.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message || 'Verification failed');
+            }
+        }
+    }
+
+    async setPassword(password: string, confirmPassword: string, verificationCode: string) {
+        try {
+            const response = await axiosInstance.post(config.endpoints.auth.setPassword, {
+                password,
+                confirmPassword,
+                verificationCode
+            })
+            return response.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message || 'Set Password Failed');
             }
         }
     }
