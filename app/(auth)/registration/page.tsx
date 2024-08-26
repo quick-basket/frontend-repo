@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, {useState} from 'react';
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {string} from "prop-types";
@@ -12,18 +12,23 @@ import AuthAPI, {RegistrationBody} from "@/api/auth/authAPI";
 import {swalAlert, swalConfirm} from "@/utils/alert/swalAlert";
 import Swal from "sweetalert2";
 import {signIn} from "next-auth/react";
+import Spinner from "@/components/spinner/Spinner";
 
 const Registration = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
-        formState: { errors },
-    } = useForm<RegistrationBody>()
+        formState: {errors},
+    } = useForm<RegistrationBody>();
 
-    const onSubmit = async (data: RegistrationBody) =>  {
+    const onSubmit = async (data: RegistrationBody) => {
+        setIsLoading(true); // Start loading spinner
+
         try {
             const response = await AuthAPI.registration(data);
-            console.log("RESPONSE", response)
+            console.log("RESPONSE", response);
 
             if (!response.success) {
                 await swalAlert({
@@ -46,13 +51,13 @@ const Registration = () => {
                     showConfirmButton: true,
                     showCancelButton: true,
                     confirmButtonText: "Log in with Google",
-                    cancelButtonText: "Cancel"
+                    cancelButtonText: "Cancel",
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Redirect to social login
                         signIn("google");
                     }
-                })
+                });
             } else {
                 await swalAlert({
                     icon: "error",
@@ -61,8 +66,10 @@ const Registration = () => {
                     showConfirmButton: true,
                 });
             }
+        } finally {
+            setIsLoading(false); // Stop loading spinner
         }
-    }
+    };
 
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
@@ -74,64 +81,68 @@ const Registration = () => {
                             Create your account by entering your details below
                         </p>
                     </div>
-                    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                placeholder="John Doe"
-                                {...register("name", {
-                                    required: "Name is required",
-                                })}
-                                className={errors.name ? "border-red-500" : ""}
-                            />
-                            {errors.name && (
-                                <p className="text-sm text-red-500">{errors.name.message}</p>
-                            )}
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="phone">Phone</Label>
-                            <Input
-                                id="phone"
-                                type="tel"
-                                placeholder="+1234567890"
-                                {...register("phone", {
-                                    required: "Phone number is required",
-                                    pattern: {
-                                        value: /^\+?[1-9]\d{1,14}$/,
-                                        message: "Invalid phone number",
-                                    },
-                                })}
-                                className={errors.phone ? "border-red-500" : ""}
-                            />
-                            {errors.phone && (
-                                <p className="text-sm text-red-500">{errors.phone.message}</p>
-                            )}
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="m@example.com"
-                                {...register("email", {
-                                    required: "Email is required",
-                                    pattern: {
-                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                        message: "Invalid email address",
-                                    },
-                                })}
-                                className={errors.email ? "border-red-500" : ""}
-                            />
-                            {errors.email && (
-                                <p className="text-sm text-red-500">{errors.email.message}</p>
-                            )}
-                        </div>
-                        <Button type="submit" className="w-full">
-                            Verify Email
-                        </Button>
-                    </form>
+                    {isLoading ? (
+                        <Spinner/>
+                    ) : (
+                        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="name">Name</Label>
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    placeholder="John Doe"
+                                    {...register("name", {
+                                        required: "Name is required",
+                                    })}
+                                    className={errors.name ? "border-red-500" : ""}
+                                />
+                                {errors.name && (
+                                    <p className="text-sm text-red-500">{errors.name.message}</p>
+                                )}
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="phone">Phone</Label>
+                                <Input
+                                    id="phone"
+                                    type="tel"
+                                    placeholder="+1234567890"
+                                    {...register("phone", {
+                                        required: "Phone number is required",
+                                        pattern: {
+                                            value: /^\+?[1-9]\d{1,14}$/,
+                                            message: "Invalid phone number",
+                                        },
+                                    })}
+                                    className={errors.phone ? "border-red-500" : ""}
+                                />
+                                {errors.phone && (
+                                    <p className="text-sm text-red-500">{errors.phone.message}</p>
+                                )}
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="m@example.com"
+                                    {...register("email", {
+                                        required: "Email is required",
+                                        pattern: {
+                                            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                            message: "Invalid email address",
+                                        },
+                                    })}
+                                    className={errors.email ? "border-red-500" : ""}
+                                />
+                                {errors.email && (
+                                    <p className="text-sm text-red-500">{errors.email.message}</p>
+                                )}
+                            </div>
+                            <Button type="submit" className="w-full">
+                                Verify Email
+                            </Button>
+                        </form>
+                    )}
                     <div className="mt-4 text-center text-sm">
                         Already have an account?{" "}
                         <Link href="#" className="underline">
@@ -152,6 +163,6 @@ const Registration = () => {
             </div>
         </div>
     );
-};
+}
 
 export default Registration;
