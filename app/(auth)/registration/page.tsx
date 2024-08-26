@@ -23,6 +23,7 @@ const Registration = () => {
     const onSubmit = async (data: RegistrationBody) =>  {
         try {
             const response = await AuthAPI.registration(data);
+            console.log("RESPONSE", response)
 
             if (!response.success) {
                 await swalAlert({
@@ -34,7 +35,7 @@ const Registration = () => {
                 return;
             }
 
-            await swalConfirm(response.message, "Check your email");
+            await swalConfirm(response.message, "Check your email for verification");
         } catch (error: any) {
             console.error("An error occurred:", error.message);
             if (error.message.includes("social account")) {

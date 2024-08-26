@@ -14,7 +14,6 @@ interface DecodedToken {
 
 
 export const {handlers, signIn, signOut, auth} = NextAuth({
-    debug: true,
     providers: [
         Credentials({
             credentials: {
@@ -102,7 +101,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     token.scope = decoded.scope
                 }
             }
-            console.log("JWT CALLBACK token", token)
             return token;
         },
         async session({session, token}: { session: Session; token: JWT }) {
