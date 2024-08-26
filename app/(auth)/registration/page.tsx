@@ -8,24 +8,59 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import {useForm} from "react-hook-form";
-
-type FormData = {
-    name: string
-    email: string
-    phone: number
-
-}
-
+import AuthAPI, {RegistrationBody} from "@/api/auth/authAPI";
+import {swalAlert, swalConfirm} from "@/utils/alert/swalAlert";
+import Swal from "sweetalert2";
+import {signIn} from "next-auth/react";
 
 const Registration = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<FormData>()
+    } = useForm<RegistrationBody>()
 
-    const onSubmit = (data: FormData) => {
-        console.log(data)
+    const onSubmit = async (data: RegistrationBody) =>  {
+        try {
+            const response = await AuthAPI.registration(data);
+
+            if (!response.success) {
+                await swalAlert({
+                    icon: "error",
+                    title: "Registration Failed",
+                    text: response.message,
+                    showConfirmButton: true,
+                });
+                return;
+            }
+
+            await swalConfirm(response.message, "Check your email");
+        } catch (error: any) {
+            console.error("An error occurred:", error.message);
+            if (error.message.includes("social account")) {
+                await Swal.fire({
+                    icon: "error",
+                    title: "Account Already Exists",
+                    text: error.message,
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Log in with Google",
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to social login
+                        signIn("google");
+                    }
+                })
+            } else {
+                await swalAlert({
+                    icon: "error",
+                    title: "Registration Failed",
+                    text: error.message,
+                    showConfirmButton: true,
+                });
+            }
+        }
     }
 
     return (
