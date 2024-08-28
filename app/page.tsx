@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import {useSession} from "next-auth/react";
+import Navbar from "@/components/navbar/Navbar";
 
 export default function Home() {
     const { data: session } = useSession()
@@ -12,7 +13,7 @@ export default function Home() {
 
     return (
     <>
-      <div className="text-3xl">HELLO HOMEPAGE</div>
+        <Navbar/>
     </>
   );
 }
