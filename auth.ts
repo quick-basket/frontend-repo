@@ -1,10 +1,10 @@
 import Credentials from "next-auth/providers/credentials";
 import {JWT} from "@auth/core/jwt";
 import NextAuth, {Account, Profile, User, Session} from "next-auth";
-import {cookies} from "next/headers";
 import {jwtDecode} from "jwt-decode";
 import GoogleProvider from "next-auth/providers/google"
 import AuthAPI, {GoogleLoginBody} from "@/api/auth/authAPI";
+import {cookies} from "next/headers";
 
 interface DecodedToken {
     userId: number;
@@ -118,6 +118,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
         }
     },
     session: {
-        maxAge: 12 * 60 * 60,
+        maxAge: 1 * 60 * 60,
     },
 });
