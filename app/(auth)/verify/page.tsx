@@ -3,32 +3,19 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from "next/navigation";
 import {useForm} from "react-hook-form";
-import {signIn} from "next-auth/react";
 import {swalAlert} from "@/utils/alert/swalAlert";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import AuthAPI from "@/api/auth/authAPI";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {TriangleAlert} from "lucide-react";
 import Spinner from "@/components/spinner/Spinner";
+import {validationPassword} from "@/utils/validation";
 
 interface FormData {
     password: string
     confirmPassword: string
-}
-
-const validationPassword = {
-    required: "Password is required",
-    minLength: {
-        value: 8,
-        message: "Password must be at least 8 characters",
-    },
-    pattern: {
-        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        message: "Password must include at least one uppercase letter, one number, and one special character",
-    }
 }
 
 const Verify = () => {

@@ -77,9 +77,52 @@ class AuthAPI {
         }
     }
 
+    async verifyResetPassword(code: string | null) {
+        try {
+            const response = await axiosInstance.get(config.endpoints.auth.verifyResetPassword, {
+                params: {token: code}
+            })
+            return response.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message || 'Verification failed');
+            }
+        }
+    }
+
     async setPassword(password: string, confirmPassword: string, verificationCode: string) {
         try {
             const response = await axiosInstance.post(config.endpoints.auth.setPassword, {
+                password,
+                confirmPassword,
+                verificationCode
+            })
+            return response.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message || 'Set Password Failed');
+            }
+        }
+    }
+
+    async requestResetPassword(email: string){
+        try {
+            const response = await axiosInstance.post(config.endpoints.auth.requestReset, null, {
+                params: {email}
+            })
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message || 'Reset Password Failed');
+            }
+        }
+    }
+
+    async resetPassword(password: string, confirmPassword: string, verificationCode: string) {
+        try {
+            const response = await axiosInstance.post(config.endpoints.auth.resetPassword, {
                 password,
                 confirmPassword,
                 verificationCode

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Drawer, DrawerContent} from "@/components/ui/drawer";
+import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
 import NavbarContent from "@/components/navbar/NavbarContent";
 import Content from "@/components/navbar/Content";
 
@@ -7,9 +7,12 @@ const Navbar = () => {
     const [open, setOpen] = useState<boolean>(false)
     return (
         <Drawer open={open} onOpenChange={setOpen}>
-            <NavbarContent />
+            <NavbarContent/>
             <DrawerContent className="h-full">
-                < Content onClose={() => setOpen(false)} />
+                <DrawerHeader>
+                    <DrawerTitle>Menu</DrawerTitle>
+                </DrawerHeader>
+                < Content onClose={() => setOpen(false)}/>
             </DrawerContent>
         </Drawer>
     );
