@@ -13,6 +13,10 @@ export const config = {
             setPassword: "/auth/set-password",
             requestReset: "/auth/password-reset/request",
             resetPassword: "/auth/password-reset",
+        },
+        user: {
+            base: "/users",
+            getProfile: "/users/profile"
         }
     }
 }
