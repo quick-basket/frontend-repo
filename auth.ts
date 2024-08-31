@@ -59,6 +59,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                         googleId: profile?.sub,
                         imageUrl: profile?.picture
                     }
+                    console.log(loginBody)
                     const response = await AuthAPI.loginWithGoogle(loginBody)
                     user.token = response.data.token;
 
@@ -75,6 +76,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     return false;
                 }
             }
+            console.log(profile)
 
             return true; // Proceed with sign-in
         },

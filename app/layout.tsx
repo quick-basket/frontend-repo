@@ -2,6 +2,8 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/utils/provider/AuthProvider";
+import ReactQueryProvider from "@/utils/provider/ReactQueryProvider";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -17,13 +19,16 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <AuthProvider>
-            <body className={inter.className}>
-            <div className="md:px-40">
-                {children}
-            </div>
-            </body>
-        </AuthProvider>
+        <ReactQueryProvider>
+            <AuthProvider>
+                <body className={inter.className}>
+                <div className="md:px-40">
+                    {children}
+                </div>
+                </body>
+            </AuthProvider>
+            <ReactQueryDevtools initialIsOpen={true}/>
+        </ReactQueryProvider>
         </html>
     );
 }
