@@ -31,7 +31,7 @@ const Content: React.FC<DrawerContentProps> = ({onClose}) => {
                             <div className="flex items-center gap-4 mb-4">
                                 <Avatar>
                                     <AvatarImage src={session.user.image || undefined}/>
-                                    <AvatarFallback>{session.user.name.charAt(0) || 'U'}</AvatarFallback>
+                                    <AvatarFallback>{session.user.email.charAt(0) || 'U'}</AvatarFallback>
                                 </Avatar>
                                 <div>
                                     <p className="font-semibold">{session.user.name}</p>
