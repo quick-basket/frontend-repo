@@ -76,6 +76,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     return false;
                 }
             }
+            console.log(profile)
 
             return true; // Proceed with sign-in
         },
