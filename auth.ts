@@ -76,7 +76,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     return false;
                 }
             }
-            console.log(profile)
 
             return true; // Proceed with sign-in
         },
@@ -120,6 +119,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
         }
     },
     session: {
-        maxAge: 1 * 60 * 60,
+        strategy: "jwt",
+        maxAge: 3600
     },
+    secret: process.env.NEXTAUTH_SECRET,
 });
