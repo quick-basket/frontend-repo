@@ -22,9 +22,7 @@ export default function RootLayout({
         <ReactQueryProvider>
             <AuthProvider>
                 <body className={inter.className}>
-                <div className="md:px-40">
                     {children}
-                </div>
                 </body>
             </AuthProvider>
             <ReactQueryDevtools initialIsOpen={true}/>

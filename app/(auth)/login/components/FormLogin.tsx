@@ -6,7 +6,7 @@ import {Input} from "@/components/ui/input";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {useForm} from "react-hook-form";
-import { signIn } from "next-auth/react";
+import {signIn, useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {signOut} from "@/auth";
 import {swalAlert} from "@/utils/alert/swalAlert";
@@ -19,6 +19,7 @@ type FormData = {
 
 const FormLogin = () => {
     const router = useRouter();
+    const {data: session, status} = useSession();
 
     const {
         register,
@@ -49,7 +50,8 @@ const FormLogin = () => {
                     text: "Welcome",
                     timer: 2500,
                     showConfirmButton: false,
-                })
+                });
+
                 router.push("/");
             }
         } catch (error) {

@@ -17,6 +17,9 @@ export const config = {
         user: {
             base: "/users",
             getProfile: "/users/profile"
+        },
+        store: {
+            base: "/stores",
         }
     }
 }
