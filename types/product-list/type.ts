@@ -30,6 +30,18 @@ export interface ProductDisplayType {
   discount: Discount;
 }
 
+export interface ProductDisplayResponse {
+  content: ProductDisplayType[];
+  page: Page;
+}
+
+export interface Page {
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export interface FormAddProduct {
   name: string;
   description: string;
