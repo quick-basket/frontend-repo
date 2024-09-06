@@ -4,5 +4,8 @@ export const queryKeys = {
     },
     stores: {
         GET_STORES: "GET_STORES",
+    },
+    location: {
+        GET_LOCATION: "GET_LOCATION",
     }
 }

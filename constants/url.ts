@@ -20,6 +20,9 @@ export const config = {
         },
         store: {
             base: "/stores",
+        },
+        location: {
+            getUserLocation: "/location/nearest-store",
         }
     }
 }
