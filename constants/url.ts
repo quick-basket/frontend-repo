@@ -23,8 +23,13 @@ export const config = {
     },
     products: {
       base: "/products",
+      create: "/products/create",
+      update: (productId: any) => `/products/${productId}`,
       getAllProducts: "/products/stores/1",
       getProductDetail: (id: any) => `/products/${id}`,
+    },
+    category: {
+      base: "/category",
     },
   },
 };

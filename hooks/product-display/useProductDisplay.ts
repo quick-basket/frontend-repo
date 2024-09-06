@@ -10,8 +10,8 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 const useProductDisplay = () => {
   return useInfiniteQuery<ProductDisplayResponse, Error>({
     queryKey: ["products"],
-    queryFn: async ({ pageParam }) =>
-      await productAPI.getProductDisplay(pageParam as number),
+    queryFn: ({ pageParam = 0 }) =>
+      productAPI.getProductDisplay(pageParam as number),
     getNextPageParam: (lastPage) => {
       if (lastPage.page.number < lastPage.page.totalPages - 1) {
         return lastPage.page.number + 1;
@@ -21,4 +21,5 @@ const useProductDisplay = () => {
     initialPageParam: 0,
   });
 };
+
 export default useProductDisplay;
