@@ -74,7 +74,7 @@ export const columns = (
                 second: '2-digit',
                 hour12: false, // 24-hour time format
                 timeZone: 'Asia/Bangkok' // GMT+7
-            }).format(new Date(row.original.createdAt));
+            }).format(new Date(row.original.updatedAt));
         }
     },
     {
