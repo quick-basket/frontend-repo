@@ -12,7 +12,7 @@ const Navbar = () => {
                 <DrawerHeader>
                     <DrawerTitle>Menu</DrawerTitle>
                 </DrawerHeader>
-                < Content onClose={() => setOpen(false)}/>
+                <Content onClose={() => setOpen(false)}/>
             </DrawerContent>
         </Drawer>
     );
