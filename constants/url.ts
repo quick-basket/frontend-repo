@@ -31,5 +31,8 @@ export const config = {
     category: {
       base: "/category",
     },
+    location: {
+          getUserLocation: "/location/nearest-store",
+    },
   },
 };

@@ -28,8 +28,6 @@ const StoreTable = () => {
     }
 
     const handleDelete = (id: string) => {
-        // Implement your delete confirmation logic here
-        // For example, using a confirmation dialog
         if (window.confirm("Are you sure you want to delete this store?")) {
             deleteStore({id}, {
                 onSuccess: () => {
@@ -84,6 +82,7 @@ const StoreTable = () => {
             });
         }
     }
+    // console.log("Data stores", stores);
 
     return (
         <div className="container mx-auto pb-10 pt-4">
