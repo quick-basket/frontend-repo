@@ -7,9 +7,17 @@ export interface ProductListType {
   categoryName: string;
   imageUrls: string[] | null;
   imageIds: number[] | null;
+  imagesToDelete: number[];
   createdAt: string;
   updatedAt: string;
 }
+
+export type FormDataProduct = Omit<
+  ProductListType,
+  "createdAt" | "updatedAt"
+> & {
+  imageFiles: File[];
+};
 
 export interface Discount {
   discountType: string;
@@ -30,6 +38,18 @@ export interface ProductDisplayType {
   discount: Discount;
 }
 
+export interface ProductDisplayResponse {
+  content: ProductDisplayType[];
+  page: Page;
+}
+
+export interface Page {
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export interface FormAddProduct {
   name: string;
   description: string;
@@ -45,4 +65,13 @@ export interface ProductDetail {
   categoryName: string;
   imageUrls: string[];
   quantity: number;
+}
+
+export interface ProductImage {
+  id: number;
+  url: string;
+}
+
+export interface FormDataProductWithImageIds extends FormDataProduct {
+  images: ProductImage[];
 }

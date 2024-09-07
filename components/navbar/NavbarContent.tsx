@@ -6,7 +6,7 @@ import {DrawerTrigger} from "@/components/ui/drawer";
 
 const NavbarContent = () => {
     return (
-        <div className="bg-red-600 grid gap-4 p-4">
+        <div className="bg-red-600 grid gap-4 p-4 md:px-40">
             <div className="flex justify-between items-center gap-4">
                 <Input placeholder="Find your favorite product here" className="border-2"/>
                 <ShoppingBasket size={35} className="text-white"/>

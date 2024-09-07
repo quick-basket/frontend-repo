@@ -26,7 +26,7 @@ const carouselItems = [
 
 export default function CarouselImage() {
   return (
-    <div className="w-full max-w-[1000px] mx-auto px-4">
+    <div className="w-full max-w-[800px] md:max-w-[600px] mx-auto px-4">
       <Carousel className="w-full">
         <CarouselContent>
           {carouselItems.map((item) => (

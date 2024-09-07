@@ -8,4 +8,7 @@ export const queryKeys = {
   product: {
     GET_PRODUCTS: "GET_PRODUCTS",
   },
+  location: {
+    GET_LOCATION: "GET_LOCATION",
+  },
 };
