@@ -11,7 +11,7 @@ import {
 const useProductList = () => {
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useQuery<ProductListType[], Error>({
-    queryKey: ["get_productss"],
+    queryKey: [queryKeys.productList.GET_PRODUCTS],
     queryFn: async () => await productAPI.getProductList(),
   });
 
@@ -23,11 +23,11 @@ const useProductList = () => {
     mutationFn: (productData) => productAPI.createProductList(productData),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.product.GET_PRODUCTS],
+        queryKey: [queryKeys.productList.GET_PRODUCTS],
       });
 
       queryClient.setQueryData(
-        ["get_product_list"],
+        [queryKeys.productList.GET_PRODUCTS],
         (oldData: ProductListType[] | undefined) => {
           return oldData ? [...oldData, data] : [data];
         }
@@ -50,11 +50,11 @@ const useProductList = () => {
       productAPI.updateProduct(productId, productData),
     onSuccess: (updateProduct) => {
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.product.GET_PRODUCTS],
+        queryKey: [queryKeys.productList.GET_PRODUCTS],
       });
 
       queryClient.setQueryData(
-        ["post_product_list"],
+        [queryKeys.productList.GET_PRODUCTS],
         (oldData: ProductListType[] | undefined) => {
           return oldData
             ? oldData.map((product) =>
@@ -73,10 +73,10 @@ const useProductList = () => {
     mutationFn: ({ id }) => productAPI.deleteProduct(id),
     onSuccess: async (_, { id }) => {
       await queryClient.invalidateQueries({
-        queryKey: [queryKeys.product.GET_PRODUCTS],
+        queryKey: [queryKeys.productList.GET_PRODUCTS],
       });
       queryClient.setQueryData(
-        [queryKeys.product.GET_PRODUCTS],
+        [queryKeys.productList.GET_PRODUCTS],
         (oldData: any) => {
           if (!oldData) return [];
 
