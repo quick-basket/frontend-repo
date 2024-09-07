@@ -1,20 +1,18 @@
-import React, {useState} from 'react';
-import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
-import NavbarContent from "@/components/navbar/NavbarContent";
-import Content from "@/components/navbar/Content";
+import React from 'react';
+import NavbarMobile from "@/components/navbar/NavbarMobile";
+import NavbarDesktop from "@/components/navbar/NavbarDesktop";
 
 const Navbar = () => {
-    const [open, setOpen] = useState<boolean>(false)
     return (
-        <Drawer open={open} onOpenChange={setOpen}>
-            <NavbarContent/>
-            <DrawerContent className="h-full">
-                <DrawerHeader>
-                    <DrawerTitle>Menu</DrawerTitle>
-                </DrawerHeader>
-                <Content onClose={() => setOpen(false)}/>
-            </DrawerContent>
-        </Drawer>
+        <>
+            <div className="md:hidden">
+                <NavbarMobile/>
+            </div>
+            <div className="hidden md:block">
+                <NavbarDesktop/>
+            </div>
+
+        </>
     );
 };
 
