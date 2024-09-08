@@ -3,7 +3,6 @@ import {Button} from "@/components/ui/button";
 import {X} from "lucide-react";
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react";
-import Spinner from "@/components/spinner/Spinner";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 interface DrawerContentProps {
