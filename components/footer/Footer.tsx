@@ -27,7 +27,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-white">
+        <footer className="bg-white shadow-lg mt-8 border-t border-gray-200 dark:border-gray-800">
             <div className="container mx-auto px-4 py-10">
                 {/* Mobile View */}
                 <div className="md:hidden">
