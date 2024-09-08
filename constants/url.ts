@@ -20,6 +20,7 @@ export const config = {
     },
     store: {
       base: "/stores",
+      inventory: (storeId: any) => `/inventory/store/${storeId}`,
     },
     products: {
       base: "/products",
@@ -32,7 +33,12 @@ export const config = {
       base: "/category",
     },
     location: {
-          getUserLocation: "/location/nearest-store",
+      getUserLocation: "/location/nearest-store",
+    },
+    inventory: {
+      base: "inventory",
+      create: "inventory/create",
+      update: (inventoryId: any) => `inventory/${inventoryId}`,
     },
   },
 };
