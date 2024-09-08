@@ -67,3 +67,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.swal-container {
+  z-index: 99999999 !important;
+  pointer-events: auto !important;
+}
+

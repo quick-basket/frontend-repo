@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {useForm} from "react-hook-form";
 import {FormDataStore} from "@/types/store/type";
@@ -34,6 +34,7 @@ const FormAddStore: React.FC<Props> = ({title, store, onSubmit, onClose, isOpen}
             : [3.139003, 101.686855] // Default to Kuala Lumpur if no location is provided
     );
     const [isUpdating, setIsUpdating] = useState(false)
+    const isSweetAlertOpenRef = useRef(false);
 
     const MapWithNoSSR = dynamic(() => import("@/components/ui/LocationMap"), {ssr: false});
 
@@ -64,8 +65,9 @@ const FormAddStore: React.FC<Props> = ({title, store, onSubmit, onClose, isOpen}
 
     const handleConfirmLocation = async () => {
         if (store && !isUpdating) {
+            isSweetAlertOpenRef.current = true;
             const result = await swalConfirm("Are you sure?", "This will update the store's location and address information.");
-
+            isSweetAlertOpenRef.current = false;
             if (!result.isConfirmed) return;
         }
 
@@ -102,13 +104,14 @@ const FormAddStore: React.FC<Props> = ({title, store, onSubmit, onClose, isOpen}
         }
     }
 
-// useEffect(() => {
-//     // Ensure Leaflet CSS is loaded
-//     import('leaflet/dist/leaflet.css');
-// }, []);
+    const handleDialogOpenChange = (open: boolean) => {
+        if (!open && !isSweetAlertOpenRef.current) {
+            onClose();
+        }
+    };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
             <DialogContent className="max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
