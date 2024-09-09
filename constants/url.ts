@@ -40,5 +40,13 @@ export const config = {
       create: "inventory/create",
       update: (inventoryId: any) => `inventory/${inventoryId}`,
     },
+    discount: {
+      base: (storeId: any) => `/discounts/store/${storeId}`,
+      create: "discounts/create",
+      update: (discountId: any) => `discounts/${discountId}`,
+    },
+    journal: {
+      base: (storeId: any) => `/inventory-journals/${storeId}`,
+    },
   },
 };

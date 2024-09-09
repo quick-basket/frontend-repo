@@ -54,6 +54,8 @@ const FormAddStoreProduct: React.FC<Props> = ({
   const param = useParams<{ storeId: string }>();
   const storeId = param.storeId;
 
+  const isEditMode = !!product;
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -112,27 +114,31 @@ const FormAddStoreProduct: React.FC<Props> = ({
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="productId">Product</Label>
-            <Select
-              onValueChange={(value) =>
-                setValue("productId", parseInt(value, 10))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue
-                  placeholder={product?.productName || "Select a product"}
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {products.map((product) => (
-                  <SelectItem key={product.id} value={product.id.toString()}>
-                    {product.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="inventoryId">Product</Label>
+            {isEditMode ? (
+              <Input value={product.productName} disabled />
+            ) : (
+              <Select
+                onValueChange={(value) =>
+                  setValue("productId", parseInt(value, 10))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a product" />
+                </SelectTrigger>
+                <SelectContent>
+                  {products.map((product) => (
+                    <SelectItem key={product.id} value={product.id.toString()}>
+                      {product.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            {errors.productId && (
+              <p className="text-red-500">{errors.productId.message}</p>
+            )}
           </div>
-
           <Card>
             <CardContent className="space-y-4">
               <div>
