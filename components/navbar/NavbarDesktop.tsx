@@ -74,7 +74,7 @@ const NavbarDesktop = () => {
 
     return (
         <nav className="bg-white shadow-sm">
-            <div className="container mx-auto py-2">
+            <div className="container mx-auto py-2 md:px-32">
                 <div className="flex items-center justify-between">
                     <div className="w-[120px]">
                         <Image src="/logo-transformed.webp" alt="Alfagift logo" width={120} height={40}/>
