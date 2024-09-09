@@ -6,6 +6,7 @@ import StoreProductTable from "@/components/storeProductTable/StoreProductTable"
 import { useParams } from "next/navigation";
 import Sidebar from "./components/Sidebar";
 
+
 const Stores = () => {
   const params = useParams();
   const storeId = params.storeId as any;

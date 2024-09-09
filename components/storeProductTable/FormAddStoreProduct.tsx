@@ -139,6 +139,7 @@ const FormAddStoreProduct: React.FC<Props> = ({
               <p className="text-red-500">{errors.productId.message}</p>
             )}
           </div>
+
           <Card>
             <CardContent className="space-y-4">
               <div>
