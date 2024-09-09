@@ -17,6 +17,7 @@ export const config = {
     user: {
       base: "/users",
       getProfile: "/users/profile",
+      addImage: "/users/upload-profile-image",
     },
     store: {
       base: "/stores",

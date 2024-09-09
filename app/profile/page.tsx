@@ -1,99 +1,105 @@
 "use client"
 
-import React from 'react';
-import {ArrowLeft, Camera, CheckCircle, Mail, Pencil, Phone, UserRoundX, XCircle} from "lucide-react";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
+import React, {useState} from 'react';
 import useProfileDetails from "@/hooks/users/useProfileDetails";
 import Spinner from "@/components/spinner/Spinner";
-import Link from "next/link";
-import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
-import EditProfileDialog from "@/app/profile/components/EditProfileDialog";
+import ProfileContent from "@/app/profile/components/ProfileContent";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 
 const Profile = () => {
-    const {data, isLoading, error} = useProfileDetails();
+    const { data, isLoading, error } = useProfileDetails();
+    const [activeTab, setActiveTab] = useState('profile');
 
-    console.log(data);
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'profile':
+                return <ProfileContent />;
+            case 'orders':
+                return <div>Order transaction history goes here</div>;
+            case 'vouchers':
+                return <div>Voucher list goes here</div>;
+            default:
+                return null;
+        }
+    };
 
-    if (isLoading) return <Spinner/>
+    if (isLoading) return <Spinner />;
     if (error) return <div>Error: {error.message}</div>;
 
+    const menuItems = [
+        { id: 'profile', label: 'Profile' },
+        { id: 'orders', label: 'Order Transactions' },
+        { id: 'vouchers', label: 'Vouchers' },
+    ];
+
     return (
-        <>
-            <div className="bg-red-600">
-                <div className="flex px-4 py-6 text-white justify-between">
-                    <div className="flex gap-4">
-                        <Link href="/">
-                            <ArrowLeft/>
-                        </Link>
-                        <p>My Profile</p>
+        <div className="bg-gray-100 min-h-screen">
+            <div className="container py-8 px-4">
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Mobile menu */}
+                    <div className="lg:hidden">
+                        <Accordion type="single" collapsible className="w-full">
+                            <AccordionItem value="menu">
+                                <AccordionTrigger className="bg-white shadow rounded-t-lg px-4 py-2">
+                                    Menu
+                                </AccordionTrigger>
+                                <AccordionContent className="bg-white shadow rounded-b-lg">
+                                    <ul className="space-y-2 p-4">
+                                        {menuItems.map((item) => (
+                                            <li key={item.id}>
+                                                <button
+                                                    onClick={() => setActiveTab(item.id)}
+                                                    className={`w-full text-left px-4 py-2 rounded-md transition-colors duration-200 ${
+                                                        activeTab === item.id
+                                                            ? 'bg-blue-500 text-white'
+                                                            : 'hover:bg-gray-100'
+                                                    }`}
+                                                >
+                                                    {item.label}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
                     </div>
-                    <Dialog>
-                        <DialogTrigger asChild className="hover:cursor-pointer">
-                            <Pencil/>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <EditProfileDialog/>
-                        </DialogContent>
-                    </Dialog>
-                </div>
-                <div className=""></div>
-            </div>
-            <div className="p-4 grid gap-2">
-                <div className="flex justify-center items-center">
-                    <div className="relative">
-                        <Avatar className="h-20 w-20">
-                            <AvatarImage src={data?.image}/>
-                            <AvatarFallback>
-                                <UserRoundX/>
-                            </AvatarFallback>
-                        </Avatar>
-                        <div className="absolute rounded-full bg-blue-500 bottom-0 right-0 p-1">
-                            <Camera className="h-4 w-4 text-white"/>
+
+                    {/* Desktop menu */}
+                    <div className="hidden lg:block lg:w-1/4">
+                        <div className="bg-white shadow rounded-lg p-6">
+                            <h2 className="text-xl font-bold mb-6">Menu</h2>
+                            <ul className="space-y-2">
+                                {menuItems.map((item) => (
+                                    <li key={item.id}>
+                                        <button
+                                            onClick={() => setActiveTab(item.id)}
+                                            className={`w-full text-left px-4 py-2 rounded-md transition-colors duration-200 ${
+                                                activeTab === item.id
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'hover:bg-gray-100'
+                                            }`}
+                                        >
+                                            {item.label}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Right content */}
+                    <div className="lg:w-3/4">
+                        <div className="bg-white shadow rounded-lg p-6">
+                            <h2 className="text-xl font-bold mb-4">
+                                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+                            </h2>
+                            {renderContent()}
                         </div>
                     </div>
                 </div>
-                <form className="space-y-4">
-                    <div>
-                        <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data?.name || ''} readOnly/>
-                    </div>
-                    <div>
-                        <Label htmlFor="email">Email</Label>
-                        <div className="relative">
-                            <Input id="email" value={data?.email || ''} readOnly/>
-                            <Mail
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5"/>
-                        </div>
-                    </div>
-                    <div>
-                        <Label htmlFor="phone">Phone</Label>
-                        <div className="relative">
-                            <Input id="phone" value={data?.phone || ''} readOnly/>
-                            <Phone
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5"/>
-                        </div>
-                    </div>
-                    <div>
-                        <Label>Verification Status</Label>
-                        <div className="flex items-center mt-1">
-                            {data?.verified ? (
-                                <>
-                                    <CheckCircle className="text-green-500 h-5 w-5 mr-2"/>
-                                    <span className="text-green-500">Verified</span>
-                                </>
-                            ) : (
-                                <>
-                                    <XCircle className="text-red-500 h-5 w-5 mr-2"/>
-                                    <span className="text-red-500">Not Verified</span>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </form>
             </div>
-        </>
+        </div>
     );
 };
 
