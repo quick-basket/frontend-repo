@@ -23,4 +23,7 @@ export const queryKeys = {
   journal: {
     GET_JOURNAL: "GET_JOURNAL",
   },
+  carts: {
+    GET_CARTS: "GET_CARTS",
+  },
 };
