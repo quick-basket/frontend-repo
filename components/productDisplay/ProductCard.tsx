@@ -9,8 +9,11 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
+
+    const encodedName = encodeURIComponent(product.name.toLowerCase().replace(/ /g, '-'));
+
     return (
-        <Link href={`/product-detail/${product.id}`}>
+        <Link href={`/product-detail/${encodedName}-${product.id}`}>
             <div
                 className="bg-white rounded-lg shadow-lg shadow-slate-200 overflow-hidden cursor-pointer transition duration-200 ease-in-out transform hover:scale-105 h-full flex flex-col">
                 <div className="relative h-48">
