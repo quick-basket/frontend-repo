@@ -17,6 +17,7 @@ export const config = {
     user: {
       base: "/users",
       getProfile: "/users/profile",
+      addImage: "/users/upload-profile-image",
     },
     store: {
       base: "/stores",
@@ -39,6 +40,14 @@ export const config = {
       base: "inventory",
       create: "inventory/create",
       update: (inventoryId: any) => `inventory/${inventoryId}`,
+    },
+    discount: {
+      base: (storeId: any) => `/discounts/store/${storeId}`,
+      create: "discounts/create",
+      update: (discountId: any) => `discounts/${discountId}`,
+    },
+    journal: {
+      base: (storeId: any) => `/inventory-journals/${storeId}`,
     },
   },
 };

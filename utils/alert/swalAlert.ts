@@ -37,6 +37,10 @@ export const swalConfirm = (title: string, text: string) => {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
+        cancelButtonText: 'No',
+        customClass: {
+            container: 'swal-container'
+        },
+        target: document.body,
     });
 };
