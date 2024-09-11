@@ -19,6 +19,9 @@ export const config = {
       getProfile: "/users/profile",
       addImage: "/users/upload-profile-image",
     },
+    userAddress: {
+      base: "/user-address"
+    },
     store: {
       base: "/stores",
       inventory: (storeId: any) => `/inventory/store/${storeId}`,
@@ -48,6 +51,12 @@ export const config = {
     },
     journal: {
       base: (storeId: any) => `/inventory-journals/${storeId}`,
+    },
+    cart: {
+      base: "/carts",
+      summary: "/carts/summary",
+      create: "/carts/create",
+      update: (cartId: any) => `carts/${cartId}`,
     },
   },
 };
