@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from "next/image";
 import {Input} from "@/components/ui/input";
-import {LogOut, MapPin, Search, Settings, ShoppingBasket, User} from "lucide-react";
+import {ArrowDown, ChevronDown, LogOut, MapPin, Search, Settings, ShoppingBasket, User} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {signIn, signOut, useSession} from "next-auth/react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
@@ -15,6 +15,7 @@ import {
 import {Skeleton} from "@/components/ui/skeleton";
 import Link from "next/link";
 import useProfileDetails from "@/hooks/users/useProfileDetails";
+import AddressDialog from "@/components/userAddress/AddressDialog";
 
 const NavbarDesktop = () => {
     const {data: session, status} = useSession();
@@ -88,6 +89,7 @@ const NavbarDesktop = () => {
                     <div className="flex items-center text-xs text-gray-600">
                         <MapPin size={16} className="mr-1"/>
                         <span>JABODETABEK</span>
+                        <AddressDialog/>
                     </div>
                     <div className="flex-1 mx-4">
                         <div className="relative">
