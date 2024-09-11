@@ -2,6 +2,9 @@ export const queryKeys = {
   users: {
     GET_PROFILE: "GET_PROFILE",
   },
+  userAddress: {
+    GET_USER_ADDRESSES: "GET_USER_ADDRESSES",
+  },
   stores: {
     GET_STORES: "GET_STORES",
   },
