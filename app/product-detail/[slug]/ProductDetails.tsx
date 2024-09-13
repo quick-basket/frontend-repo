@@ -60,7 +60,7 @@ const ProductDetails: React.FC<ProductDetailProps> = ({ product }) => {
             <span className="text-sm font-semibold text-blue-600">brand</span>
           </div>
           <p className="text-xl font-bold text-red-600 mb-4">
-            {formatToIDR(product.price)}
+            {formatToIDR(product.discount.discountPrice)}
           </p>
           <div className="mb-4 py-4 border-y border-gray-200">
             <p className="text-gray-600 text-sm">{product.description}</p>

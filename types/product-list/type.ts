@@ -66,7 +66,7 @@ export interface ProductDetail {
   categoryName: string;
   imageUrls: string[];
   quantity: number;
-  discount: Discount[];
+  discount: Discount;
 }
 
 export interface ProductImage {
