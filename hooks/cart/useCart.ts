@@ -1,15 +1,39 @@
 import cartAPI from "@/api/cart/cartAPI";
 import { queryKeys } from "@/constants/queryKey";
-import { CartItem, FormCartItem } from "@/types/cart/type";
+import {AddToCartItem, CartItem, FormCartItem} from "@/types/cart/type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useCheckout from "@/hooks/order/useCheckout";
 
 const useCart = () => {
   const queryClient = useQueryClient();
+  const checkout = useCheckout();
 
   const { data, isLoading, error } = useQuery<CartItem[], Error>({
     queryKey: [queryKeys.carts.GET_CARTS],
     queryFn: async () => await cartAPI.getCartList(),
   });
+
+  const addProductToCart = useMutation<CartItem, Error, {cartData: AddToCartItem}>({
+    mutationFn: ({cartData}) => cartAPI.addCart(cartData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS] });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS"],
+      });
+
+      queryClient.setQueryData([queryKeys.carts.GET_CARTS], (oldData: any) => {
+        if (Array.isArray(oldData)) {
+          return oldData.map((cartItem: CartItem) =>
+              cartItem.id === data.id ? data : cartItem
+          );
+        }
+        return oldData;
+      });
+    },
+    onError: (error) => {
+      console.error("Error updating cart", error);
+    }
+  })
 
   const editCartMutation = useMutation<
     CartItem,
@@ -32,6 +56,8 @@ const useCart = () => {
         }
         return oldData;
       });
+
+      checkout.invalidateCheckout();
     },
     onError: (error) => {
       console.error("Error updating profile", error);

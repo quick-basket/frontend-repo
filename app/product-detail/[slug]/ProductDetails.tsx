@@ -2,6 +2,8 @@ import React from 'react';
 import Image from "next/image";
 import {ProductDetail} from "@/types/product-list/type";
 import {formatToIDR} from "@/utils/currency";
+import useCart from "@/hooks/cart/useCart";
+import {notify} from "@/utils/alert/notify";
 
 interface ProductDetailProps {
     product: ProductDetail
@@ -10,12 +12,35 @@ interface ProductDetailProps {
 const ProductDetails: React.FC<ProductDetailProps> = ({product}) => {
     const [selectedQuantity, setSelectedQuantity] = React.useState(1);
     const [mainImage, setMainImage] = React.useState("");
+    const {editCart} = useCart();
 
     React.useEffect(() => {
         if (product) {
             setMainImage(product.imageUrls[0]);
         }
     }, [product]);
+
+    const handleAddToCart = () => {
+        editCart({
+            cartData: {quantity: selectedQuantity},
+            cartId: String(product.id),
+        },{
+            onSuccess: () => {
+                notify({
+                    title: "Success",
+                    text: "Item added to cart",
+                    type: "success",
+                })
+            },
+            onError: (error) => {
+                notify({
+                    title: "Error",
+                    text: 'Failed to add item to cart',
+                    type: "error"
+                })
+            }
+        })
+    }
 
     return (
         <div className="container mx-auto px-4 py-8 pb-24 md:pb-8"> {/* Added padding bottom for mobile */}
@@ -101,6 +126,7 @@ const ProductDetails: React.FC<ProductDetailProps> = ({product}) => {
                             </div>
                         </div>
                         <button
+                            onClick={handleAddToCart}
                             className="w-full bg-red-600 text-white px-4 py-2 rounded text-lg hover:bg-red-700 transition duration-300 ease-in-out">
                             + Keranjang
                         </button>
