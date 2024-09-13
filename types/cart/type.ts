@@ -11,3 +11,4 @@ export type CartItem = {
 };
 
 export type FormCartItem = Pick<CartItem, "quantity">;
+export type AddToCartItem = Pick<CartItem, "quantity" | "inventoryId" | "price" | "discountPrice">;

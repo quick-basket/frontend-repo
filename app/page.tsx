@@ -1,5 +1,3 @@
-"use client";
-
 import ProductDisplay from "@/components/productDisplay/page";
 import CarouselImage from "@/components/carousel/page";
 import Navbar from "@/components/navbar/Navbar";

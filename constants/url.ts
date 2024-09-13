@@ -58,5 +58,10 @@ export const config = {
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
     },
+    order: {
+      base: "/orders",
+      checkout: "/orders/checkout",
+      initiate:"/orders/initiate"
+    }
   },
 };

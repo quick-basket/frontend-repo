@@ -1,11 +1,22 @@
 import { config } from "@/constants/url";
-import { FormCartItem } from "@/types/cart/type";
+import {AddToCartItem, FormCartItem} from "@/types/cart/type";
 import { axiosInstance, isAxiosError } from "@/utils/axiosInstance";
 
 class CartAPI {
   async getCartList() {
     try {
       const response = await axiosInstance.get(config.endpoints.cart.base);
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+    }
+  }
+
+  async addCart(cartData: AddToCartItem) {
+    try {
+      const response = await axiosInstance.post(config.endpoints.cart.base, cartData)
       return response.data.data;
     } catch (error) {
       if (isAxiosError(error) && error.response) {
