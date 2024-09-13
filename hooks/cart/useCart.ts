@@ -21,7 +21,7 @@ const useCart = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS] });
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS"],
+        queryKey: [queryKeys.carts.GET_CARTS_SUMMARY],
       });
 
       queryClient.setQueryData([queryKeys.carts.GET_CARTS], (oldData: any) => {

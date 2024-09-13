@@ -1,4 +1,5 @@
 import { config } from "@/constants/url";
+import { CartSummaryData } from "@/types/cart-summary/type";
 import { FormCartItem } from "@/types/cart/type";
 import { axiosInstance, isAxiosError } from "@/utils/axiosInstance";
 
@@ -14,14 +15,20 @@ class CartAPI {
     }
   }
 
-  async getCartSummary() {
+  async getCartSummary(
+    selectedUserVoucherId?: number
+  ): Promise<CartSummaryData> {
     try {
-      const response = await axiosInstance.get(config.endpoints.cart.summary);
-      return response.data.data;
+      const params = selectedUserVoucherId ? { selectedUserVoucherId } : {};
+      const response = await axiosInstance.get(config.endpoints.cart.summary, {
+        params,
+      });
+      return response.data.data as CartSummaryData;
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         throw new Error(error.response.data.message);
       }
+      throw error;
     }
   }
 

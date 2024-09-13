@@ -28,5 +28,6 @@ export const queryKeys = {
   },
   carts: {
     GET_CARTS: "GET_CARTS",
+    GET_CARTS_SUMMARY: "GET_CARTS_SUMMARY",
   },
 };

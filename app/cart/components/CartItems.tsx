@@ -26,14 +26,14 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
     <>
       <button className="flex items-center text-blue-600 mb-4">
         <Trash2 className="mr-2" size={20} />
-        Hapus Semua
+        Remove All
       </button>
       <div className="bg-white p-4 rounded-lg shadow">
         <div className="flex items-center mb-4">
           <Truck className="mr-2" size={20} />
-          <span className="font-semibold">Stok dari Toko</span>
+          <span className="font-semibold">Stock from Store</span>
         </div>
-        <div className="text-sm text-gray-600 mb-4">Pengiriman Hari ini</div>
+        <div className="text-sm text-gray-600 mb-4">Delivery Today</div>
         {items.map((item) => (
           <div
             key={item.id}
