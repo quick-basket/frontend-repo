@@ -20,7 +20,7 @@ export const config = {
       addImage: "/users/upload-profile-image",
     },
     userAddress: {
-      base: "/user-address"
+      base: "/user-address",
     },
     store: {
       base: "/stores",
