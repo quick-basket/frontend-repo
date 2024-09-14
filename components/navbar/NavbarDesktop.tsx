@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import {Input} from "@/components/ui/input";
 import {ArrowDown, ChevronDown, LogOut, MapPin, Search, Settings, ShoppingBasket, User} from "lucide-react";
@@ -15,14 +15,35 @@ import {
 import {Skeleton} from "@/components/ui/skeleton";
 import Link from "next/link";
 import useProfileDetails from "@/hooks/users/useProfileDetails";
-import AddressDialog from "@/components/userAddress/AddressDialog";
 import CartIcon from "@/components/navbar/CartIcon";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
+import {StoreType} from "@/types/store/type";
+import storeAPI from "@/api/store/storeAPI";
 
 const NavbarDesktop = () => {
     const {data: session, status} = useSession();
     const {data: profile, isLoading, error} = useProfileDetails();
-    console.log(session)
-    console.log("profile", profile)
+    const [nearestStore, setNearestStore] = useState<StoreType | null>(null)
+    const {selectedStoreId} = useLocationContext();
+
+    useEffect(() => {
+        const getStoreById = async (id: string) => {
+            try {
+                const response = await storeAPI.getStoreById(id);
+                setNearestStore(response);
+            } catch (error) {
+                console.error('Error fetching store:', error);
+                // Optionally, set an error state here
+            }
+        };
+
+        if (selectedStoreId) {
+            getStoreById(selectedStoreId)
+        } else {
+            // Handle the case where selectedStoreId is null or undefined
+            setNearestStore(null);
+        }
+    }, [selectedStoreId]);
 
     const renderAuthSection = () => {
         if (status === "loading") {
@@ -91,8 +112,7 @@ const NavbarDesktop = () => {
                     </Link>
                     <div className="flex items-center text-xs text-gray-600">
                         <MapPin size={16} className="mr-1"/>
-                        <span>JABODETABEK</span>
-                        <AddressDialog/>
+                        <span>{nearestStore?.name}</span>
                     </div>
                     <div className="flex-1 mx-4">
                         <div className="relative">

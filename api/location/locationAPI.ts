@@ -3,9 +3,9 @@ import {config} from "@/constants/url";
 import {NominatimResponse} from "@/types/location/type";
 
 class LocationAPI {
-    async getLocation(longitude: number, latitude: number) {
+    async getNearestStore(longitude: number, latitude: number) {
         try {
-            const response = await axiosInstance.get(config.endpoints.location.getUserLocation, {
+            const response = await axiosInstance.get(config.endpoints.location.getNearestStore, {
                 params: {longitude, latitude},
             })
             return response.data.data;
