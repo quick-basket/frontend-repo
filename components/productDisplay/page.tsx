@@ -9,8 +9,11 @@ import {
 } from "@/types/product-list/type";
 import {useEffect} from "react";
 import ProductCard from "@/components/productDisplay/ProductCard";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
 
 const ProductDisplay = () => {
+    const {selectedStoreId} = useLocationContext();
+
     const {
         data,
         isLoading,
@@ -18,7 +21,7 @@ const ProductDisplay = () => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useProductDisplay();
+    } = useProductDisplay(selectedStoreId as string);
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;

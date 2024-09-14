@@ -20,11 +20,11 @@ class ProductAPI {
     }
   }
 
-  async getProductDisplay(page: number): Promise<ProductDisplayResponse> {
+  async getProductDisplay(storeId: string, page: number): Promise<ProductDisplayResponse> {
     try {
       const response = await axiosInstance.get<
         ApiResponse<ProductDisplayResponse>
-      >(`${config.endpoints.products.getAllProducts}?page=${page}&size=6`);
+      >(`${config.endpoints.products.getAllProducts(storeId)}?page=${page}&size=6`);
       console.log("API response:", response.data);
       return response.data.data;
     } catch (error) {

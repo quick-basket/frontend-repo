@@ -19,6 +19,7 @@ export const queryKeys = {
   },
   location: {
     GET_LOCATION: "GET_LOCATION",
+    GET_USER_ADDRESSES: "GET_USER_ADDRESSES",
   },
   discount: {
     GET_DISCOUNT: "GET_DISCOUNT",

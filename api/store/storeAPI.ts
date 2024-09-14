@@ -14,6 +14,17 @@ class StoreAPI {
         }
     }
 
+    async getStoreById(id: string) {
+        try {
+            const response = await axiosInstance.get(`${config.endpoints.store.base}/${id}`)
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message);
+            }
+        }
+    }
+
     async createStore(storeData: FormDataStore){
         try {
             const response = await axiosInstance.post(config.endpoints.store.base, storeData);

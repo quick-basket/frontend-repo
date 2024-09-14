@@ -30,14 +30,15 @@ export const config = {
       base: "/products",
       create: "/products/create",
       update: (productId: any) => `/products/${productId}`,
-      getAllProducts: "/products/stores/1",
+      getAllProducts: (storeId: string) => `/products/stores/${storeId}`,
       getProductDetail: (id: any) => `/inventory/${id}`,
     },
     category: {
       base: "/category",
     },
     location: {
-      getUserLocation: "/location/nearest-store",
+      getNearestStore: "/location/nearest-store",
+
     },
     inventory: {
       base: "inventory",

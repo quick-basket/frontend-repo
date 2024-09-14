@@ -1,3 +1,5 @@
+import {StoreType} from "@/types/store/type";
+
 export interface NominatimResponse {
     display_name?: string;
     address: {
@@ -6,4 +8,9 @@ export interface NominatimResponse {
         state?: string;
         postcode?: string;
     };
+}
+
+export interface NearestStoreResponse {
+    store: StoreType;
+    distance: number;
 }
