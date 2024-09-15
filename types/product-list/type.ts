@@ -27,6 +27,7 @@ export interface Discount {
 
 export interface ProductDisplayType {
   id: number;
+  inventoryId: number;
   name: string;
   description: string;
   price: number;
@@ -65,6 +66,7 @@ export interface ProductDetail {
   categoryName: string;
   imageUrls: string[];
   quantity: number;
+  discount: Discount[];
 }
 
 export interface ProductImage {

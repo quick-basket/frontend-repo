@@ -20,7 +20,7 @@ export const config = {
       addImage: "/users/upload-profile-image",
     },
     userAddress: {
-      base: "/user-address"
+      base: "/user-address",
     },
     store: {
       base: "/stores",
@@ -31,7 +31,7 @@ export const config = {
       create: "/products/create",
       update: (productId: any) => `/products/${productId}`,
       getAllProducts: "/products/stores/1",
-      getProductDetail: (id: any) => `/products/${id}`,
+      getProductDetail: (id: any) => `/inventory/${id}`,
     },
     category: {
       base: "/category",
@@ -58,5 +58,10 @@ export const config = {
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
     },
+    order: {
+      base: "/orders",
+      checkout: "/orders/checkout",
+      initiate:"/orders/initiate"
+    }
   },
 };

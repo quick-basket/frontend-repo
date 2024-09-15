@@ -16,6 +16,7 @@ import {Skeleton} from "@/components/ui/skeleton";
 import Link from "next/link";
 import useProfileDetails from "@/hooks/users/useProfileDetails";
 import AddressDialog from "@/components/userAddress/AddressDialog";
+import CartIcon from "@/components/navbar/CartIcon";
 
 const NavbarDesktop = () => {
     const {data: session, status} = useSession();
@@ -83,9 +84,11 @@ const NavbarDesktop = () => {
         <nav className="bg-white shadow-sm">
             <div className="container mx-auto py-2 md:px-32">
                 <div className="flex items-center justify-between">
-                    <div className="w-[120px]">
-                        <Image src="/logo-transformed.webp" alt="Alfagift logo" width={120} height={40}/>
-                    </div>
+                    <Link href="/">
+                        <div className="w-[120px] cursor-pointer">
+                            <Image src="/logo-transformed.webp" alt="Alfagift logo" width={120} height={40}/>
+                        </div>
+                    </Link>
                     <div className="flex items-center text-xs text-gray-600">
                         <MapPin size={16} className="mr-1"/>
                         <span>JABODETABEK</span>
@@ -102,7 +105,9 @@ const NavbarDesktop = () => {
                         </div>
                     </div>
                     <div className="flex gap-6 items-center">
-                        <ShoppingBasket className="text-gray-600 ml-4" size={24}/>
+                        <Link href="/cart">
+                            <CartIcon/>
+                        </Link>
                         <div className="flex items-center space-x-4 ml-4">
                             {renderAuthSection()}
                         </div>

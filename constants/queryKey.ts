@@ -29,4 +29,7 @@ export const queryKeys = {
   carts: {
     GET_CARTS: "GET_CARTS",
   },
+  checkout: {
+    GET_CHECKOUT_SUMMARY: "GET_CHECKOUT_SUMMARY",
+  }
 };
