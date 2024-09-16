@@ -20,12 +20,14 @@ import {useLocationContext} from "@/hooks/context/LocationProvider";
 import {StoreType} from "@/types/store/type";
 import storeAPI from "@/api/store/storeAPI";
 import {useLogout} from "@/hooks/useLogout";
+import LocationSelectionDialog from "@/app/components/LocationSelectionDialog";
 
 const NavbarDesktop = () => {
     const {data: session, status} = useSession();
     const {data: profile, isLoading, error} = useProfileDetails();
     const [nearestStore, setNearestStore] = useState<StoreType | null>(null)
     const {selectedStoreId} = useLocationContext();
+    const [showLocationDialog, setShowLocationDialog] = useState<boolean>(false)
 
     const logout = useLogout();
 
@@ -118,9 +120,11 @@ const NavbarDesktop = () => {
                             <Image src="/logo-transformed.webp" alt="Alfagift logo" width={120} height={40}/>
                         </div>
                     </Link>
-                    <div className="flex items-center text-xs text-gray-600">
+                    <div className="flex items-center text-xs text-gray-600 cursor-pointer"
+                    onClick={() => setShowLocationDialog(true)}>
                         <MapPin size={16} className="mr-1"/>
                         <span>{nearestStore?.name}</span>
+                        <ChevronDown size={16} className="ml-1"/>
                     </div>
                     <div className="flex-1 mx-4">
                         <div className="relative">
@@ -142,6 +146,7 @@ const NavbarDesktop = () => {
                     </div>
                 </div>
             </div>
+            <LocationSelectionDialog isOpen={showLocationDialog} onClose={() => setShowLocationDialog(false)} />
         </nav>
     );
 };
