@@ -134,6 +134,17 @@ class AuthAPI {
             }
         }
     }
+
+    async logout() {
+        try{
+            const response = await axiosInstance.post(config.endpoints.auth.logout, {});
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message);
+            }
+        }
+    }
 }
 
 export default new AuthAPI();
