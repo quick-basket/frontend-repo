@@ -19,12 +19,20 @@ import CartIcon from "@/components/navbar/CartIcon";
 import {useLocationContext} from "@/hooks/context/LocationProvider";
 import {StoreType} from "@/types/store/type";
 import storeAPI from "@/api/store/storeAPI";
+import {useLogout} from "@/hooks/useLogout";
 
 const NavbarDesktop = () => {
     const {data: session, status} = useSession();
     const {data: profile, isLoading, error} = useProfileDetails();
     const [nearestStore, setNearestStore] = useState<StoreType | null>(null)
     const {selectedStoreId} = useLocationContext();
+
+    const logout = useLogout();
+
+    const handleLogout = (event: React.MouseEvent<HTMLSpanElement>) => {
+        event.preventDefault();
+        logout();
+    }
 
     useEffect(() => {
         const getStoreById = async (id: string) => {
@@ -82,7 +90,7 @@ const NavbarDesktop = () => {
                         <DropdownMenuSeparator/>
                         <DropdownMenuItem>
                             <LogOut className="mr-2 h-4 w-4"/>
-                            <span onClick={() => signOut()}>Log out</span>
+                            <span onClick={handleLogout}>Log out</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

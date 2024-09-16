@@ -25,7 +25,6 @@ class ProductAPI {
       const response = await axiosInstance.get<
         ApiResponse<ProductDisplayResponse>
       >(`${config.endpoints.products.getAllProducts(storeId)}?page=${page}&size=6`);
-      console.log("API response:", response.data);
       return response.data.data;
     } catch (error) {
       if (isAxiosError(error) && error.response) {
