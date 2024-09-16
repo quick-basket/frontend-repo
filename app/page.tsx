@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import {useLocationContext} from "@/hooks/context/LocationProvider";
 import {useRouter} from "next/navigation";
 import LocationSelectionDialog from "@/app/components/LocationSelectionDialog";
+import LocationSelectionPrompt from "@/components/alert/LocationSelectionPrompt";
 
 export default function Home() { const { selectedStoreId, isLoading, isLoggedIn } = useLocationContext();
     const router = useRouter();
@@ -29,6 +30,10 @@ export default function Home() { const { selectedStoreId, isLoading, isLoggedIn 
         setShowLocationDialog(false);
     };
 
+    const handleShowDialog = () => {
+        setShowLocationDialog(true);
+    }
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -43,7 +48,7 @@ export default function Home() { const { selectedStoreId, isLoading, isLoggedIn 
                     <Footer />
                 </>
             ) : isLoggedIn ? (
-                <div>Please select a location</div>
+                <LocationSelectionPrompt onShowDialog={handleShowDialog}/>
             ) : (
                 <>
                     <CarouselImage />
