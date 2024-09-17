@@ -37,7 +37,6 @@ export default function Home() { const { selectedStoreId, isLoading, isLoggedIn 
     if (isLoading) {
         return <div>Loading...</div>;
     }
-
     return (
         <div>
             <Navbar />
