@@ -5,6 +5,7 @@ import ReactQueryProvider from "@/utils/provider/ReactQueryProvider";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {auth} from "@/auth";
 import {SessionProvider} from "next-auth/react";
+import {LocationProvider} from "@/hooks/context/LocationProvider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-                                       children,
-                                   }: Readonly<{
+                                             children,
+                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
     const session = await auth()
@@ -23,9 +24,11 @@ export default async function RootLayout({
         <html lang="en">
         <ReactQueryProvider>
             <SessionProvider session={session} refetchInterval={120}>
-                <body className={inter.className}>
+                <LocationProvider>
+                    <body className={inter.className}>
                     {children}
-                </body>
+                    </body>
+                </LocationProvider>
             </SessionProvider>
             <ReactQueryDevtools initialIsOpen={true}/>
         </ReactQueryProvider>

@@ -10,6 +10,7 @@ import {signIn, useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {signOut} from "@/auth";
 import {swalAlert} from "@/utils/alert/swalAlert";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
 
 
 type FormData = {
@@ -20,6 +21,7 @@ type FormData = {
 const FormLogin = () => {
     const router = useRouter();
     const {data: session, status} = useSession();
+    const {clearLocationData} = useLocationContext();
 
     const {
         register,
@@ -44,6 +46,8 @@ const FormLogin = () => {
                     showConfirmButton: true
                 })
             } else {
+                clearLocationData();
+
                 await swalAlert({
                     title: "Success",
                     icon: "success",
@@ -52,7 +56,7 @@ const FormLogin = () => {
                     showConfirmButton: false,
                 });
 
-                router.push("/");
+                router.push("/")
             }
         } catch (error) {
             console.error("An error occurred during sign in:", error);
