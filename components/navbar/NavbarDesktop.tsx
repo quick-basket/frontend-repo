@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import {Input} from "@/components/ui/input";
 import {ArrowDown, ChevronDown, LogOut, MapPin, Search, Settings, ShoppingBasket, User} from "lucide-react";
@@ -15,14 +15,45 @@ import {
 import {Skeleton} from "@/components/ui/skeleton";
 import Link from "next/link";
 import useProfileDetails from "@/hooks/users/useProfileDetails";
-import AddressDialog from "@/components/userAddress/AddressDialog";
 import CartIcon from "@/components/navbar/CartIcon";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
+import {StoreType} from "@/types/store/type";
+import storeAPI from "@/api/store/storeAPI";
+import {useLogout} from "@/hooks/useLogout";
+import LocationSelectionDialog from "@/app/components/LocationSelectionDialog";
 
 const NavbarDesktop = () => {
     const {data: session, status} = useSession();
     const {data: profile, isLoading, error} = useProfileDetails();
-    console.log(session)
-    console.log("profile", profile)
+    const [nearestStore, setNearestStore] = useState<StoreType | null>(null)
+    const {selectedStoreId} = useLocationContext();
+    const [showLocationDialog, setShowLocationDialog] = useState<boolean>(false)
+
+    const logout = useLogout();
+
+    const handleLogout = (event: React.MouseEvent<HTMLSpanElement>) => {
+        event.preventDefault();
+        logout();
+    }
+
+    useEffect(() => {
+        const getStoreById = async (id: string) => {
+            try {
+                const response = await storeAPI.getStoreById(id);
+                setNearestStore(response);
+            } catch (error) {
+                console.error('Error fetching store:', error);
+                // Optionally, set an error state here
+            }
+        };
+
+        if (selectedStoreId) {
+            getStoreById(selectedStoreId)
+        } else {
+            // Handle the case where selectedStoreId is null or undefined
+            setNearestStore(null);
+        }
+    }, [selectedStoreId]);
 
     const renderAuthSection = () => {
         if (status === "loading") {
@@ -61,7 +92,7 @@ const NavbarDesktop = () => {
                         <DropdownMenuSeparator/>
                         <DropdownMenuItem>
                             <LogOut className="mr-2 h-4 w-4"/>
-                            <span onClick={() => signOut()}>Log out</span>
+                            <span onClick={handleLogout}>Log out</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -89,10 +120,11 @@ const NavbarDesktop = () => {
                             <Image src="/logo-transformed.webp" alt="Alfagift logo" width={120} height={40}/>
                         </div>
                     </Link>
-                    <div className="flex items-center text-xs text-gray-600">
+                    <div className="flex items-center text-xs text-gray-600 cursor-pointer"
+                    onClick={() => setShowLocationDialog(true)}>
                         <MapPin size={16} className="mr-1"/>
-                        <span>JABODETABEK</span>
-                        <AddressDialog/>
+                        <span>{nearestStore?.name}</span>
+                        <ChevronDown size={16} className="ml-1"/>
                     </div>
                     <div className="flex-1 mx-4">
                         <div className="relative">
@@ -114,6 +146,7 @@ const NavbarDesktop = () => {
                     </div>
                 </div>
             </div>
+            <LocationSelectionDialog isOpen={showLocationDialog} onClose={() => setShowLocationDialog(false)} />
         </nav>
     );
 };

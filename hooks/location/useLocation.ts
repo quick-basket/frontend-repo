@@ -3,6 +3,7 @@ import {queryKeys} from "@/constants/queryKey";
 import locationAPI from "@/api/location/locationAPI";
 import {useEffect, useState} from "react";
 import {getUserLocation} from "@/utils/location/location";
+import {NearestStoreResponse} from "@/types/location/type";
 
 const useLocation = () => {
     const [coords, setCoords] = useState<{longitude: number; latitude: number} | null>(null);
@@ -24,12 +25,12 @@ const useLocation = () => {
         data,
         isLoading,
         error
-    } = useQuery({
+    } = useQuery<NearestStoreResponse, Error>({
         queryKey: [queryKeys.location.GET_LOCATION],
         queryFn: async () => {
             if (coords) {
                 const {longitude, latitude} = coords;
-                return await locationAPI.getLocation(longitude, latitude);
+                return await locationAPI.getNearestStore(longitude, latitude);
             }
             return null;
         },

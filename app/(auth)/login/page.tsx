@@ -5,12 +5,14 @@ import Link from "next/link"
 import {Button} from "@/components/ui/button"
 import FormLogin from "@/app/(auth)/login/components/FormLogin";
 import {signIn} from "next-auth/react";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
 
 function Login() {
+
     const handleGoogleSignIn = async () => {
-       await signIn('google', {
+        await signIn('google', {
             callbackUrl: '/',
-        })
+        });
     }
 
     return (

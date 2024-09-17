@@ -7,11 +7,11 @@ import {
 } from "@/types/product-list/type";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-const useProductDisplay = () => {
+const useProductDisplay = (storeId: string) => {
   return useInfiniteQuery<ProductDisplayResponse, Error>({
-    queryKey: ["products"],
+    queryKey: ["products", storeId],
     queryFn: ({ pageParam = 0 }) =>
-      productAPI.getProductDisplay(pageParam as number),
+      productAPI.getProductDisplay(storeId, pageParam as number),
     getNextPageParam: (lastPage) => {
       if (lastPage.page.number < lastPage.page.totalPages - 1) {
         return lastPage.page.number + 1;

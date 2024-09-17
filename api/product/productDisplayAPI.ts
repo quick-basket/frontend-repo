@@ -2,10 +2,10 @@ import { config } from "@/constants/url";
 import { axiosInstance, isAxiosError } from "@/utils/axiosInstance";
 
 class ProductDisplayAPI {
-  async getProductList() {
+  async getProductList(storeId:string) {
     try {
       const response = await axiosInstance.get(
-        config.endpoints.products.getAllProducts
+        config.endpoints.products.getAllProducts(storeId)
       );
       return response.data.data;
     } catch (error) {
