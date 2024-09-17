@@ -60,13 +60,14 @@ export interface FormAddProduct {
 
 export interface ProductDetail {
   id: number;
+  inventoryId: number;
   name: string;
   description: string;
   price: number;
   categoryName: string;
   imageUrls: string[];
   quantity: number;
-  discount: Discount[];
+  discount: Discount;
 }
 
 export interface ProductImage {
