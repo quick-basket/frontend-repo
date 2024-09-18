@@ -24,6 +24,8 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
     const { setSelectedStoreId, nearestStoreId} = useLocationContext();
     const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<UserAddressType | null>(null);
+    const [isDeletingAddress, setIsDeletingAddress] = useState(false);
+
 
     const { data: userAddresses, isLoading, error, deleteUserAddress} = useUserAddress();
 
@@ -50,6 +52,7 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
     };
 
     const handleDeleteAddress = async (address: UserAddressType) => {
+        setIsDeletingAddress(true)
         const result = await confirmAlert(
             "Delete Address",
             "Are you sure you want to delete this address?"
@@ -57,7 +60,14 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
         if (result) {
             deleteUserAddress({id: address.id!.toString()})
         }
+        setIsDeletingAddress(false)
     }
+
+    const handleDialogClose = (open: boolean) => {
+        if (!open && !isDeletingAddress) {
+            onClose();
+        }
+    };
 
     const handleAddressAdded = () => {
         setIsAddressDialogOpen(false);
@@ -67,7 +77,7 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
 
     return (
         <>
-            <Dialog open={isOpen} onOpenChange={onClose}>
+            <Dialog open={isOpen} onOpenChange={handleDialogClose}>
                 <DialogContent className="w-[90vw] max-w-[600px] rounded-lg">
                     <DialogHeader>
                         <DialogTitle className="text-xl font-bold">Choose Your Location</DialogTitle>
