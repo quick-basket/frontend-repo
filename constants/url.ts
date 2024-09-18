@@ -38,7 +38,6 @@ export const config = {
     },
     location: {
       getNearestStore: "/location/nearest-store",
-
     },
     inventory: {
       base: "inventory",
@@ -61,8 +60,10 @@ export const config = {
     },
     order: {
       base: "/orders",
+      update: (orderId: any) => `/orders/status/${orderId}`,
+      getAll: (orderId: any) => `/orders/store/${orderId}`,
       checkout: "/orders/checkout",
-      initiate:"/orders/initiate"
-    }
+      initiate: "/orders/initiate",
+    },
   },
 };
