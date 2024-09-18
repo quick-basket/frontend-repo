@@ -4,6 +4,7 @@ import useCart from "@/hooks/cart/useCart";
 
 const CartIcon = () => {
     const { data: cartItems } = useCart();
+    console.log("cart items", cartItems)
     const itemCount = cartItems?.length || 0;
 
     return (

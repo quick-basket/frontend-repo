@@ -14,6 +14,17 @@ class CartAPI {
     }
   }
 
+  async getCartListWithStoreId(storeId: string) {
+    try {
+      const response = await axiosInstance.get(config.endpoints.cart.cartWithStoreId(storeId));
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+    }
+  }
+
   async addCart(cartData: AddToCartItem) {
     try {
       const response = await axiosInstance.post(config.endpoints.cart.base, cartData)
@@ -25,9 +36,9 @@ class CartAPI {
     }
   }
 
-  async getCartSummary() {
+  async getCartSummary(storeId: string) {
     try {
-      const response = await axiosInstance.get(config.endpoints.cart.summary);
+      const response = await axiosInstance.get(config.endpoints.cart.summary(storeId));
       return response.data.data;
     } catch (error) {
       if (isAxiosError(error) && error.response) {

@@ -54,9 +54,10 @@ export const config = {
     },
     cart: {
       base: "/carts",
-      summary: "/carts/summary",
+      summary: (storeId: string) => `/carts/summary/${storeId}`,
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
+      cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`
     },
     order: {
       base: "/orders",
