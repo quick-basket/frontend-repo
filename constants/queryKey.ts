@@ -32,5 +32,8 @@ export const queryKeys = {
   },
   checkout: {
     GET_CHECKOUT_SUMMARY: "GET_CHECKOUT_SUMMARY",
-  }
+  },
+  order: {
+    GET_ORDER: "GET_ORDER",
+  },
 };
