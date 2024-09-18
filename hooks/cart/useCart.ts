@@ -3,14 +3,22 @@ import { queryKeys } from "@/constants/queryKey";
 import { AddToCartItem, CartItem, FormCartItem } from "@/types/cart/type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useCheckout from "@/hooks/order/useCheckout";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
 
 const useCart = () => {
   const queryClient = useQueryClient();
   const checkout = useCheckout();
+  const {selectedStoreId} = useLocationContext()
 
   const { data, isLoading, error } = useQuery<CartItem[], Error>({
-    queryKey: [queryKeys.carts.GET_CARTS],
-    queryFn: async () => await cartAPI.getCartList(),
+    queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+    queryFn:async () => {
+      if (!selectedStoreId) {
+        throw new Error('No store selected');
+      }
+      return await cartAPI.getCartListWithStoreId(selectedStoreId);
+    },
+    enabled: !!selectedStoreId,
   });
 
   const addProductToCart = useMutation<
@@ -20,12 +28,12 @@ const useCart = () => {
   >({
     mutationFn: ({ cartData }) => cartAPI.addCart(cartData),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS] });
+      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS"],
+        queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS", selectedStoreId],
       });
 
-      queryClient.setQueryData([queryKeys.carts.GET_CARTS], (oldData: any) => {
+      queryClient.setQueryData([queryKeys.carts.GET_CARTS, selectedStoreId], (oldData: any) => {
         if (Array.isArray(oldData)) {
           return oldData.map((cartItem: CartItem) =>
             cartItem.id === data.id ? data : cartItem
@@ -47,12 +55,12 @@ const useCart = () => {
     mutationFn: ({ cartData, cartId }) =>
       cartAPI.updateCartItem(cartData, cartId),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS] });
+      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS"],
+        queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS", selectedStoreId],
       });
 
-      queryClient.setQueryData([queryKeys.carts.GET_CARTS], (oldData: any) => {
+      queryClient.setQueryData([queryKeys.carts.GET_CARTS, selectedStoreId], (oldData: any) => {
         if (Array.isArray(oldData)) {
           return oldData.map((cartItem: CartItem) =>
             cartItem.id === data.id ? data : cartItem
@@ -71,9 +79,9 @@ const useCart = () => {
   const deleteCartMutation = useMutation<string, Error, { id: string }>({
     mutationFn: ({ id }) => cartAPI.deleteCartItem(id),
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS] });
+      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
 
-      queryClient.setQueryData([queryKeys.carts.GET_CARTS], (oldData: any) => {
+      queryClient.setQueryData([queryKeys.carts.GET_CARTS,selectedStoreId], (oldData: any) => {
         if (!oldData) return [];
 
         return oldData.filter((cart: CartItem) => cart.id !== id);
