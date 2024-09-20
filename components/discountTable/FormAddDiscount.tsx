@@ -65,7 +65,8 @@ const FormAddDiscount: React.FC<Props> = ({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await storeProductAPI.getStoreProductList(storeId);
+        const response =
+          await storeProductAPI.getStoreProductListWithoutDiscount(storeId);
         console.log("result", response);
         setProducts(response);
       } catch (error) {

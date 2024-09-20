@@ -14,6 +14,19 @@ const useStoreProduct = (id?: string) => {
     enabled: !!id,
   });
 
+  const {
+    data: notInInventoryData,
+    isLoading: isNotInInventoryLoading,
+    error: notInInventoryError,
+  } = useQuery({
+    queryKey: [queryKeys.productStoreList.GET_PRODUCTS, id],
+    queryFn: async () => {
+      if (!id) throw new Error("Store ID is required");
+      return await storeProductAPI.getProductNotInInventory(id);
+    },
+    enabled: !!id,
+  });
+
   const createStoreProductMutation = useMutation<
     StoreProduct,
     Error,
@@ -88,6 +101,9 @@ const useStoreProduct = (id?: string) => {
     data,
     isLoading,
     error,
+    notInInventoryData,
+    isNotInInventoryLoading,
+    notInInventoryError,
     createStoreProduct: createStoreProductMutation.mutate,
     updateStoreProduct: editStoreProductMutation.mutate,
     deleteStoreProduct: deleteStoreProductMutation.mutate,

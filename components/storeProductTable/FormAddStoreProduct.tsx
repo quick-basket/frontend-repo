@@ -21,6 +21,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
 import productAPI from "@/api/product/productAPI";
 import { FormStoreProduct, StoreProduct } from "@/types/store-product/type";
+import storeProductAPI from "@/api/store/storeProductAPI";
 
 interface Props {
   title: string;
@@ -59,14 +60,18 @@ const FormAddStoreProduct: React.FC<Props> = ({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const products = await productAPI.getProductList();
-        setProducts(products);
+        const products = await storeProductAPI.getProductNotInInventory(
+          storeId
+        );
+        console.log("check fetch", products);
+
+        setProducts(products.data.content);
       } catch (error) {
         console.error("Failed to fetch products", error);
       }
     };
     fetchProducts();
-  }, []);
+  }, [storeId]);
 
   useEffect(() => {
     if (product) {

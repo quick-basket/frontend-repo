@@ -25,9 +25,12 @@ export const config = {
     store: {
       base: "/stores",
       inventory: (storeId: any) => `/inventory/store/${storeId}`,
+      withoutDiscount: (storeId: any) =>
+        `/inventory/store/without-discount/${storeId}`,
     },
     products: {
       base: "/products",
+      notInventory: "/products/not-in-inventory",
       create: "/products/create",
       update: (productId: any) => `/products/${productId}`,
       getAllProducts: (storeId: string) => `/products/stores/${storeId}`,
