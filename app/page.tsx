@@ -9,10 +9,14 @@ import {useLocationContext} from "@/hooks/context/LocationProvider";
 import {useRouter} from "next/navigation";
 import LocationSelectionDialog from "@/app/components/LocationSelectionDialog";
 import LocationSelectionPrompt from "@/components/alert/LocationSelectionPrompt";
+import {useSession} from "next-auth/react";
 
 export default function Home() { const { selectedStoreId, isLoading, isLoggedIn } = useLocationContext();
     const router = useRouter();
+    const {data: session} = useSession()
     const [showLocationDialog, setShowLocationDialog] = useState(false);
+
+    console.log(session)
 
     useEffect(() => {
         if (!isLoading && isLoggedIn && !selectedStoreId) {

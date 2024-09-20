@@ -73,3 +73,10 @@
   pointer-events: auto !important;
 }
 
+.notiflix-confirm,
+.notiflix-report,
+.notiflix-loading,
+.notiflix-notify {
+  z-index: 99999999 !important;
+  pointer-events: auto !important;
+}

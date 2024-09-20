@@ -10,7 +10,7 @@ export async function GET() {
         .map((file, index) => ({
             id: index + 1,
             imageUrl: `/banner/${file}`,
-            link: `/link-${index + 1}`, // You might want to define these links elsewhere
+            link: "/#", // You might want to define these links elsewhere
             alt: `Banner ${index + 1}`
         }));
 

@@ -8,26 +8,26 @@ const OrderSummary = () => {
   console.log("sata", data);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
-      <div className="flex justify-between mb-2">
-        <span>Subtotal</span>
-        <span>{formatToIDR(data?.totalPrice as number)}</span>
+      <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
+          <div className="flex justify-between mb-2">
+              <span>Subtotal</span>
+              <span>{formatToIDR(data?.totalPrice as number)}</span>
+          </div>
+          <div className="flex justify-between mb-4">
+              <span>Diskon</span>
+              <span>{formatToIDR(data?.totalDiscount as number)}</span>
+          </div>
+          <div className="flex justify-between font-bold text-base sm:text-lg">
+              <span>Total Belanja</span>
+              <span>{formatToIDR(data?.totalDiscountPrice as number)}</span>
+          </div>
+          <Link href="/checkout">
+              <button className="w-full bg-red-600 text-white py-2 rounded mt-4 hover:bg-red-700 transition">
+                  Checkout
+              </button>
+          </Link>
       </div>
-      <div className="flex justify-between mb-4">
-        <span>Diskon</span>
-        <span>{formatToIDR(data?.totalDiscount as number)}</span>
-      </div>
-      <div className="flex justify-between font-bold text-lg">
-        <span>Total Belanja</span>
-        <span>{formatToIDR(data?.totalDiscountPrice as number)}</span>
-      </div>
-      <Link href="/checkout">
-        <button className="w-full bg-red-600 text-white py-2 rounded mt-4 hover:bg-red-700 transition">
-          Checkout
-        </button>
-      </Link>
-    </div>
   );
 };
 

@@ -38,7 +38,6 @@ export const config = {
     },
     location: {
       getNearestStore: "/location/nearest-store",
-
     },
     inventory: {
       base: "inventory",
@@ -55,14 +54,17 @@ export const config = {
     },
     cart: {
       base: "/carts",
-      summary: "/carts/summary",
+      summary: (storeId: string) => `/carts/summary/${storeId}`,
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
+      cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`
     },
     order: {
       base: "/orders",
+      update: (orderId: any) => `/orders/status/${orderId}`,
+      getAll: (orderId: any) => `/orders/store/${orderId}`,
       checkout: "/orders/checkout",
-      initiate:"/orders/initiate"
-    }
+      initiate: "/orders/initiate",
+    },
   },
 };
