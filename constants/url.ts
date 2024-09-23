@@ -16,8 +16,12 @@ export const config = {
     },
     user: {
       base: "/users",
+      storeAdmin: "/users/create-role",
+      updateStoreAdmin: (storeAdminId: any) =>
+        `/users/update-role/${storeAdminId}`,
       getProfile: "/users/profile",
       addImage: "/users/upload-profile-image",
+      notStoreAdmin: "/users/not-store-admins",
     },
     userAddress: {
       base: "/user-address",
@@ -25,6 +29,10 @@ export const config = {
     store: {
       base: "/stores",
       inventory: (storeId: any) => `/inventory/store/${storeId}`,
+      storeAdmin: "/stores/store-admins",
+      notStoreAdmin: "/stores/not-store-admins",
+      deleteStoreAdmin: (storeAdminId: any) =>
+        `/stores/store-admin/${storeAdminId}`,
     },
     products: {
       base: "/products",
@@ -57,7 +65,7 @@ export const config = {
       summary: (storeId: string) => `/carts/summary/${storeId}`,
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
-      cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`
+      cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`,
     },
     order: {
       base: "/orders",
@@ -65,6 +73,14 @@ export const config = {
       getAll: (orderId: any) => `/orders/store/${orderId}`,
       checkout: "/orders/checkout",
       initiate: "/orders/initiate",
+    },
+    sales: {
+      totalAmountAllStore: "orders/total-amounts-all-store",
+      totalAmountLastWeek: "orders/total-amount-last-week",
+      totalAmountLastMonth: "orders/total-amount-last-month",
+      totalAmountWithStoreId: "orders/total-amounts-storeid",
+      totalAmountWithStoreIdAndCategoryId:
+        "orders/total-amount-storeid-categoryid",
     },
   },
 };
