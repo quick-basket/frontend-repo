@@ -62,9 +62,11 @@ export const config = {
     order: {
       base: "/orders",
       update: (orderId: any) => `/orders/status/${orderId}`,
+      updateAfterPayment: (orderId: any) => `/orders/status-payment/${orderId}`,
       getAll: (orderId: any) => `/orders/store/${orderId}`,
       checkout: "/orders/checkout",
       initiate: "/orders/initiate",
+      createOrRetrievePendingOrder: "/orders/create-pending"
     },
   },
 };

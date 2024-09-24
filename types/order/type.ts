@@ -41,7 +41,7 @@ export interface SnapTokenResponse {
   clientKey: string;
 }
 
-export type OrderList = {
+export type OrderType = {
   id: string;
   storeId: number;
   userId: number;
@@ -59,6 +59,30 @@ export enum OrderStatus {
   SHIPPED = "SHIPPED",
   DELIVERED = "DELIVERED",
   CANCELED = "CANCELED",
+}
+
+export enum PaymentStatus {
+  SUCCESS = "success",
+  PENDING = "pending",
+  ERROR = "error",
+  EXPIRED = "expired",
+}
+
+// Helper function to map transaction status to PaymentStatus enum
+export function mapTransactionStatusToPaymentStatus(status: string): PaymentStatus | null {
+  switch (status.toLowerCase()) {
+    case 'success':
+      return PaymentStatus.SUCCESS;
+    case 'pending':
+      return PaymentStatus.PENDING;
+    case 'error':
+    case 'failure':
+      return PaymentStatus.ERROR;
+    case 'expired':
+      return PaymentStatus.EXPIRED;
+    default:
+      return null;
+  }
 }
 
 export interface OrderStatusUpdate {

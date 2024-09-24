@@ -4,21 +4,26 @@ import OrderSummary from "@/app/checkout/components/OrderSummary";
 import OrderPrice from "@/app/checkout/components/OrderPrice";
 import useCheckout from "@/hooks/order/useCheckout";
 import Spinner from "@/components/spinner/Spinner";
-import {SnapTokenResponse} from "@/types/order/type";
+import {useSearchParams} from 'next/navigation';
+import {useRouter} from 'next/router';
+import {mapTransactionStatusToPaymentStatus} from "@/types/order/type";
 
 const Checkout = () => {
+    const searchParams = useSearchParams();
+
     const {
         data,
         isLoading,
         error,
-        initiateSnapTransaction,
-        isInitiatingTransaction
+        handlePayment,
+        isInitiatingTransaction,
+        updateOrderStatus
     } = useCheckout();
 
     useEffect(() => {
         const script: HTMLScriptElement = document.createElement('script');
         script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
-        script.setAttribute('data-client-key', 'YOUR_MIDTRANS_CLIENT_KEY');
+        script.setAttribute('data-client-key', process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'CLIENT_KEY');
         document.body.appendChild(script);
 
         return () => {
@@ -26,12 +31,45 @@ const Checkout = () => {
         };
     }, []);
 
-    const handlePayment = () => {
+    useEffect(() => {
+        const handleTransactionStatus = () => {
+            const order_id = searchParams.get("order_id")
+            const status_code = searchParams.get("status_code")
+            const transaction_status = searchParams.get("transaction_status")
+
+            if (order_id && status_code && transaction_status) {
+                console.log(`Order ID: ${order_id}`);
+                console.log(`Status Code: ${status_code}`);
+                console.log(`Transaction Status: ${transaction_status}`);
+
+                const paymentStatus = mapTransactionStatusToPaymentStatus(transaction_status);
+                if (paymentStatus === null) {
+                    console.error('Invalid transaction status');
+                    return;
+                }
+
+                // Update order status based on transaction status
+                updateOrderStatus({
+                    orderId: order_id,
+                    status: paymentStatus
+                });
+
+                // Remove the query parameters from the URL
+                window.history.replaceState(null, '', `/checkout`);
+            }
+        };
+
+        // Call the function when the route changes
+        handleTransactionStatus();
+
+    }, [updateOrderStatus]);
+
+    const handlePaymentClick = () => {
         if (!data) {
             console.error("Checkout data not available");
             return;
         }
-        initiateSnapTransaction({checkoutData: data});
+        handlePayment();
     };
 
     if (isLoading) return <Spinner />;
@@ -47,7 +85,7 @@ const Checkout = () => {
                     <OrderSummary recipient={recipient} items={items}/>
                 </div>
                 <div className="md:w-1/3 mt-8 md:mt-0">
-                    <OrderPrice {...summary} onPaymentClick={handlePayment} />
+                    <OrderPrice {...summary} onPaymentClick={handlePaymentClick} />
                 </div>
             </div>
         </div>
