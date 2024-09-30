@@ -30,14 +30,21 @@ const Stores = () => {
             title="Total Sales"
           />
           <SalesCards
-            fetchTotalAmount={(categoryId) =>
+            fetchAmount={(categoryId) =>
               salesAPI.getTotalAmountWithStoreIdAndCategoryId(
                 storeId,
                 categoryId
               )
             }
-            fetchCategories={salesAPI.getAllCategories}
-            title="Total Sales by Category"
+            fetchItems={salesAPI.getAllCategories}
+            title="Total Sales"
+          />
+          <SalesCards
+            fetchAmount={(productId) =>
+              salesAPI.getTotalAmountWithStoreIdAndProductId(storeId, productId)
+            }
+            fetchItems={salesAPI.getAllProducts}
+            title="Total Sales"
           />
         </div>
         <div className="flex-grow overflow-auto p-4">

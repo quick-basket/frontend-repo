@@ -14,7 +14,7 @@ const StoreAdmins = () => {
       <div className="flex flex-col flex-grow">
         <NavbarDashboard onMenuClick={() => setSidebarOpen(true)} />
         <div className="flex-grow overflow-auto p-4">
-          <StoreAdminTable />
+          <StoreAdminTable storeAdminId={""} />
         </div>
       </div>
     </div>
