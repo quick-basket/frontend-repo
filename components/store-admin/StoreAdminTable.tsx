@@ -1,39 +1,44 @@
-"use client";
-
-import useProductList from "@/hooks/product-list/useProductList";
-import React, { useState } from "react";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
+import useStoreAdmin from "@/hooks/stores/useStoreAdmin";
+import {
+  FormStoreAdminData,
+  StoreAdminListType,
+} from "@/types/store-admin/type";
+import { useState } from "react";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
-import { FormDataProduct, ProductListType } from "@/types/product-list/type";
-import FormAddProduct from "./FormAddProduct";
+import StoreAdmins from "@/app/(admin)/dashboard/store-admins/page";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
 import { swalAlert } from "@/utils/alert/swalAlert";
+import FormAddStoreAdmin from "./FormAddStoreAdmins";
 
-const ProductTable = () => {
+interface StoreAdminTableProps {
+  storeAdminId: string;
+}
+
+const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
   const {
-    data: products,
+    data: storeAdmins,
     isLoading,
     error,
-    createProductList,
-    updateProductList,
-    deleteProductList,
-  } = useProductList();
+    createStoreAdmin,
+    updateStoreAdmin,
+    deleteStoreAdmin,
+  } = useStoreAdmin();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<
-    FormDataProduct | undefined
+    StoreAdminListType | undefined
   >(undefined);
 
-  const handleEdit = (product: ProductListType) => {
-    const { id, createdAt, updatedAt, ...FormDataProduct } = product;
-    setSelectedProduct({ ...FormDataProduct, id } as FormDataProduct);
+  const handleEdit = (storeAdmin: StoreAdminListType) => {
+    const { id, ...StoreAdminListType } = storeAdmin;
+    setSelectedProduct({ ...StoreAdminListType, id } as StoreAdminListType);
     setIsDialogOpen(true);
   };
 
   const handleDelete = (id: string) => {
     if (window.confirm("are you surer want to delete this product?")) {
-      console.log("deletting product with id", id);
-      deleteProductList(
+      deleteStoreAdmin(
         { id },
         {
           onSuccess: () => {
@@ -50,19 +55,12 @@ const ProductTable = () => {
     }
   };
 
-  const handleDialogClose = () => {
-    setSelectedProduct(undefined);
-    setIsDialogOpen(false);
-  };
-
-  const handleFormSubmit = (data: FormDataProduct) => {
-    console.log("Submitting form data:", data);
-
+  const handleFormSubmit = (data: FormStoreAdminData) => {
     if (selectedProduct) {
-      updateProductList(
+      updateStoreAdmin(
         {
-          productId: selectedProduct.id,
-          productData: data,
+          storeAdminId: selectedProduct.id,
+          storeAdminData: data,
         },
         {
           onSuccess: (updatedProduct) => {
@@ -84,7 +82,7 @@ const ProductTable = () => {
         }
       );
     } else {
-      createProductList(data, {
+      createStoreAdmin(data, {
         onSuccess: () => {
           swalAlert({
             title: "Success",
@@ -99,33 +97,40 @@ const ProductTable = () => {
     }
   };
 
+  const handleDialogClose = () => {
+    setSelectedProduct(undefined);
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Products</h1>
+        <h1 className="text-2xl font-bold">Stores</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Product
+          <Plus className="mr-2 h-4 w-4" /> Add New Store
         </Button>
       </div>
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        products && (
+        storeAdmins && (
           <DataTable
             columns={columns(handleEdit, handleDelete)}
-            data={products}
+            data={storeAdmins}
           />
         )
       )}
-      <FormAddProduct
-        title={selectedProduct ? "Edit Product" : "Add Product"}
-        product={selectedProduct}
+
+      <FormAddStoreAdmin
+        title={selectedProduct ? "Edit Store" : "Add Store"}
+        storeAdmin={selectedProduct}
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleFormSubmit}
+        storeAdminId={storeAdminId}
       />
     </div>
   );
 };
 
-export default ProductTable;
+export default StoreAdminTable;
