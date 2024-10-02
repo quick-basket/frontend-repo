@@ -81,6 +81,8 @@ export const config = {
       totalAmountWithStoreId: "orders/total-amounts-storeid",
       totalAmountWithStoreIdAndCategoryId:
         "orders/total-amount-storeid-categoryid",
+      totalAmountWithStoreIdAndProductId:
+        "orders/total-amount-storeid-productId",
     },
   },
 };

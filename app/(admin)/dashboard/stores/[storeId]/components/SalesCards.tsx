@@ -8,85 +8,84 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface Category {
+interface Item {
   id: string;
   name: string;
 }
 
-interface SaleCartProps {
-  fetchTotalAmount: (categoryId: string) => Promise<number>;
-  fetchCategories: () => Promise<Category[]>;
+interface DataCardProps {
+  fetchAmount: (itemId: string) => Promise<number>;
+  fetchItems: () => Promise<Item[]>;
   title: string;
+  icon?: React.ReactNode;
+  formatValue?: (value: number) => string;
 }
 
-const SalesCards: React.FC<SaleCartProps> = ({
-  fetchTotalAmount,
-  fetchCategories,
+const SalesCards: React.FC<DataCardProps> = ({
+  fetchAmount,
+  fetchItems,
   title,
+  icon = <ChartNoAxesColumn size={24} className="text-gray-600" />,
+  formatValue = (value) => `Rp.${value.toLocaleString()}`,
 }) => {
-  const [totalSales, setTotalSales] = useState<number | null>(null);
+  const [totalAmount, setTotalAmount] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    const fetchCateg = async () => {
+    const fetchItemsList = async () => {
       try {
-        const response = await fetchCategories();
-        setCategories(response);
+        const response = await fetchItems();
+        setItems(response);
         if (response.length > 0) {
-          setCategoryId(response[0].id);
+          setSelectedItemId(response[0].id);
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
-        setError("Failed to fetch categories");
+        console.error("Error fetching items:", error);
+        setError("Failed to fetch items");
       }
     };
-
-    fetchCateg();
-  }, [fetchCategories]);
+    fetchItemsList();
+  }, [fetchItems]);
 
   useEffect(() => {
-    const fetchSales = async () => {
-      if (categoryId) {
+    const fetchData = async () => {
+      if (selectedItemId) {
         try {
-          setTotalSales(null);
-          const total = await fetchTotalAmount(categoryId);
-          setTotalSales(total);
+          setTotalAmount(null);
+          const total = await fetchAmount(selectedItemId);
+          setTotalAmount(total);
         } catch (err) {
-          console.error("Failed to fetch total amount", err);
-          setError("Failed to fetch total amount");
+          console.error("Failed to fetch amount", err);
+          setError("Failed to fetch amount");
         }
       }
     };
-    fetchSales();
-  }, [fetchTotalAmount, categoryId]);
+    fetchData();
+  }, [fetchAmount, selectedItemId]);
 
-  const handleCategoryChange = (value: string) => {
-    setCategoryId(value);
+  const handleItemChange = (value: string) => {
+    setSelectedItemId(value);
   };
 
   return (
     <div className="p-4 sm:p-6 rounded-md bg-white shadow">
       <div className="flex flex-col space-y-4">
-        <div className="flex justify-between items-center">
-          <div className="text-gray-600">
-            <ChartNoAxesColumn size={24} />
-          </div>
-          <h2 className="text-sm text-gray-600">{title}</h2>
-        </div>
-        <div className="w-full">
+        <div className="flex items-center space-x-2">
+          {icon}
+          <h2 className="text-sm text-gray-600 flex-grow">{title}</h2>
           <Select
-            onValueChange={handleCategoryChange}
-            value={categoryId || undefined}
+            onValueChange={handleItemChange}
+            value={selectedItemId || undefined}
           >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a category" />
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Select item" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
+              {items.map((item) => (
+                <SelectItem key={item.id} value={item.id}>
+                  {item.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -95,11 +94,11 @@ const SalesCards: React.FC<SaleCartProps> = ({
         <div className="text-center">
           {error ? (
             <p className="text-red-500 text-sm">Error: {error}</p>
-          ) : totalSales === null ? (
+          ) : totalAmount === null ? (
             <p className="text-gray-400">Loading...</p>
           ) : (
             <h1 className="font-semibold text-base sm:text-lg md:text-xl">
-              Rp.{totalSales.toLocaleString()}
+              {formatValue(totalAmount)}
             </h1>
           )}
         </div>
