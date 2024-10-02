@@ -73,10 +73,43 @@ class SalesAPI {
       throw error;
     }
   }
+  async getTotalAmountWithStoreIdAndProductId(
+    storeId: string,
+    productId: string = "1"
+  ) {
+    try {
+      const response = await axiosInstance.get(
+        `${config.endpoints.sales.totalAmountWithStoreIdAndProductId}`,
+        {
+          params: {
+            storeId,
+            productId,
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+      throw error;
+    }
+  }
   async getAllCategories() {
     try {
       const response = await axiosInstance.get(config.endpoints.category.base);
       return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+      throw error;
+    }
+  }
+  async getAllProducts() {
+    try {
+      const response = await axiosInstance.get(config.endpoints.products.base);
+      return response.data.data.content;
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         throw new Error(error.response.data.message);

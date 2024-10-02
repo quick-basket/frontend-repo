@@ -34,6 +34,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-2 py-1 m-2 rounded">
               {product.discount.discountType === "BUY_ONE_GET_ONE"
                 ? `BUY 1 GET 1`
+                : product.discount.discountType === "FIXED"
+                ? `-${formatToIDR(product.discount.discountValue)}`
                 : `${product.discount.discountValue.toFixed(0)}% OFF`}
             </div>
           )}

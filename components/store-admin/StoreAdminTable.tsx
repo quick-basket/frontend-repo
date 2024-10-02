@@ -105,9 +105,9 @@ const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Stores</h1>
+        <h1 className="text-2xl font-bold">Store Admin List</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Store
+          <Plus className="mr-2 h-4 w-4" /> Add New Store Admin
         </Button>
       </div>
       {isLoading ? (
@@ -122,7 +122,7 @@ const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
       )}
 
       <FormAddStoreAdmin
-        title={selectedProduct ? "Edit Store" : "Add Store"}
+        title={selectedProduct ? "Edit Store Admin" : "Add Store Admin"}
         storeAdmin={selectedProduct}
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
