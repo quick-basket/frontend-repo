@@ -76,16 +76,14 @@ const useCart = () => {
     },
   });
 
-  const deleteCartMutation = useMutation<string, Error, { id: string }>({
-    mutationFn: ({ id }) => cartAPI.deleteCartItem(id),
-    onSuccess: (_, { id }) => {
+  const deleteCartMutation = useMutation<void, Error, { userId: number; inventoryIds: number[] }>({
+    mutationFn: ({ userId, inventoryIds }) => cartAPI.deleteCartItem(userId, inventoryIds),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
+      queryClient.invalidateQueries({ queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY] });
 
-      queryClient.setQueryData([queryKeys.carts.GET_CARTS,selectedStoreId], (oldData: any) => {
-        if (!oldData) return [];
-
-        return oldData.filter((cart: CartItem) => cart.id !== id);
-      });
+      // Clear the checkout summary from the cache
+      queryClient.setQueryData([queryKeys.checkout.GET_CHECKOUT_SUMMARY], null);
     },
     onError: (error) => {
       console.error("Error updating profile", error);
