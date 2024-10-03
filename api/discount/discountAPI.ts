@@ -17,6 +17,19 @@ class DiscountAPI {
     }
   }
 
+  async getStoreProductListNotInDiscount(storeId: string) {
+    try {
+      const response = await axiosInstance.get(
+        config.endpoints.store.inventoryNotInDiscount(storeId)
+      );
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+    }
+  }
+
   async createDiscount(discountData: FormDiscountData) {
     try {
       const response = await axiosInstance.post(

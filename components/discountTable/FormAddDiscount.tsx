@@ -27,6 +27,7 @@ import { format } from "date-fns";
 import { DiscountList, FormDiscountData } from "@/types/discount/type";
 import storeProductAPI from "@/api/store/storeProductAPI";
 import { Value } from "@radix-ui/react-select";
+import discountAPI from "@/api/discount/discountAPI";
 
 interface Props {
   title: string;
@@ -65,7 +66,9 @@ const FormAddDiscount: React.FC<Props> = ({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await storeProductAPI.getStoreProductList(storeId);
+        const response = await discountAPI.getStoreProductListNotInDiscount(
+          storeId
+        );
         console.log("result", response);
         setProducts(response);
       } catch (error) {

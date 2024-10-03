@@ -59,7 +59,9 @@ const FormAddStoreProduct: React.FC<Props> = ({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const products = await productAPI.getProductList();
+        const products = await productAPI.getProductListNotInInventory(
+          parseInt(storeId)
+        );
         setProducts(products);
       } catch (error) {
         console.error("Failed to fetch products", error);

@@ -39,4 +39,7 @@ export const queryKeys = {
   storesADmin: {
     GET_STORE_ADMIN: "GET_STORES_ADMIN",
   },
+  payment: {
+    GET_PAYMENT: "GET_PAYMENT",
+  },
 };

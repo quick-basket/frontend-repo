@@ -12,7 +12,7 @@ const JournalTable = ({ storeId }: JournalTableProps) => {
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Stores</h1>
+        <h1 className="text-2xl font-bold">Journals</h1>
       </div>
       {isLoading ? (
         <div>Loading...</div>
