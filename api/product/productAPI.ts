@@ -19,12 +19,31 @@ class ProductAPI {
       }
     }
   }
+  async getProductListNotInInventory(storeId: number) {
+    try {
+      const response = await axiosInstance.get(
+        config.endpoints.products.notInInventory(storeId)
+      );
+      return response.data.data.content;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+    }
+  }
 
-  async getProductDisplay(storeId: string, page: number): Promise<ProductDisplayResponse> {
+  async getProductDisplay(
+    storeId: string,
+    page: number
+  ): Promise<ProductDisplayResponse> {
     try {
       const response = await axiosInstance.get<
         ApiResponse<ProductDisplayResponse>
-      >(`${config.endpoints.products.getAllProducts(storeId)}?page=${page}&size=6`);
+      >(
+        `${config.endpoints.products.getAllProducts(
+          storeId
+        )}?page=${page}&size=6`
+      );
       return response.data.data;
     } catch (error) {
       if (isAxiosError(error) && error.response) {

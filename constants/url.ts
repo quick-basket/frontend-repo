@@ -29,6 +29,8 @@ export const config = {
     store: {
       base: "/stores",
       inventory: (storeId: any) => `/inventory/store/${storeId}`,
+      inventoryNotInDiscount: (storeId: any) =>
+        `/inventory/store/without-discount/${storeId}`,
       storeAdmin: "/stores/store-admins",
       notStoreAdmin: "/stores/not-store-admins",
       deleteStoreAdmin: (storeAdminId: any) =>
@@ -36,6 +38,8 @@ export const config = {
     },
     products: {
       base: "/products",
+      notInInventory: (storeId: any) =>
+        `/products/not-in-inventory?storeId=${storeId}`,
       create: "/products/create",
       update: (productId: any) => `/products/${productId}`,
       getAllProducts: (storeId: string) => `/products/stores/${storeId}`,
@@ -83,6 +87,10 @@ export const config = {
         "orders/total-amount-storeid-categoryid",
       totalAmountWithStoreIdAndProductId:
         "orders/total-amount-storeid-productId",
+    },
+    payment: {
+      base: (storeId: any) => `/payments/store/${storeId}`,
+      update: (id: any) => `payments/${id}`,
     },
   },
 };
