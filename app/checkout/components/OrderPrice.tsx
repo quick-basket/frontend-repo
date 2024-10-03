@@ -2,18 +2,17 @@ import React from 'react';
 import {formatToIDR} from "@/utils/currency";
 import {Summary} from "@/types/order/type";
 import useCheckout from "@/hooks/order/useCheckout";
+import {DataTransaction} from "@/types/payment/type";
 
 interface OrderPriceProps extends Summary{
     onPaymentClick: () => void;
+    pendingOrder?: DataTransaction | null;
 }
 
-const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shippingCost, onPaymentClick}) => {
+const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shippingCost, onPaymentClick, pendingOrder}) => {
     const {
-        data,
         isLoading,
         error,
-        handlePayment,
-        isInitiatingTransaction,
     } = useCheckout();
 
     if (isLoading) return <div>Loading...</div>;
@@ -41,10 +40,13 @@ const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shipp
                     <p>{formatToIDR(total + shippingCost)}</p>
                 </div>
             </div>
-            <button onClick={onPaymentClick} disabled={isInitiatingTransaction} className="w-full bg-red-600 text-white py-2 rounded-lg mt-4">
-                {
-                    isInitiatingTransaction ? 'Processing' : 'Pay Now'
-                }
+            <button
+                onClick={onPaymentClick}
+                className={`w-full text-white py-2 rounded-lg mt-4 ${
+                    pendingOrder ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-600 hover:bg-red-700'
+                }`}
+            >
+                {pendingOrder ? 'Resume Pending Payment' : 'Pay Now'}
             </button>
         </div>
     );

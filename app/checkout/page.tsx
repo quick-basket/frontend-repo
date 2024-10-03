@@ -1,82 +1,49 @@
 "use client"
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import OrderSummary from "@/app/checkout/components/OrderSummary";
 import OrderPrice from "@/app/checkout/components/OrderPrice";
 import useCheckout from "@/hooks/order/useCheckout";
 import Spinner from "@/components/spinner/Spinner";
-import {useSearchParams} from 'next/navigation';
-import {useRouter} from 'next/router';
-import {mapTransactionStatusToPaymentStatus} from "@/types/order/type";
+import {mapTransactionStatusToPaymentStatus, PaymentStatus} from "@/types/order/type";
+import PaymentMethodDialog from "@/app/checkout/components/PaymentMethodDialog";
+import usePayment from "@/hooks/payment/usePayment";
+import {Button} from "@/components/ui/button";
+import {DataTransaction} from "@/types/payment/type";
 
 const Checkout = () => {
-    const searchParams = useSearchParams();
-
     const {
-        data,
-        isLoading,
-        error,
-        handlePayment,
-        isInitiatingTransaction,
-        updateOrderStatus
+        data: checkoutData,
+        isLoading: isCheckoutLoading,
+        error: checkoutError,
     } = useCheckout();
 
-    useEffect(() => {
-        const script: HTMLScriptElement = document.createElement('script');
-        script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
-        script.setAttribute('data-client-key', process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'CLIENT_KEY');
-        document.body.appendChild(script);
+    const {
+        pendingOrder,
+        isPendingOrderLoading,
+        pendingOrderError,
+        initiateTrx
+    } = usePayment();
 
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
+    const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+    const [transactionData, setTransactionData] = useState<DataTransaction | undefined>(undefined)
 
-    useEffect(() => {
-        const handleTransactionStatus = () => {
-            const order_id = searchParams.get("order_id")
-            const status_code = searchParams.get("status_code")
-            const transaction_status = searchParams.get("transaction_status")
+    if (isCheckoutLoading || isPendingOrderLoading) return <Spinner/>;
+    if (checkoutError) return <div>Error: {checkoutError.message}</div>;
+    if (pendingOrderError) return <div>Error: {pendingOrderError.message}</div>;
+    if (!checkoutData) return <div>Data not available</div>;
 
-            if (order_id && status_code && transaction_status) {
-                console.log(`Order ID: ${order_id}`);
-                console.log(`Status Code: ${status_code}`);
-                console.log(`Transaction Status: ${transaction_status}`);
+    const {recipient, items, summary} = checkoutData;
 
-                const paymentStatus = mapTransactionStatusToPaymentStatus(transaction_status);
-                if (paymentStatus === null) {
-                    console.error('Invalid transaction status');
-                    return;
-                }
-
-                // Update order status based on transaction status
-                updateOrderStatus({
-                    orderId: order_id,
-                    status: paymentStatus
-                });
-
-                // Remove the query parameters from the URL
-                window.history.replaceState(null, '', `/checkout`);
-            }
-        };
-
-        // Call the function when the route changes
-        handleTransactionStatus();
-
-    }, [updateOrderStatus]);
-
-    const handlePaymentClick = () => {
-        if (!data) {
-            console.error("Checkout data not available");
-            return;
+    const handleShowPaymentMethod = () => {
+        if (pendingOrder) {
+            setTransactionData(pendingOrder);
         }
-        handlePayment();
+        setIsPaymentDialogOpen(true);
     };
 
-    if (isLoading) return <Spinner />;
-    if (error) return <div>Error: {error.message}</div>;
-    if (!data) return <div>Data not available</div>;
-
-    const {recipient, items, summary} = data
+    const handleClosePaymentDialog = () => {
+        setIsPaymentDialogOpen(false);
+    };
 
     return (
         <div className="container mx-auto max-w-6xl py-8 px-4 sm:px-6 lg:px-8">
@@ -85,11 +52,19 @@ const Checkout = () => {
                     <OrderSummary recipient={recipient} items={items}/>
                 </div>
                 <div className="md:w-1/3 mt-8 md:mt-0">
-                    <OrderPrice {...summary} onPaymentClick={handlePaymentClick} />
+                    <OrderPrice {...summary} onPaymentClick={handleShowPaymentMethod} pendingOrder={pendingOrder} />
+                    <PaymentMethodDialog
+                        isOpen={isPaymentDialogOpen}
+                        onClose={handleClosePaymentDialog}
+                        checkoutData={checkoutData || pendingOrder}
+                        isPendingOrder={!!pendingOrder}
+                        transactionData={transactionData}
+                        setTransactionData={setTransactionData}
+                    />
                 </div>
             </div>
         </div>
     );
 };
 
-export default Checkout;
+export default React.memo(Checkout);

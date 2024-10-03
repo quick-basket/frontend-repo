@@ -61,10 +61,12 @@ class CartAPI {
     }
   }
 
-  async deleteCartItem(cartId: string) {
+  async deleteCartItem(userId: number, inventoryIds: number[]) {
     try {
       const response = await axiosInstance.delete(
-        config.endpoints.cart.update(cartId)
+        config.endpoints.cart.delete, {
+          data: {userId, inventoryIds}
+          },
       );
       return response.data.data;
     } catch (error) {
