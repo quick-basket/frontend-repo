@@ -20,6 +20,7 @@ export interface Recipient {
 
 export interface Item {
   productId: number;
+  inventoryId: number;
   name: string;
   image: string;
   price: number; // BigDecimal is typically handled as number in TypeScript

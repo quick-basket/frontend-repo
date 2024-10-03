@@ -57,7 +57,8 @@ export const config = {
       summary: (storeId: string) => `/carts/summary/${storeId}`,
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
-      cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`
+      cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`,
+      delete: "/carts"
     },
     order: {
       base: "/orders",
@@ -66,7 +67,8 @@ export const config = {
       getAll: (orderId: any) => `/orders/store/${orderId}`,
       checkout: "/orders/checkout",
       initiate: "/orders/initiate",
-      createOrRetrievePendingOrder: "/orders/create-pending"
+      pending: "/orders/pending",
+      status: (orderCode: string) => `/orders/status/${orderCode}`,
     },
   },
 };
