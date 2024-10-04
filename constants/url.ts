@@ -70,13 +70,17 @@ export const config = {
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
       cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`,
+      delete: "/carts"
     },
     order: {
       base: "/orders",
       update: (orderId: any) => `/orders/status/${orderId}`,
+      updateAfterPayment: (orderId: any) => `/orders/status-payment/${orderId}`,
       getAll: (orderId: any) => `/orders/store/${orderId}`,
       checkout: "/orders/checkout",
       initiate: "/orders/initiate",
+      pending: "/orders/pending",
+      status: (orderCode: string) => `/orders/status/${orderCode}`,
     },
     sales: {
       totalAmountAllStore: "orders/total-amounts-all-store",

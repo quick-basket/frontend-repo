@@ -1,20 +1,20 @@
 import orderAPI from "@/api/order/orderAPI";
 import { queryKeys } from "@/constants/queryKey";
-import { OrderList } from "@/types/order/type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {OrderType} from "@/types/order/type";
 
 const useOrder = (id?: string) => {
   const queryClient = useQueryClient();
-  const { data, isLoading, error } = useQuery<OrderList[], Error>({
+  const { data, isLoading, error } = useQuery<OrderType[], Error>({
     queryKey: [queryKeys.order.GET_ORDER],
     queryFn: async () => await orderAPI.getAllOrder(id!),
     enabled: !!id,
   });
 
   const updateOrderMutation = useMutation<
-    OrderList,
+    OrderType,
     Error,
-    { orderData: OrderList; id: string }
+    { orderData: OrderType; id: string }
   >({
     mutationFn: ({ orderData, id }) => orderAPI.updateOrder(orderData, id),
     onSuccess: (data) => {

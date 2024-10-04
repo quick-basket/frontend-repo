@@ -35,6 +35,8 @@ export const queryKeys = {
   },
   order: {
     GET_ORDER: "GET_ORDER",
+    GET_ORDER_PENDING: "GET_ORDER_PENDING",
+    GET_ORDER_STATUS: "GET_ORDER_STATUS",
   },
   storesADmin: {
     GET_STORE_ADMIN: "GET_STORES_ADMIN",
