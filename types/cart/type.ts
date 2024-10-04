@@ -5,6 +5,7 @@ export type CartItem = {
   productId: number;
   productName: string;
   price: number;
+  discountType: string;
   discountPrice: number;
   quantity: number;
   imageUrls: string[];

@@ -102,9 +102,9 @@ const ProductTable = () => {
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Stores</h1>
+        <h1 className="text-2xl font-bold">Products</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Store
+          <Plus className="mr-2 h-4 w-4" /> Add New Product
         </Button>
       </div>
       {isLoading ? (

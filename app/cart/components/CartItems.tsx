@@ -47,15 +47,25 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
             <div className="flex-grow mb-4 sm:mb-0">
               <h3 className="font-semibold">{item.productName}</h3>
               <div className="flex items-center mt-2">
-                {item.discountPrice < item.price && (
+                {item.discountType === "PERCENTAGE" && (
                   <span className="text-orange-500 font-semibold mr-2">
                     {Math.round((1 - item.discountPrice / item.price) * 100)}%
                   </span>
                 )}
+                {item.discountType === "FIXED" && (
+                  <span className="text-orange-500 font-semibold mr-2">
+                    -Rp{" "}
+                    {(item.price - item.discountPrice).toLocaleString("id-ID")}
+                  </span>
+                )}
+
                 <span className="font-bold">
                   Rp {item.discountPrice.toLocaleString("id-ID")}
                 </span>
               </div>
+              {item.discountType === "BUY_ONE_GET_ONE" && (
+                <div className="text-gray-500">Get Free 1 Item</div>
+              )}
               {item.discountPrice < item.price && (
                 <div className="text-gray-500 line-through">
                   Rp {item.price.toLocaleString("id-ID")}

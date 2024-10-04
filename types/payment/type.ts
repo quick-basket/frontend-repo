@@ -1,5 +1,3 @@
-// types.ts
-
 export interface Action {
     method: string;
     name: string;
@@ -60,3 +58,16 @@ export interface DataTransaction {
     order: Order;
     midtransResponse?: MidtransResponse; // Optional in case it's null or omitted
 }
+export type PaymentList = {
+  id: string;
+  orderId: number;
+  storeId: number;
+  amount: number | null;
+  paymentMethod: string;
+  paymentProof: string;
+  paymentStatus: string;
+};
+
+export type FormEditPayment = {
+  paymentStatus: string;
+};

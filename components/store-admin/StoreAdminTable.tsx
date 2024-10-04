@@ -1,47 +1,44 @@
-import useProductList from "@/hooks/product-list/useProductList";
-import useStoreProduct from "@/hooks/stores/useStoreProduct";
-import { FormStoreProduct, StoreProduct } from "@/types/store-product/type";
-import React, { useState } from "react";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
+import useStoreAdmin from "@/hooks/stores/useStoreAdmin";
+import {
+  FormStoreAdminData,
+  StoreAdminListType,
+} from "@/types/store-admin/type";
+import { useState } from "react";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
-import FormAddStoreProduct from "./FormAddStoreProduct";
+import StoreAdmins from "@/app/(admin)/dashboard/store-admins/page";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
 import { swalAlert } from "@/utils/alert/swalAlert";
+import FormAddStoreAdmin from "./FormAddStoreAdmins";
 
-interface StoreTableProps {
-  storeId: string;
+interface StoreAdminTableProps {
+  storeAdminId: string;
 }
 
-const StoreProductTable = ({ storeId }: StoreTableProps) => {
+const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
   const {
-    data: products,
+    data: storeAdmins,
     isLoading,
     error,
-    createStoreProduct,
-    updateStoreProduct,
-    deleteStoreProduct,
-  } = useStoreProduct(storeId);
+    createStoreAdmin,
+    updateStoreAdmin,
+    deleteStoreAdmin,
+  } = useStoreAdmin();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<
-    StoreProduct | undefined
+    StoreAdminListType | undefined
   >(undefined);
 
-  const handleEdit = (products: StoreProduct) => {
-    const { id, ...StoreProduct } = products;
-    setSelectedProduct({ ...StoreProduct, id } as StoreProduct);
+  const handleEdit = (storeAdmin: StoreAdminListType) => {
+    const { id, ...StoreAdminListType } = storeAdmin;
+    setSelectedProduct({ ...StoreAdminListType, id } as StoreAdminListType);
     setIsDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setSelectedProduct(undefined);
-    setIsDialogOpen(false);
   };
 
   const handleDelete = (id: string) => {
     if (window.confirm("are you surer want to delete this product?")) {
-      console.log("deletting product with id", id);
-      deleteStoreProduct(
+      deleteStoreAdmin(
         { id },
         {
           onSuccess: () => {
@@ -58,12 +55,12 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
     }
   };
 
-  const handleFormSubmit = (data: FormStoreProduct) => {
+  const handleFormSubmit = (data: FormStoreAdminData) => {
     if (selectedProduct) {
-      updateStoreProduct(
+      updateStoreAdmin(
         {
-          id: selectedProduct.id,
-          productData: data,
+          storeAdminId: selectedProduct.id,
+          storeAdminData: data,
         },
         {
           onSuccess: (updatedProduct) => {
@@ -85,7 +82,7 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
         }
       );
     } else {
-      createStoreProduct(data, {
+      createStoreAdmin(data, {
         onSuccess: () => {
           swalAlert({
             title: "Success",
@@ -100,34 +97,40 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
     }
   };
 
+  const handleDialogClose = () => {
+    setSelectedProduct(undefined);
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Product</h1>
+        <h1 className="text-2xl font-bold">Store Admin List</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Product
+          <Plus className="mr-2 h-4 w-4" /> Add New Store Admin
         </Button>
       </div>
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        products && (
+        storeAdmins && (
           <DataTable
             columns={columns(handleEdit, handleDelete)}
-            data={products}
+            data={storeAdmins}
           />
         )
       )}
 
-      <FormAddStoreProduct
-        title={selectedProduct ? "Edit Store" : "Add Store"}
-        product={selectedProduct}
+      <FormAddStoreAdmin
+        title={selectedProduct ? "Edit Store Admin" : "Add Store Admin"}
+        storeAdmin={selectedProduct}
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleFormSubmit}
+        storeAdminId={storeAdminId}
       />
     </div>
   );
 };
 
-export default StoreProductTable;
+export default StoreAdminTable;
