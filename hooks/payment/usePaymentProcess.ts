@@ -4,7 +4,7 @@ import {DataTransaction} from "@/types/payment/type";
 import orderAPI from "@/api/order/orderAPI";
 import {queryKeys} from "@/constants/queryKey";
 
-const usePayment = (orderCode?: string) => {
+const usePaymentProcess = (orderCode?: string) => {
     const queryClient = useQueryClient();
 
     const {
@@ -62,4 +62,4 @@ const usePayment = (orderCode?: string) => {
     };
 }
 
-export default usePayment;
+export default usePaymentProcess;

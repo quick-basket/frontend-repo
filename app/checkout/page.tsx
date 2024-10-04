@@ -6,7 +6,7 @@ import useCheckout from "@/hooks/order/useCheckout";
 import Spinner from "@/components/spinner/Spinner";
 import {mapTransactionStatusToPaymentStatus, PaymentStatus} from "@/types/order/type";
 import PaymentMethodDialog from "@/app/checkout/components/PaymentMethodDialog";
-import usePayment from "@/hooks/payment/usePayment";
+import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import {Button} from "@/components/ui/button";
 import {DataTransaction} from "@/types/payment/type";
 
@@ -22,7 +22,7 @@ const Checkout = () => {
         isPendingOrderLoading,
         pendingOrderError,
         initiateTrx
-    } = usePayment();
+    } = usePaymentProcess();
 
     const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
     const [transactionData, setTransactionData] = useState<DataTransaction | undefined>(undefined)

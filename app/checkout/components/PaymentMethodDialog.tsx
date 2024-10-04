@@ -8,7 +8,7 @@ import React, {useEffect, useState} from "react";
 import {BankTransferResponse, DataTransaction, GopayResponse} from "@/types/payment/type";
 import {Copy} from "lucide-react";
 import {CheckoutType} from "@/types/order/type";
-import usePayment from "@/hooks/payment/usePayment";
+import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import PaymentInstructions from "@/app/checkout/components/PaymentInstructions";
 
 interface PaymentMethod {
@@ -43,7 +43,7 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                                                                  }) => {
     const [selectedMethod, setSelectedMethod] = useState<string | undefined>(undefined);
 
-    const {initiateTrx} = usePayment();
+    const {initiateTrx} = usePaymentProcess();
 
     useEffect(() => {
         if (isPendingOrder && 'midtransResponse' in checkoutData && !transactionData) {

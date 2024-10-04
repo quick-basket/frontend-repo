@@ -3,7 +3,7 @@ import {BankTransferResponse, DataTransaction, GopayResponse} from "@/types/paym
 import {Button} from "@/components/ui/button";
 import {AlertCircle, Clock, Copy, RefreshCw} from "lucide-react";
 import {formatToIDR} from "@/utils/currency";
-import usePayment from "@/hooks/payment/usePayment";
+import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import {notify} from "@/utils/alert/notiflixConfig";
 import useCart from "@/hooks/cart/useCart";
 import {useQueryClient} from "@tanstack/react-query";
@@ -48,7 +48,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
         return () => clearInterval(timer);
     }, [transactionData.midtransResponse?.expiry_time]);
 
-    const {checkPaymentStatus} = usePayment(transactionData.order.orderCode);
+    const {checkPaymentStatus} = usePaymentProcess(transactionData.order.orderCode);
 
     const renderPaymentDetails = () => {
         const { midtransResponse } = transactionData;
