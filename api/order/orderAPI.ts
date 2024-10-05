@@ -123,6 +123,25 @@ class OrderAPI {
             throw error;
         }
     }
+
+    async getUserOrders(page?: number, size?: number) {
+        try {
+            const response = await axiosInstance.get(
+                config.endpoints.order.base, {
+                    params: {page, size}
+                }
+            )
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error)) {
+                if (error.response && error.response.status === 404) {
+                    return null;
+                }
+                throw new Error(error.response?.data?.message || 'An error occurred');
+            }
+            throw error;
+        }
+    }
 }
 
 const orderAPI = new OrderAPI();
