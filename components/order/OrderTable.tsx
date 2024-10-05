@@ -1,12 +1,6 @@
 import useOrder from "@/hooks/order/useOrder";
-import { OrderList } from "@/types/order/type";
-import { store } from "next/dist/build/output/store";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
-import { swalAlert } from "@/utils/alert/swalAlert";
 
 interface OrderTableProps {
   storeId: string;

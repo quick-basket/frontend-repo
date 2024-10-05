@@ -21,7 +21,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                                                                      onCancel,
                                                                  }) => {
     const [timeLeft, setTimeLeft] = useState('');
-    const {deleteCart} = useCart();
+    const {bulkDeleteCartMutation} = useCart();
     const queryClient = useQueryClient();
     const router = useRouter()
 
@@ -46,7 +46,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
 
         const timer = setInterval(calculateTimeLeft, 1000);
         return () => clearInterval(timer);
-    }, [transactionData.midtransResponse?.expiry_time]);
+    }, [transactionData.midtransResponse, transactionData.midtransResponse?.expiry_time]);
 
     const {checkPaymentStatus} = usePaymentProcess(transactionData.order.orderCode);
 
@@ -60,6 +60,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
             return (
                 <div className="text-center">
                     <h3 className="text-xl font-semibold mb-4">Scan QR Code to Pay with GoPay</h3>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     {qrCodeUrl && <img src={qrCodeUrl} alt="GoPay QR Code" className="mx-auto h-48 w-48 mb-4"/>}
                 </div>
             );
@@ -101,7 +102,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                     const checkoutData = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY])
                     if (checkoutData) {
                         const inventoryIds = checkoutData.items.map(item => item.inventoryId);
-                        deleteCart({userId: checkoutData.userId, inventoryIds})
+                        bulkDeleteCartMutation({userId: checkoutData.userId, inventoryIds})
                     }
                     router.push("/");
 

@@ -21,6 +21,7 @@ import { AspectRatio } from "../ui/aspect-ratio";
 import { X } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 interface Props {
   title: string;
@@ -164,7 +165,7 @@ const FormAddProduct: React.FC<Props> = ({
                   {currentImageUrls.map((url) => (
                     <div key={url} className="relative w-32 h-32">
                       <AspectRatio ratio={1}>
-                        <img
+                        <Image
                           src={url}
                           alt={`Product Image`}
                           className="object-cover w-full h-full"

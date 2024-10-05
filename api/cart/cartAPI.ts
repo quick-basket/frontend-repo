@@ -61,7 +61,20 @@ class CartAPI {
     }
   }
 
-  async deleteCartItem(userId: number, inventoryIds: number[]) {
+  async deleteCartItem(cartId: string) {
+    try {
+      const response = await axiosInstance.delete(
+          config.endpoints.cart.update(cartId)
+      );
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+    }
+  }
+
+  async bulkDeleteCartItem(userId: number, inventoryIds: number[]) {
     try {
       const response = await axiosInstance.delete(
         config.endpoints.cart.delete, {

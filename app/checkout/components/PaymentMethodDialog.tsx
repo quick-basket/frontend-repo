@@ -10,6 +10,7 @@ import {Copy} from "lucide-react";
 import {CheckoutType} from "@/types/order/type";
 import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import PaymentInstructions from "@/app/checkout/components/PaymentInstructions";
+import Image from "next/image";
 
 interface PaymentMethod {
     id: string;
@@ -88,7 +89,7 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                                 <div key={method.id} className="flex items-center space-x-2">
                                     <RadioGroupItem value={method.id} id={method.id}/>
                                     <Label htmlFor={method.id} className="flex items-center space-x-5">
-                                        <img src={method.icon} alt={method.name} className="w-20 h-20"/>
+                                        <Image width={100} height={100} src={method.icon} alt={method.name} className="w-20 h-20"/>
                                         <span>{method.name}</span>
                                     </Label>
                                 </div>

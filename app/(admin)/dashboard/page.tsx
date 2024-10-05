@@ -14,11 +14,14 @@ const Dashboard = () => {
 
     if (session?.user.scope === "super_admin") {
         return <SuperAdminDashboard/>
-    } else if (session?.user.scope === "store_admin") {
-        return <StoreAdminDashboard storeId={session.user.storeId}/>;
-    } else {
-        return <AccessDenied/>
     }
+    //TODO
+    // Check this conditional
+    // else if (session?.user.scope === "store_admin") {
+    //     return <StoreAdminDashboard storeId={session.user.storeId}/>;
+    // } else {
+    //     return <AccessDenied/>
+    // }
 };
 
 export default Dashboard;
