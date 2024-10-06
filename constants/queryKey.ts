@@ -31,7 +31,7 @@ export const queryKeys = {
     GET_CARTS: "GET_CARTS",
   },
   checkout: {
-    GET_CHECKOUT_SUMMARY: "GET_CHECKOUT_SUMMARY",
+    GET_CHECKOUT_SUMMARY: (storeId:any) =>  `GET_CHECKOUT_SUMMARY_STOREID_${storeId}`,
   },
   order: {
     GET_ORDER: "GET_ORDER",

@@ -118,7 +118,7 @@ const useCart = () => {
     addCart: addProductToCart.mutate,
     editCart: editCartMutation.mutate,
     deleteCart: deleteCartMutation.mutate,
-    bulkDeleteCartMutation: bulkDeleteCartMutation.mutate
+    bulkDeleteCartMutation: bulkDeleteCartMutation.mutateAsync
   };
 };
 

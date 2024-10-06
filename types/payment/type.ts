@@ -71,3 +71,8 @@ export type PaymentList = {
 export type FormEditPayment = {
   paymentStatus: string;
 };
+
+export interface PaymentDTO{
+    transactionId: string;
+    paymentProofUrl: string;
+}

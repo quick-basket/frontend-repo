@@ -24,6 +24,10 @@ const Checkout = () => {
         initiateTrx
     } = usePaymentProcess();
 
+    useEffect(() => {
+        setTransactionData(undefined)
+    }, [checkoutError]);
+
     const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
     const [transactionData, setTransactionData] = useState<DataTransaction | undefined>(undefined)
 
@@ -67,4 +71,4 @@ const Checkout = () => {
     );
 };
 
-export default React.memo(Checkout);
+export default Checkout;

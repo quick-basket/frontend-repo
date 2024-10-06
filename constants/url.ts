@@ -77,7 +77,7 @@ export const config = {
       update: (orderId: any) => `/orders/status/${orderId}`,
       updateAfterPayment: (orderId: any) => `/orders/status-payment/${orderId}`,
       getAll: (orderId: any) => `/orders/store/${orderId}`,
-      checkout: "/orders/checkout",
+      checkout: (storeId: any) =>  `/orders/checkout/${storeId}`,
       initiate: "/orders/initiate",
       pending: "/orders/pending",
       status: (orderCode: string) => `/orders/status/${orderCode}`,
@@ -95,6 +95,7 @@ export const config = {
     payment: {
       base: (storeId: any) => `/payments/store/${storeId}`,
       update: (id: any) => `payments/${id}`,
+      upload: (orderCode: any) => `/payment/${orderCode}/proof`,
     },
   },
 };
