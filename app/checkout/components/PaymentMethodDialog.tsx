@@ -70,11 +70,6 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
         }
     };
 
-    const handleCancelTransaction = () => {
-        console.log("cancel transaction", selectedMethod);
-        onClose();
-    }
-
     const handlePaymentSuccess = () => {
         setTransactionData(undefined);
         setSelectedMethod(undefined);
@@ -90,7 +85,6 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                 {isPendingOrder || transactionData ? (
                     <PaymentInstructions
                         transactionData={transactionData!}
-                        onCancel={handleCancelTransaction}
                         onPaymentSuccess={handlePaymentSuccess}
                     />
                 ) : (

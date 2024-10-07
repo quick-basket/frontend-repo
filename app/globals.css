@@ -76,7 +76,8 @@
 .notiflix-confirm,
 .notiflix-report,
 .notiflix-loading,
-.notiflix-notify {
+.notiflix-notify,
+.notiflix-overlay{
   z-index: 99999999 !important;
   pointer-events: auto !important;
 }
