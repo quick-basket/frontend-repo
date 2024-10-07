@@ -3,18 +3,18 @@ import { queryKeys } from "@/constants/queryKey";
 import { AddToCartItem, CartItem, FormCartItem } from "@/types/cart/type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useCheckout from "@/hooks/order/useCheckout";
-import {useLocationContext} from "@/hooks/context/LocationProvider";
+import { useLocationContext } from "@/hooks/context/LocationProvider";
 
 const useCart = () => {
   const queryClient = useQueryClient();
   const checkout = useCheckout();
-  const {selectedStoreId} = useLocationContext()
+  const { selectedStoreId } = useLocationContext();
 
   const { data, isLoading, error } = useQuery<CartItem[], Error>({
     queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
-    queryFn:async () => {
+    queryFn: async () => {
       if (!selectedStoreId) {
-        throw new Error('No store selected');
+        throw new Error("No store selected");
       }
       return await cartAPI.getCartListWithStoreId(selectedStoreId);
     },
@@ -28,19 +28,24 @@ const useCart = () => {
   >({
     mutationFn: ({ cartData }) => cartAPI.addCart(cartData),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+      });
       queryClient.invalidateQueries({
         queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS", selectedStoreId],
       });
 
-      queryClient.setQueryData([queryKeys.carts.GET_CARTS, selectedStoreId], (oldData: any) => {
-        if (Array.isArray(oldData)) {
-          return oldData.map((cartItem: CartItem) =>
-            cartItem.id === data.id ? data : cartItem
-          );
+      queryClient.setQueryData(
+        [queryKeys.carts.GET_CARTS, selectedStoreId],
+        (oldData: any) => {
+          if (Array.isArray(oldData)) {
+            return oldData.map((cartItem: CartItem) =>
+              cartItem.id === data.id ? data : cartItem
+            );
+          }
+          return oldData;
         }
-        return oldData;
-      });
+      );
     },
     onError: (error) => {
       console.error("Error updating cart", error);
@@ -55,19 +60,24 @@ const useCart = () => {
     mutationFn: ({ cartData, cartId }) =>
       cartAPI.updateCartItem(cartData, cartId),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+      });
       queryClient.invalidateQueries({
         queryKey: [queryKeys.carts.GET_CARTS, "TOTAL_CARTS", selectedStoreId],
       });
 
-      queryClient.setQueryData([queryKeys.carts.GET_CARTS, selectedStoreId], (oldData: any) => {
-        if (Array.isArray(oldData)) {
-          return oldData.map((cartItem: CartItem) =>
-            cartItem.id === data.id ? data : cartItem
-          );
+      queryClient.setQueryData(
+        [queryKeys.carts.GET_CARTS, selectedStoreId],
+        (oldData: any) => {
+          if (Array.isArray(oldData)) {
+            return oldData.map((cartItem: CartItem) =>
+              cartItem.id === data.id ? data : cartItem
+            );
+          }
+          return oldData;
         }
-        return oldData;
-      });
+      );
 
       checkout.invalidateCheckout();
     },
@@ -76,17 +86,42 @@ const useCart = () => {
     },
   });
 
-  const deleteCartMutation = useMutation<void, Error, { userId: number; inventoryIds: number[] }>({
-    mutationFn: ({ userId, inventoryIds }) => cartAPI.deleteCartItem(userId, inventoryIds),
+  const deleteCartMutation = useMutation<void, Error, { id: any }>({
+    mutationFn: ({ id }) => cartAPI.deleteCartItem(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId] });
-      queryClient.invalidateQueries({ queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY] });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY],
+      });
 
       // Clear the checkout summary from the cache
       queryClient.setQueryData([queryKeys.checkout.GET_CHECKOUT_SUMMARY], null);
     },
     onError: (error) => {
       console.error("Error updating profile", error);
+    },
+  });
+
+  const deleteALlCartMutation = useMutation<void, Error, void>({
+    mutationFn: async () => {
+      if (!selectedStoreId) {
+        throw new Error("no store selected");
+      }
+      return cartAPI.deleteAllCart(selectedStoreId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+      });
+      queryClient.setQueryData(
+        [queryKeys.carts.GET_CARTS, selectedStoreId],
+        []
+      );
+    },
+    onError: (error) => {
+      console.error("Error deleting all cart items", error);
     },
   });
 
@@ -97,6 +132,7 @@ const useCart = () => {
     addCart: addProductToCart.mutate,
     editCart: editCartMutation.mutate,
     deleteCart: deleteCartMutation.mutate,
+    deleteAllCart: deleteALlCartMutation.mutate,
   };
 };
 

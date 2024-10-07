@@ -43,7 +43,7 @@ const Stores = () => {
             fetchAmount={(productId) =>
               salesAPI.getTotalAmountWithStoreIdAndProductId(storeId, productId)
             }
-            fetchItems={salesAPI.getAllProducts}
+            fetchItems={() => salesAPI.getAllProducts(storeId)}
             title="Total Sales"
           />
         </div>

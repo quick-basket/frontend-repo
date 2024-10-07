@@ -8,25 +8,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Definisi tipe untuk Item
 interface Item {
   id: string;
-  name: string;
+  name?: string; // Nama item untuk sales
+  productName?: string; // Nama produk untuk journal
 }
 
+// Definisi tipe untuk props komponen SalesCards
 interface DataCardProps {
   fetchAmount: (itemId: string) => Promise<number>;
   fetchItems: () => Promise<Item[]>;
   title: string;
+  itemNameKey?: keyof Item; // Kunci nama item untuk menyesuaikan respons
   icon?: React.ReactNode;
   formatValue?: (value: number) => string;
+  useCurrencyFormat?: boolean;
 }
 
+// Komponen SalesCards
 const SalesCards: React.FC<DataCardProps> = ({
   fetchAmount,
   fetchItems,
   title,
+  itemNameKey = "name", // Default ke "name" jika tidak ada prop itemNameKey
   icon = <ChartNoAxesColumn size={24} className="text-gray-600" />,
   formatValue = (value) => `Rp.${value.toLocaleString()}`,
+  useCurrencyFormat = true,
 }) => {
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +93,8 @@ const SalesCards: React.FC<DataCardProps> = ({
             <SelectContent>
               {items.map((item) => (
                 <SelectItem key={item.id} value={item.id}>
-                  {item.name}
+                  {/* Ambil nama item berdasarkan prop itemNameKey */}
+                  {item[itemNameKey]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -98,7 +107,7 @@ const SalesCards: React.FC<DataCardProps> = ({
             <p className="text-gray-400">Loading...</p>
           ) : (
             <h1 className="font-semibold text-base sm:text-lg md:text-xl">
-              {formatValue(totalAmount)}
+              {useCurrencyFormat ? formatValue(totalAmount) : totalAmount}
             </h1>
           )}
         </div>
