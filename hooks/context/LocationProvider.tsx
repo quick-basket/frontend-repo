@@ -8,10 +8,11 @@ import useUserAddress from "@/hooks/users/useUserAddress";
 import {NearestStoreResponse} from "@/types/location/type";
 import {useSession} from "next-auth/react";
 import {store} from "next/dist/build/output/store";
+import locationAPI from "@/api/location/locationAPI";
 
 type LocationContextType = {
     selectedStoreId: string | null;
-    setSelectedStoreId: (storeId: string) => void;
+    setSelectedStoreId: (storeId: string, address?: UserAddressType) => void;
     nearestStore: NearestStoreResponse | undefined;
     nearestStoreId: string | null;
     userAddresses: UserAddressType[];
@@ -42,12 +43,30 @@ export const LocationProvider: React.FC<React.PropsWithChildren> = ({ children }
             } else {
                 setSelectedStoreId(null);
             }
-        } else if (status === 'unauthenticated' && nearestStore) {
+        } else if (status === 'unauthenticated' && nearestStore && nearestStore.store) {
             setSelectedStoreId(nearestStore.store.id);
         }
     }, [nearestStore, status]);
 
-    const setAndSaveSelectedStoreId = useCallback((storeId: string) => {
+    const setAndSaveSelectedStoreId = useCallback(async (storeId: string, address?: UserAddressType) => {
+        if (address) {
+            try {
+                // Find nearest store based on the selected address
+                const nearestStoreForAddress = await locationAPI.getNearestStore(address.longitude, address.latitude);
+                if (nearestStoreForAddress && nearestStoreForAddress.store) {
+                    storeId = nearestStoreForAddress.store.id;
+                } else {
+                    console.error("Unable to find nearest store for the selected address");
+                    // Optionally, show an error message to the user
+                    return;
+                }
+            } catch (error) {
+                console.error("Error finding nearest store for address:", error);
+                // Optionally, show an error message to the user
+                return;
+            }
+        }
+
         setSelectedStoreId(storeId);
         if (status === 'authenticated') {
             localStorage.setItem('selectedStoreId', storeId);
