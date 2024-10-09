@@ -19,7 +19,7 @@ const SalesCard: React.FC<SaleCartProps> = ({ fetchTotalAmount, title }) => {
       }
     };
     fetchSales();
-  }, [fetchTotalAmount]);
+  }, [error, fetchTotalAmount]);
 
   return (
     <div className="p-4 sm:p-6 rounded-md bg-white shadow">

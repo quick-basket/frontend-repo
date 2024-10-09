@@ -2,6 +2,7 @@ import React from "react";
 import { Minus, Plus, Trash2, Truck } from "lucide-react";
 import { CartItem, FormCartItem } from "@/types/cart/type";
 import useCart from "@/hooks/cart/useCart";
+import Image from "next/image";
 
 interface CartItemsProps {
   items: CartItem[];
@@ -52,8 +53,10 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
             key={item.id}
             className="flex flex-col sm:flex-row items-start sm:items-center mb-4 pb-4 border-b"
           >
-            <img
-              src={item.imageUrls?.[0] || "default-image-url.jpg"}
+            <Image
+              src={item.imageUrls?.[0] || "/default-image-url.jpg"}
+              width={100}
+              height={100}
               alt={item.productName || "Product Image"}
               className="w-20 h-20 object-cover mr-4 mb-4 sm:mb-0"
             />

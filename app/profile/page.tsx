@@ -5,6 +5,7 @@ import useProfileDetails from "@/hooks/users/useProfileDetails";
 import Spinner from "@/components/spinner/Spinner";
 import ProfileContent from "@/app/profile/components/ProfileContent";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
+import OrderList from "@/app/profile/components/OrderList";
 
 const Profile = () => {
     const { data, isLoading, error } = useProfileDetails();
@@ -15,7 +16,7 @@ const Profile = () => {
             case 'profile':
                 return <ProfileContent />;
             case 'orders':
-                return <div>Order transaction history goes here</div>;
+                return <OrderList/>
             case 'vouchers':
                 return <div>Voucher list goes here</div>;
             default:

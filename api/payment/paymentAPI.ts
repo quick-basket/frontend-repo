@@ -30,6 +30,29 @@ class PaymentAPI {
       }
     }
   }
+
+  async uploadPaymentProof(orderCode: string, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axiosInstance.post(
+          config.endpoints.payment.upload(orderCode),
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }
+      )
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+      throw new  Error;
+    }
+  }
 }
 
 const paymentAPI = new PaymentAPI();

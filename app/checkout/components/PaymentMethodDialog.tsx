@@ -10,6 +10,8 @@ import {Copy} from "lucide-react";
 import {CheckoutType} from "@/types/order/type";
 import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import PaymentInstructions from "@/app/checkout/components/PaymentInstructions";
+import Image from "next/image";
+import Spinner from "@/components/spinner/Spinner";
 
 interface PaymentMethod {
     id: string;
@@ -43,7 +45,7 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                                                                  }) => {
     const [selectedMethod, setSelectedMethod] = useState<string | undefined>(undefined);
 
-    const {initiateTrx} = usePaymentProcess();
+    const {initiateTrx, isInitiatingTrx} = usePaymentProcess();
 
     useEffect(() => {
         if (isPendingOrder && 'midtransResponse' in checkoutData && !transactionData) {
@@ -68,8 +70,9 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
         }
     };
 
-    const handleCancelTransaction = () => {
-        console.log("cancel transaction", selectedMethod);
+    const handlePaymentSuccess = () => {
+        setTransactionData(undefined);
+        setSelectedMethod(undefined);
         onClose();
     }
 
@@ -80,7 +83,10 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                     <DialogTitle>{transactionData ? 'Payment Instructions' : 'Select Payment Method'}</DialogTitle>
                 </DialogHeader>
                 {isPendingOrder || transactionData ? (
-                    <PaymentInstructions transactionData={transactionData!} onCancel={handleCancelTransaction}/>
+                    <PaymentInstructions
+                        transactionData={transactionData!}
+                        onPaymentSuccess={handlePaymentSuccess}
+                    />
                 ) : (
                     <>
                         <RadioGroup onValueChange={setSelectedMethod} value={selectedMethod} className="gap-5">
@@ -88,16 +94,29 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                                 <div key={method.id} className="flex items-center space-x-2">
                                     <RadioGroupItem value={method.id} id={method.id}/>
                                     <Label htmlFor={method.id} className="flex items-center space-x-5">
-                                        <img src={method.icon} alt={method.name} className="w-20 h-20"/>
+                                        <Image width={100} height={100} src={method.icon} alt={method.name} className="w-20 h-20"/>
                                         <span>{method.name}</span>
                                     </Label>
                                 </div>
                             ))}
                         </RadioGroup>
-                        <Button onClick={handleConfirm} disabled={!selectedMethod}>
-                            Confirm Payment Method
+                        <Button
+                            onClick={handleConfirm}
+                            disabled={!selectedMethod || isInitiatingTrx}
+                        >
+                            {isInitiatingTrx ? (
+                                <>
+                                    <Spinner size="small" className="mr-2" />
+                                    Processing...
+                                </>
+                            ) : (
+                                'Confirm Payment Method'
+                            )}
                         </Button>
                     </>
+                )}
+                {isInitiatingTrx && (
+                    <Spinner fullScreen size="large" />
                 )}
             </DialogContent>
         </Dialog>

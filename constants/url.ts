@@ -80,10 +80,11 @@ export const config = {
       update: (orderId: any) => `/orders/status/${orderId}`,
       updateAfterPayment: (orderId: any) => `/orders/status-payment/${orderId}`,
       getAll: (orderId: any) => `/orders/store/${orderId}`,
-      checkout: "/orders/checkout",
+      checkout: (storeId: any) =>  `/orders/checkout/${storeId}`,
       initiate: "/orders/initiate",
       pending: "/orders/pending",
       status: (orderCode: string) => `/orders/status/${orderCode}`,
+      cancel: (orderCode: string) => `/orders/cancel/${orderCode}`,
     },
     sales: {
       totalAmountAllStore: "orders/total-amounts-all-store",
@@ -98,6 +99,7 @@ export const config = {
     payment: {
       base: (storeId: any) => `/payment/store/${storeId}`,
       update: (id: any) => `payments/${id}`,
+      upload: (orderCode: any) => `/payment/${orderCode}/proof`,
     },
     inventoryJournal: {
       totalIn: (inventoryId: any) => `inventory-journals/${inventoryId}/in`,
