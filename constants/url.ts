@@ -53,6 +53,8 @@ export const config = {
     },
     inventory: {
       base: "inventory",
+      getAllInventoryByStoreId: (storeId: string) =>
+        `/inventory/store/${storeId}`,
       create: "inventory/create",
       update: (inventoryId: any) => `inventory/${inventoryId}`,
     },
@@ -70,7 +72,8 @@ export const config = {
       create: "/carts/create",
       update: (cartId: any) => `carts/${cartId}`,
       cartWithStoreId: (storeId: string) => `/carts/cart-store/${storeId}`,
-      delete: "/carts"
+      deleteAllCart: (storeId: string) => `carts/carts/${storeId}`,
+      delete: "/carts",
     },
     order: {
       base: "/orders",
@@ -93,8 +96,12 @@ export const config = {
         "orders/total-amount-storeid-productId",
     },
     payment: {
-      base: (storeId: any) => `/payments/store/${storeId}`,
+      base: (storeId: any) => `/payment/store/${storeId}`,
       update: (id: any) => `payments/${id}`,
+    },
+    inventoryJournal: {
+      totalIn: (inventoryId: any) => `inventory-journals/${inventoryId}/in`,
+      totalOut: (inventoryId: any) => `inventory-journals/${inventoryId}/out`,
     },
   },
 };

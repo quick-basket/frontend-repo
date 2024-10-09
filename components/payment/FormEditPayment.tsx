@@ -55,8 +55,8 @@ const FormEditPayments: React.FC<FormEditPaymentProps> = ({
                 <SelectValue placeholder="Select payment status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PENDING">Pending</SelectItem>
-                <SelectItem value="PAID">Paid</SelectItem>
+                <SelectItem value="PAYMENT_CONFIRMATION">Pending</SelectItem>
+                <SelectItem value="COMPLETED">Completed</SelectItem>
                 <SelectItem value="CANCELED">Canceled</SelectItem>
               </SelectContent>
             </Select>

@@ -106,9 +106,11 @@ class SalesAPI {
       throw error;
     }
   }
-  async getAllProducts() {
+  async getAllProducts(storeId: string) {
     try {
-      const response = await axiosInstance.get(config.endpoints.products.base);
+      const response = await axiosInstance.get(
+        config.endpoints.products.getAllProducts(storeId)
+      );
       return response.data.data.content;
     } catch (error) {
       if (isAxiosError(error) && error.response) {

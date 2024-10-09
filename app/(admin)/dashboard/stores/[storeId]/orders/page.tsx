@@ -18,7 +18,7 @@ const Orders = () => {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         storeId={storeId}
-      />claude
+      />
       <div className="flex flex-col flex-grow">
         <NavbarDashboard onMenuClick={() => setSidebarOpen(true)} />
         <div className="flex-grow overflow-auto p-4">

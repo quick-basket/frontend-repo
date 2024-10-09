@@ -9,6 +9,7 @@ import { swalAlert } from "@/utils/alert/swalAlert";
 import usePayment from "@/hooks/payment/usePayment";
 import { FormEditPayment, PaymentList } from "@/types/payment/type";
 import FormEditPayments from "./FormEditPayment";
+import FormOpenPrrof from "./FormOpenProof";
 
 interface PaymentTableProps {
   storeId: string;
@@ -17,6 +18,7 @@ interface PaymentTableProps {
 const PaymentTable = ({ storeId }: PaymentTableProps) => {
   const { data: payment, isLoading, error, editPayment } = usePayment(storeId);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isProofDialogOpen, setIsProoDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<
     PaymentList | undefined
   >(undefined);
@@ -26,10 +28,19 @@ const PaymentTable = ({ storeId }: PaymentTableProps) => {
     setSelectedPayment({ ...PaymentList, id } as PaymentList);
     setIsDialogOpen(true);
   };
+  const handleOpenProof = (proof: PaymentList) => {
+    const { id, ...PaymentList } = proof;
+    setSelectedPayment({ ...PaymentList, id } as PaymentList);
+    setIsProoDialogOpen(true);
+  };
 
   const handleDialogClose = () => {
     setSelectedPayment(undefined);
     setIsDialogOpen(false);
+  };
+  const handleProofDialogClose = () => {
+    setSelectedPayment(undefined);
+    setIsProoDialogOpen(false);
   };
 
   const handleFormSubmit = (data: FormEditPayment) => {
@@ -75,7 +86,12 @@ const PaymentTable = ({ storeId }: PaymentTableProps) => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        payment && <DataTable columns={columns(handleEdit)} data={payment} />
+        payment && (
+          <DataTable
+            columns={columns(handleEdit, handleOpenProof)}
+            data={payment}
+          />
+        )
       )}
 
       <FormEditPayments
@@ -83,6 +99,11 @@ const PaymentTable = ({ storeId }: PaymentTableProps) => {
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleFormSubmit}
+      />
+      <FormOpenPrrof
+        payment={selectedPayment}
+        isOpen={isProofDialogOpen}
+        onClose={handleProofDialogClose}
       />
     </div>
   );
