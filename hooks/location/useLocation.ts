@@ -30,7 +30,15 @@ const useLocation = () => {
         queryFn: async () => {
             if (coords) {
                 const {longitude, latitude} = coords;
-                return await locationAPI.getNearestStore(longitude, latitude);
+                const nearestStore = await locationAPI.getNearestStore(longitude, latitude);
+                // Check if the nearest store has valid location data
+                if (nearestStore && nearestStore.store &&
+                    typeof nearestStore.store.latitude === 'number' &&
+                    typeof nearestStore.store.longitude === 'number') {
+                    return nearestStore;
+                } else {
+                    throw new Error("Nearest store has invalid location data");
+                }
             }
             return null;
         },

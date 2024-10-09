@@ -25,6 +25,7 @@ export const config = {
     },
     userAddress: {
       base: "/user-address",
+      setPrimary: (id: string) => `/user-address/set-primary/${id}`
     },
     store: {
       base: "/stores",
