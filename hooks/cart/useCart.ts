@@ -104,27 +104,6 @@ const useCart = () => {
     },
   });
 
-  const deleteCartMutation = useMutation<string, Error, { id: string }>({
-    mutationFn: ({ id }) => cartAPI.deleteCartItem(id),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
-      });
-
-      queryClient.setQueryData(
-          [queryKeys.carts.GET_CARTS, selectedStoreId],
-          (oldData: any) => {
-            if (!oldData) return [];
-
-            return oldData.filter((cart: CartItem) => cart.id !== id);
-          }
-      );
-    },
-    onError: (error) => {
-      console.error("Error updating profile", error);
-        },
-  });
-  
   const deleteALlCartMutation = useMutation<void, Error, void>({
     mutationFn: async () => {
       if (!selectedStoreId) {
@@ -167,7 +146,7 @@ const useCart = () => {
     addCart: addProductToCart.mutate,
     editCart: editCartMutation.mutate,
     deleteCart: deleteCartMutation.mutate,
-    bulkDeleteCartMutation: bulkDeleteCartMutation.mutateAsync
+    bulkDeleteCartMutation: bulkDeleteCartMutation.mutateAsync,
     deleteAllCart: deleteALlCartMutation.mutate,
   };
 };
