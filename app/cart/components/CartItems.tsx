@@ -9,7 +9,7 @@ interface CartItemsProps {
 }
 
 const CartItems: React.FC<CartItemsProps> = ({ items }) => {
-  const { editCart, deleteCart } = useCart();
+  const { editCart, deleteCart, deleteAllCart } = useCart();
 
   const handleQuantityChange = (cartId: string, newQuantity: number) => {
     if (newQuantity > 0) {
@@ -23,9 +23,22 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
   const handleRemoveItem = (id: string) => {
     deleteCart({ id });
   };
+
+  const handleDeleteAll = () => {
+    if (
+      window.confirm(
+        "Apakah Anda yakin ingin menghapus semua item di keranjang?"
+      )
+    ) {
+      deleteAllCart();
+    }
+  };
   return (
     <>
-      <button className="flex items-center text-blue-600 mb-4">
+      <button
+        className="flex items-center text-blue-600 mb-4"
+        onClick={handleDeleteAll}
+      >
         <Trash2 className="mr-2" size={20} />
         Hapus Semua
       </button>

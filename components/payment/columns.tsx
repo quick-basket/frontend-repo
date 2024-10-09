@@ -1,11 +1,19 @@
 import { DiscountList } from "@/types/discount/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
-import { ArrowUpDown, Edit, Trash } from "lucide-react";
+import {
+  ArrowUpDown,
+  Edit,
+  Image,
+  SquareIcon,
+  SquareParking,
+  Trash,
+} from "lucide-react";
 import { PaymentList } from "@/types/payment/type";
 
 export const columns = (
-  onEdit: (payment: PaymentList) => void
+  onEdit: (payment: PaymentList) => void,
+  onOpenProof: (proof: PaymentList) => void
 ): ColumnDef<PaymentList>[] => [
   {
     accessorKey: "orderId",
@@ -36,6 +44,23 @@ export const columns = (
   {
     accessorKey: "paymentStatus",
     header: "Payment Status",
+  },
+  {
+    accessorKey: "paymentProof",
+    header: "Payment Proof",
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenProof(row.original)}
+          >
+            <Image className="h-4 w-4 mr-1" /> Proof
+          </Button>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "action",
