@@ -26,6 +26,6 @@ COPY --from=builder /usr/src/app/.next/standalone ./
 COPY . .
 
 # Run the app
-USER node
+USER root
 EXPOSE 3000
 CMD ["node", "server.js"]
