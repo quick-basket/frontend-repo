@@ -11,7 +11,7 @@ RUN npm ci
 FROM base AS builder
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
-COPY .env.local .env.local
+#COPY .env.local .env.local
 RUN npm run build
 
 # Setup development image
@@ -20,7 +20,7 @@ ENV NODE_ENV=development
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
-COPY --from=builder /usr/src/app/.env.local .env.local
+#COPY --from=builder /usr/src/app/.env.local .env.local
 COPY . .
 
 # Run the app
