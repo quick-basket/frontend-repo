@@ -1,15 +1,18 @@
 import Credentials from "next-auth/providers/credentials";
-import {JWT} from "@auth/core/jwt";
-import NextAuth, {Account, Profile, User, Session} from "next-auth";
+import NextAuth, {Account, Profile, Session, User} from "next-auth";
 import {jwtDecode} from "jwt-decode";
 import GoogleProvider from "next-auth/providers/google"
-import AuthAPI, {GoogleLoginBody} from "@/api/auth/authAPI";
-import {cookies} from "next/headers";
+import AuthAPI from "@/api/auth/authAPI";
+import {JWT} from "@auth/core/jwt";
 
-interface DecodedToken {
-    userId: number;
-    scope: string;
+interface JWTPayload {
+    iss: string;
     sub: string;
+    exp: number;
+    iat: number;
+    scope: string;
+    userId: string;
+    store_id?: string; // Optional, only present for store_admin role
 }
 
 
@@ -26,20 +29,14 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 if (!user) {
                     throw new Error("User not found.");
                 }
-                const useCookies = cookies();
-                useCookies.set("sid", user.token, {
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: 60 * 60 * 1000,
-                    path: "/"
-                })
                 // decode
-                const decoded = jwtDecode<DecodedToken>(user.token);
+                const decoded = jwtDecode<JWTPayload>(user.token);
                 return {
-                    id: decoded.userId.toString(),
+                    id: decoded.userId,
                     email: decoded.sub,
                     role: decoded.scope,
-                    token: user.token
+                    token: user.token,
+                    store_id: decoded.store_id,
                 }
             },
         }),
@@ -50,7 +47,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
     ],
     callbacks: {
         async signIn({user, account, profile, email, credentials}) {
-            // Fetch JWT from backend if user is already registered
             if (account?.provider === 'google' && profile?.email) {
                 try {
                     const loginBody = {
@@ -59,73 +55,49 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                         googleId: profile?.sub,
                         imageUrl: profile?.picture
                     }
-                    console.log(loginBody)
                     const response = await AuthAPI.loginWithGoogle(loginBody)
-                    console.log("RESPONSE BODY", response)
                     user.token = response.data.token;
 
-                    const useCookies = cookies();
-                    useCookies.set("sid", user.token, {
-                        httpOnly: true,
-                        secure: false,
-                        maxAge: 60 * 60 * 1000,
-                        path: "/"
-                    })
+                    const decoded = jwtDecode<JWTPayload>(user.token);
+                    user.id = decoded.userId;
+                    user.role = decoded.scope;
+                    user.store_id = decoded.store_id;
 
                 } catch (error) {
                     console.error('Error during sign-in process:', error);
                     return false;
                 }
             }
-            console.log("PROFILE SIGN IN", profile)
-            console.log("user SIGN IN", user)
-
             return true; // Proceed with sign-in
         },
 
-        async jwt({token, user, account, profile}: {
-            token: JWT,
-            user: User,
-            profile?: Profile | undefined,
-            account: Account | null
-        }) {
-
+        async jwt({ token, user }) {
             if (user) {
-                if (account?.provider === 'google') {
-                    token.accessToken = user.token
-                    const decoded = jwtDecode<DecodedToken>(user.token);
-                    token.id = profile?.sub
-                    token.email = profile?.email
-                    token.scope = decoded.scope
-                } else {
-                    token.accessToken = user.token
-                    const decoded = jwtDecode<DecodedToken>(user.token);
-                    token.id = decoded.userId
-                    token.email = decoded.sub
-                    token.scope = decoded.scope
-                }
+                token.id = user.id;
+                token.email = user.email;
+                token.role = user.role;
+                token.store_id = user.store_id;
+                token.accessToken = user.token;
             }
             return token;
         },
-        async session({session, token}: { session: Session; token: JWT }) {
-            if (token) {
-                session.user = {
+        async session({ session, token }: { session: Session; token: JWT }): Promise<Session> {
+            return {
+                ...session,
+                user: {
                     ...session.user,
-                    id: token.sub as string,
+                    id: token.id as string,
                     email: token.email as string,
-                    scope: token.scope as string,
-                };
-                session.accessToken = token.accessToken as string
-            } else {
-                console.log("session not transferring")
-            }
-            console.log("SESSION: ", session)
-            return session
-        }
+                    role: token.role as string,
+                    store_id: token.store_id as string | undefined,
+                },
+                accessToken: token.accessToken as string,
+            };
+        },
     },
     session: {
         strategy: "jwt",
-        maxAge: 3600
+        maxAge: 3600 * 12
     },
     secret: process.env.NEXTAUTH_SECRET,
 });
