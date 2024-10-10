@@ -24,6 +24,7 @@ COPY --from=builder /usr/src/app/public ./public
 COPY . .
 
 # Run the app
+RUN chown -R node:node .
 USER node
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
