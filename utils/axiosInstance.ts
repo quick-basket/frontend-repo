@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 import {config} from "@/constants/url";
+import {getSession} from "next-auth/react";
 
 // List of endpoints that don't require authentication
 const publicEndpoints = [
@@ -23,20 +24,45 @@ const axiosInstance: AxiosInstance = axios.create({
     },
 });
 
-axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const requestUrl = config.url || '';
-    console.log(requestUrl)
-    const isProtectedRoute = !publicEndpoints.some(endpoint => requestUrl.startsWith(endpoint));
+axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+    const fullUrl = `${config.baseURL}${config.url}`;
+    console.log(`Full request URL: ${fullUrl}`);
+
+    const isProtectedRoute = !publicEndpoints.some(endpoint => config.url?.startsWith(endpoint));
+    console.log(`Is protected route: ${isProtectedRoute}`);
 
     if (isProtectedRoute) {
-        const token = Cookies.get("sid");
-        if (token) {
-            config.headers = config.headers || {};
-            config.headers.Authorization = `Bearer ${token}`;
+        try {
+            const session = await getSession();
+            console.log('Session:', session);
+
+            if (session?.accessToken) {
+                config.headers = config.headers || {};
+                config.headers.Authorization = `Bearer ${session.accessToken}`;
+                console.log('Using session token for authentication');
+            } else {
+                console.log('No session token available, falling back to cookie');
+                // Fallback to cookie if session token is not available
+                const cookies = document.cookie.split(';');
+                const sidCookie = cookies.find(cookie => cookie.trim().startsWith('sid='));
+                if (sidCookie) {
+                    const sidToken = sidCookie.split('=')[1];
+                    config.headers = config.headers || {};
+                    config.headers.Authorization = `Bearer ${sidToken}`;
+                    console.log('Using sid cookie for authentication');
+                } else {
+                    console.log('No sid cookie found');
+                }
+            }
+        } catch (error) {
+            console.error('Error in axios interceptor:', error);
         }
     }
+
+    console.log('Final request config:', JSON.stringify(config, null, 2));
     return config;
 }, (error) => {
+    console.error('Error in axios interceptor:', error);
     return Promise.reject(error);
 });
 

@@ -61,6 +61,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     }
                     console.log(loginBody)
                     const response = await AuthAPI.loginWithGoogle(loginBody)
+                    console.log("RESPONSE BODY", response)
                     user.token = response.data.token;
 
                     const useCookies = cookies();
@@ -76,7 +77,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     return false;
                 }
             }
-            console.log(profile)
+            console.log("PROFILE SIGN IN", profile)
+            console.log("user SIGN IN", user)
 
             return true; // Proceed with sign-in
         },
@@ -113,9 +115,11 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     email: token.email as string,
                     scope: token.scope as string,
                 };
+                session.accessToken = token.accessToken as string
             } else {
                 console.log("session not transferring")
             }
+            console.log("SESSION: ", session)
             return session
         }
     },
