@@ -17,14 +17,15 @@ RUN npm run build
 # Setup development image
 FROM base AS development
 ENV NODE_ENV=development
-COPY --from=deps /usr/src/app/node_modules ./node_modules
+#COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder /usr/src/app/.next/static ./.next/static
+COPY --from=builder /usr/src/app/.next/standalone ./
 #COPY --from=builder /usr/src/app/.env.local .env.local
 COPY . .
 
 # Run the app
-RUN chown -R node:node .
 USER node
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["node", "server.js"]
