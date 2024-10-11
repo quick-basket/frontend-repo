@@ -97,11 +97,16 @@ export const config = {
     },
     payment: {
       base: (storeId: any) => `/payment/store/${storeId}`,
-      update: (id: any) => `payments/${id}`,
+      update: (id: any) => `payment/${id}`,
     },
     inventoryJournal: {
       totalIn: (inventoryId: any) => `inventory-journals/${inventoryId}/in`,
       totalOut: (inventoryId: any) => `inventory-journals/${inventoryId}/out`,
+    },
+    voucher: {
+      base: "/vouchers",
+      create: "vouchers/create",
+      update: (voucerId: any) => `vouchers/${voucerId}`,
     },
   },
 };

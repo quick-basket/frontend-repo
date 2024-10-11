@@ -48,6 +48,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <Link href={"/dashboard/store-admins"}>
               <SidebarItem icon={<span>📦</span>} text="Store Admins" />
             </Link>
+            <Link href={"/dashboard/vouchers"}>
+              <SidebarItem icon={<span>📦</span>} text="Vouchers" />
+            </Link>
           </div>
         </div>
       </div>

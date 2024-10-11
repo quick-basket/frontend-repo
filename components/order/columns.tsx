@@ -1,9 +1,9 @@
-import { OrderList } from "@/types/order/type";
+import { OrderType } from "@/types/order/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import { ArrowUpDown, Edit, Trash } from "lucide-react";
 
-export const columns = (): ColumnDef<OrderList>[] => [
+export const columns = (): ColumnDef<OrderType>[] => [
   {
     accessorKey: "storeName",
     header: ({ column }) => {
