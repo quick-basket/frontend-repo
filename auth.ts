@@ -29,6 +29,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 if (!user) {
                     throw new Error("User not found.");
                 }
+
                 // decode
                 const decoded = jwtDecode<JWTPayload>(user.token);
                 return {
@@ -94,6 +95,10 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 accessToken: token.accessToken as string,
             };
         },
+    },
+    pages: {
+        signIn: "/login",
+        error: "/login",
     },
     session: {
         strategy: "jwt",
