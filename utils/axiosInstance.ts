@@ -26,10 +26,8 @@ const axiosInstance: AxiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     const fullUrl = `${config.baseURL}${config.url}`;
-    console.log(`Full request URL: ${fullUrl}`);
 
     const isProtectedRoute = !publicEndpoints.some(endpoint => config.url?.startsWith(endpoint));
-    console.log(`Is protected route: ${isProtectedRoute}`);
 
     if (isProtectedRoute) {
         try {
@@ -37,32 +35,22 @@ axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig
             console.log('Session:', session);
 
             if (session?.accessToken) {
+                // Remove any surrounding quotes and "Bearer " prefix if present
+                const cleanToken = session.accessToken.replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
+
                 config.headers = config.headers || {};
-                config.headers.Authorization = `Bearer ${session.accessToken}`;
-                console.log('Using session token for authentication');
+                config.headers.Authorization = `Bearer ${cleanToken}`;
             } else {
-                console.log('No session token available, falling back to cookie');
-                // Fallback to cookie if session token is not available
-                const cookies = document.cookie.split(';');
-                const sidCookie = cookies.find(cookie => cookie.trim().startsWith('sid='));
-                if (sidCookie) {
-                    const sidToken = sidCookie.split('=')[1];
-                    config.headers = config.headers || {};
-                    config.headers.Authorization = `Bearer ${sidToken}`;
-                    console.log('Using sid cookie for authentication');
-                } else {
-                    console.log('No sid cookie found');
-                }
+                console.log('No session token available');
+                // You might want to handle this case, perhaps by redirecting to login
             }
         } catch (error) {
             console.error('Error in axios interceptor:', error);
         }
     }
 
-    console.log('Final request config:', JSON.stringify(config, null, 2));
     return config;
 }, (error) => {
-    console.error('Error in axios interceptor:', error);
     return Promise.reject(error);
 });
 
