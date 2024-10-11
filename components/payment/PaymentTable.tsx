@@ -1,8 +1,4 @@
-import useDiscount from "@/hooks/discount/useDiscount";
-import { DiscountList, FormDiscountData } from "@/types/discount/type";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
 import { swalAlert } from "@/utils/alert/swalAlert";

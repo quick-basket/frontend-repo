@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const userRoles = session.user?.scope;
+    const userRoles = session.user?.role;
     console.log("User Roles:", userRoles); // Debugging statement
 
     // Ensure that userRoles is treated as an array for consistency

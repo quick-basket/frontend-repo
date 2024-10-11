@@ -3,9 +3,9 @@ import {config} from "@/constants/url";
 import {CheckoutType, OrderStatus, OrderType, PaymentStatus} from "@/types/order/type";
 
 class OrderAPI {
-    async getCheckoutSummary() {
+    async getCheckoutSummary(storeId: number) {
         try {
-            const response = await axiosInstance.get(config.endpoints.order.checkout);
+            const response = await axiosInstance.get(config.endpoints.order.checkout(storeId));
             return response.data.data;
         } catch (error) {
             if (isAxiosError(error) && error.response) {
@@ -121,6 +121,38 @@ class OrderAPI {
             }
             // For non-Axios errors, throw the original error
             throw error;
+        }
+    }
+
+    async getUserOrders(page?: number, size?: number) {
+        try {
+            const response = await axiosInstance.get(
+                config.endpoints.order.base, {
+                    params: {page, size}
+                }
+            )
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error)) {
+                if (error.response && error.response.status === 404) {
+                    return null;
+                }
+                throw new Error(error.response?.data?.message || 'An error occurred');
+            }
+            throw error;
+        }
+    }
+
+    async cancelOrder(orderCode: string) {
+        try {
+            const response = await axiosInstance.post(
+                config.endpoints.order.cancel(orderCode)
+            )
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message);
+            }
         }
     }
 }

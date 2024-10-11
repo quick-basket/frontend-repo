@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 import {config} from "@/constants/url";
+import {getSession} from "next-auth/react";
 
 // List of endpoints that don't require authentication
 const publicEndpoints = [
@@ -23,18 +24,31 @@ const axiosInstance: AxiosInstance = axios.create({
     },
 });
 
-axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const requestUrl = config.url || '';
-    console.log(requestUrl)
-    const isProtectedRoute = !publicEndpoints.some(endpoint => requestUrl.startsWith(endpoint));
+axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+    const fullUrl = `${config.baseURL}${config.url}`;
+
+    const isProtectedRoute = !publicEndpoints.some(endpoint => config.url?.startsWith(endpoint));
 
     if (isProtectedRoute) {
-        const token = Cookies.get("sid");
-        if (token) {
-            config.headers = config.headers || {};
-            config.headers.Authorization = `Bearer ${token}`;
+        try {
+            const session = await getSession();
+            console.log('Session:', session);
+
+            if (session?.accessToken) {
+                // Remove any surrounding quotes and "Bearer " prefix if present
+                const cleanToken = session.accessToken.replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
+
+                config.headers = config.headers || {};
+                config.headers.Authorization = `Bearer ${cleanToken}`;
+            } else {
+                console.log('No session token available');
+                // You might want to handle this case, perhaps by redirecting to login
+            }
+        } catch (error) {
+            console.error('Error in axios interceptor:', error);
         }
     }
+
     return config;
 }, (error) => {
     return Promise.reject(error);

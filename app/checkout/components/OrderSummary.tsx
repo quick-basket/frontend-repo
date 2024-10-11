@@ -1,6 +1,7 @@
 import React from 'react';
 import {Item, Recipient} from "@/types/order/type";
 import useCheckout from "@/hooks/order/useCheckout";
+import Image from "next/image";
 
 interface OrderSummaryProps {
     recipient: Recipient;
@@ -36,7 +37,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({recipient,  items}) => {
                 {items.map((item, index) => (
                     <div key={index} className="flex items-center justify-between py-2">
                         <div className="flex items-center">
-                            <img src={item.image} alt={item.name} className="w-16 h-16 object-cover mr-4"/>
+                            <Image width={100} height={100} src={item.image} alt={item.name} className="w-16 h-16 object-cover mr-4"/>
                             <div>
                                 <p className="font-medium">{item.name}</p>
                                 <p className="text-sm text-gray-500">Jumlah: {item.quantity}</p>

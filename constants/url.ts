@@ -1,5 +1,5 @@
 export const config = {
-  BASE_URL: process.env.BASE_URL || "http://localhost:8080/api/v1",
+  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080/api/v1",
   endpoints: {
     auth: {
       login: "/auth/login",
@@ -25,6 +25,7 @@ export const config = {
     },
     userAddress: {
       base: "/user-address",
+      setPrimary: (id: string) => `/user-address/set-primary/${id}`,
     },
     store: {
       base: "/stores",
@@ -80,10 +81,11 @@ export const config = {
       update: (orderId: any) => `/orders/status/${orderId}`,
       updateAfterPayment: (orderId: any) => `/orders/status-payment/${orderId}`,
       getAll: (orderId: any) => `/orders/store/${orderId}`,
-      checkout: "/orders/checkout",
+      checkout: (storeId: any) => `/orders/checkout/${storeId}`,
       initiate: "/orders/initiate",
       pending: "/orders/pending",
       status: (orderCode: string) => `/orders/status/${orderCode}`,
+      cancel: (orderCode: string) => `/orders/cancel/${orderCode}`,
     },
     sales: {
       totalAmountAllStore: "orders/total-amounts-all-store",
@@ -98,6 +100,7 @@ export const config = {
     payment: {
       base: (storeId: any) => `/payment/store/${storeId}`,
       update: (id: any) => `payment/${id}`,
+      upload: (orderCode: any) => `/payment/${orderCode}/proof`,
     },
     inventoryJournal: {
       totalIn: (inventoryId: any) => `inventory-journals/${inventoryId}/in`,

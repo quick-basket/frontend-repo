@@ -1,8 +1,9 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {CheckoutType} from "@/types/order/type";
-import {DataTransaction} from "@/types/payment/type";
+import {DataTransaction, PaymentDTO} from "@/types/payment/type";
 import orderAPI from "@/api/order/orderAPI";
 import {queryKeys} from "@/constants/queryKey";
+import paymentAPI from "@/api/payment/paymentAPI";
 
 const usePaymentProcess = (orderCode?: string) => {
     const queryClient = useQueryClient();
@@ -50,6 +51,10 @@ const usePaymentProcess = (orderCode?: string) => {
         }
     };
 
+    const uploadPaymentProof = useMutation<PaymentDTO, Error, File>({
+        mutationFn: (file: File) => paymentAPI.uploadPaymentProof(orderCode!, file)
+    })
+
     return {
         pendingOrder,
         isPendingOrderLoading,
@@ -58,6 +63,8 @@ const usePaymentProcess = (orderCode?: string) => {
         isOrderStatusLoading,
         orderStatusError,
         initiateTrx: initiateTrx.mutate,
+        isInitiatingTrx: initiateTrx.isPending,
+        uploadPaymentProof: uploadPaymentProof.mutateAsync,
         checkPaymentStatus
     };
 }
