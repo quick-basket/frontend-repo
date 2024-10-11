@@ -46,9 +46,11 @@ const FormLogin = () => {
       } else {
         clearLocationData();
 
-        const updatedSession = await fetch("/api/auth/session").then((res) =>
-          res.json()
-        );
+        // const updatedSession = await fetch("/api/auth/session").then((res) =>
+        //   res.json()
+        // );
+        //
+        // console.log("FETCHING FROM AUTH SESSION: ", updatedSession);
 
         await swalAlert({
           title: "Success",
@@ -58,13 +60,13 @@ const FormLogin = () => {
           showConfirmButton: false,
         });
 
-        if (updatedSession?.user?.scope === "super_admin") {
-          router.push("/dashboard");
-        } else if (updatedSession?.user?.scope === "store_admin") {
-          router.push("/dashboard/stores/1");
-        } else {
-          router.push("/");
-        }
+        // if (updatedSession?.user?.scope === "super_admin") {
+        //   router.push("/dashboard");
+        // } else if (updatedSession?.user?.scope === "store_admin") {
+        //   router.push("/dashboard/stores/1");
+        // } else {
+        //   router.push("/");
+        // }
       }
     } catch (error) {
       console.error("An error occurred during sign in:", error);
