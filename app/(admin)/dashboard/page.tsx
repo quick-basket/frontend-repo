@@ -12,7 +12,7 @@ const Dashboard = () => {
 
     if (status == "loading") return <Spinner/>
 
-    if (session?.user.scope === "super_admin") {
+    if (session?.user.role === "super_admin") {
         return <SuperAdminDashboard/>
     }
     //TODO
