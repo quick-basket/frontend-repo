@@ -68,7 +68,7 @@ const FormAddStoreProduct: React.FC<Props> = ({
       }
     };
     fetchProducts();
-  }, []);
+  }, [storeId]);
 
   useEffect(() => {
     if (product) {

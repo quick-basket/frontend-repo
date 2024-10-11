@@ -46,6 +46,17 @@ class UserAddressAPI {
             }
         }
     }
+
+    async setPrimaryAddress(id: string) {
+        try {
+            const response = await axiosInstance.put(config.endpoints.userAddress.setPrimary(id));
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message);
+            }
+        }
+    }
 }
 
 const userAddressAPI = new UserAddressAPI();

@@ -124,6 +124,45 @@ const useCart = () => {
       console.error("Error deleting all cart items", error);
     },
   });
+  
+  const bulkDeleteCartMutation = useMutation<void, Error, { userId: number; inventoryIds: number[] }>({
+    mutationFn: ({ userId, inventoryIds }) => cartAPI.bulkDeleteCartItem(userId, inventoryIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY],
+      });
+
+      // Clear the checkout summary from the cache
+      queryClient.setQueryData([queryKeys.checkout.GET_CHECKOUT_SUMMARY], null);
+    },
+    onError: (error) => {
+      console.error("Error updating profile", error);
+    },
+  });
+
+  const deleteALlCartMutation = useMutation<void, Error, void>({
+    mutationFn: async () => {
+      if (!selectedStoreId) {
+        throw new Error("no store selected");
+      }
+      return cartAPI.deleteAllCart(selectedStoreId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.carts.GET_CARTS, selectedStoreId],
+      });
+      queryClient.setQueryData(
+        [queryKeys.carts.GET_CARTS, selectedStoreId],
+        []
+      );
+    },
+    onError: (error) => {
+      console.error("Error deleting all cart items", error);
+    },
+  });
 
   return {
     data,
@@ -132,6 +171,7 @@ const useCart = () => {
     addCart: addProductToCart.mutate,
     editCart: editCartMutation.mutate,
     deleteCart: deleteCartMutation.mutate,
+    bulkDeleteCartMutation: bulkDeleteCartMutation.mutateAsync,
     deleteAllCart: deleteALlCartMutation.mutate,
   };
 };

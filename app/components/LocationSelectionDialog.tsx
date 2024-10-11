@@ -14,6 +14,9 @@ import {UserAddressType} from "@/types/user/type";
 import {useLocationContext} from "@/hooks/context/LocationProvider";
 import AddUserAddressDialog from "@/app/components/AddUserAddressDialog";
 import {confirmAlert} from "@/utils/alert/notiflixConfig";
+import userAddressAPI from "@/api/user/userAddressAPI";
+import {useQueryClient} from "@tanstack/react-query";
+import {queryKeys} from "@/constants/queryKey";
 
 interface LocationSelectionDialogProps {
     isOpen: boolean;
@@ -21,16 +24,23 @@ interface LocationSelectionDialogProps {
 }
 
 const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen, onClose}) => {
-    const { setSelectedStoreId, nearestStoreId} = useLocationContext();
+    const {setSelectedStoreId, nearestStoreId} = useLocationContext();
     const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<UserAddressType | null>(null);
     const [isDeletingAddress, setIsDeletingAddress] = useState(false);
+    const queryClient = useQueryClient();
 
 
-    const { data: userAddresses, isLoading, error, deleteUserAddress} = useUserAddress();
+    const {data: userAddresses, isLoading, error, deleteUserAddress} = useUserAddress();
 
-    const handleSelectAddress = async (addressId: string) => {
-        setSelectedStoreId(addressId);
+    const handleSelectAddress = async (address: UserAddressType) => {
+        if (!address.isPrimary) {
+            await userAddressAPI.setPrimaryAddress(address.id!.toString());
+            await queryClient.invalidateQueries({
+                queryKey: [queryKeys.userAddress.GET_USER_ADDRESSES]
+            })
+        }
+        setSelectedStoreId('', address);
         onClose();
     };
 
@@ -109,7 +119,8 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
                                             <div className="flex items-center gap-2">
                                                 <span className="font-semibold">{address.address.split(',')[0]}</span>
                                                 {address.isPrimary && (
-                                                    <span className="px-2 py-1 text-xs font-medium text-white bg-red-600 rounded-full">
+                                                    <span
+                                                        className="px-2 py-1 text-xs font-medium text-white bg-red-600 rounded-full">
                                                         Primary Address
                                                     </span>
                                                 )}
@@ -123,19 +134,19 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
                                                 size="sm"
                                                 onClick={() => handleEditAddress(address)}
                                             >
-                                                <Edit className="h-4 w-4" />
+                                                <Edit className="h-4 w-4"/>
                                             </Button>
                                             <Button
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => handleDeleteAddress(address)}
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4"/>
                                             </Button>
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                onClick={() => handleSelectAddress(address.id?.toString() ?? '')}
+                                                onClick={() => handleSelectAddress(address)}
                                             >
                                                 Select
                                             </Button>

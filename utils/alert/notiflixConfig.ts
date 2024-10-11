@@ -35,7 +35,11 @@ export const confirmAlert = (title: string, text: string): Promise<boolean> => {
                 'Yes',
                 'No',
                 () => resolve(true),
-                () => resolve(false)
+                () => resolve(false),
+                {
+                    zindex: 9999999999, // Ensure this is the highest z-index
+                    cssAnimationStyle: 'zoom', // This can help with rendering issues
+                }
             );
         } else {
             resolve(false);

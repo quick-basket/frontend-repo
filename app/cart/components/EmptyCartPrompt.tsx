@@ -19,7 +19,7 @@ const EmptyCartPrompt = () => {
             </div>
             <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-center">Your Cart is Empty</h2>
             <p className="text-gray-600 mb-6 sm:mb-8 text-center max-w-md text-sm sm:text-base">
-                Looks like you haven't added anything to your cart yet. Start shopping and discover great deals!
+                Looks like you haven&#39;t added anything to your cart yet. Start shopping and discover great deals!
             </p>
             <Link href="/">
                 <Button className="px-4 sm:px-6 py-2">

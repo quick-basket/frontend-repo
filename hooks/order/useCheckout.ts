@@ -5,6 +5,7 @@ import {CheckoutType, OrderType, PaymentStatus, SnapTokenResponse} from "@/types
 import {queryKeys} from "@/constants/queryKey";
 import orderAPI from "@/api/order/orderAPI";
 import {useCallback, useEffect, useState} from "react";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
 
 const CHECKOUT_STORAGE_KEY = 'checkoutData';
 const SNAP_TOKEN_KEY = 'SNAP_TOKEN';
@@ -14,14 +15,16 @@ const useCheckout = () => {
     const [localData, setLocalData] = useState<CheckoutType | null>(null);
     const [storedToken, setStoredToken] = useState<{ token: string; orderId: number } | null>(null);
 
-    const { data, isLoading, error } = useQuery<CheckoutType, Error>({
-        queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY],
+    const {selectedStoreId} = useLocationContext();
+
+    const { data, isLoading, error, refetch } = useQuery<CheckoutType, Error>({
+        queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)],
         queryFn: async () => {
-            const response = await orderAPI.getCheckoutSummary();
+            const response = await orderAPI.getCheckoutSummary(parseInt(selectedStoreId!));
             localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(response));
             return response;
         },
-        enabled: !localData
+        staleTime: 0,
     });
 
     useEffect(() => {
@@ -42,15 +45,22 @@ const useCheckout = () => {
         }
     }, []);
 
-    const invalidateCheckout = useCallback(() => {
-        localStorage.removeItem(CHECKOUT_STORAGE_KEY);
-        localStorage.removeItem(SNAP_TOKEN_KEY);
-        setLocalData(null);
-        setStoredToken(null);
-        queryClient.invalidateQueries({
-            queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY],
-        });
+    const clearAllQueries = useCallback(async () => {
+        queryClient.clear();
+        console.log("Cleared all queries from React Query cache");
     }, [queryClient]);
+
+    const invalidateCheckout = useCallback(async() => {
+        localStorage.removeItem(CHECKOUT_STORAGE_KEY);
+        setLocalData(null);
+        console.log("remove local storage")
+
+        await queryClient.invalidateQueries({
+            queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]
+        });
+        await clearAllQueries();
+        await refetch()
+    }, [queryClient, selectedStoreId, clearAllQueries, refetch]);
 
     const updateOrderStatus = useMutation<OrderType, Error, { orderId: string, status: PaymentStatus }>({
         mutationFn: ({orderId, status}) => orderAPI.updateOrderAfterPayment(orderId, status),
@@ -67,6 +77,7 @@ const useCheckout = () => {
         error,
         invalidateCheckout,
         updateOrderStatus: updateOrderStatus.mutate,
+        clearAllQueries
     };
 };
 

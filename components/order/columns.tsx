@@ -1,7 +1,8 @@
-import { OrderType } from "@/types/order/type";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import { ArrowUpDown, Edit, Trash } from "lucide-react";
+import {OrderType} from "@/types/order/type";
 
 export const columns = (): ColumnDef<OrderType>[] => [
   {
