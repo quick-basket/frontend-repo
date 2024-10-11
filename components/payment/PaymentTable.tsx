@@ -1,8 +1,4 @@
-import useDiscount from "@/hooks/discount/useDiscount";
-import { DiscountList, FormDiscountData } from "@/types/discount/type";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
 import { swalAlert } from "@/utils/alert/swalAlert";
@@ -10,6 +6,7 @@ import usePayment from "@/hooks/payment/usePayment";
 import { FormEditPayment, PaymentList } from "@/types/payment/type";
 import FormEditPayments from "./FormEditPayment";
 import FormOpenPrrof from "./FormOpenProof";
+import Spinner from "../spinner/Spinner";
 
 interface PaymentTableProps {
   storeId: string;
@@ -81,10 +78,10 @@ const PaymentTable = ({ storeId }: PaymentTableProps) => {
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Payment</h1>
+        <h1 className="text-2xl font-bold">Payment Manual</h1>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner />
       ) : (
         payment && (
           <DataTable

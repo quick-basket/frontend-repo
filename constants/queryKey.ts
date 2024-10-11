@@ -45,4 +45,7 @@ export const queryKeys = {
   payment: {
     GET_PAYMENT: "GET_PAYMENT",
   },
+  voucher: {
+    GET_VOUCHER: "GET_VOUCHER",
+  },
 };

@@ -25,7 +25,7 @@ export const config = {
     },
     userAddress: {
       base: "/user-address",
-      setPrimary: (id: string) => `/user-address/set-primary/${id}`
+      setPrimary: (id: string) => `/user-address/set-primary/${id}`,
     },
     store: {
       base: "/stores",
@@ -81,7 +81,7 @@ export const config = {
       update: (orderId: any) => `/orders/status/${orderId}`,
       updateAfterPayment: (orderId: any) => `/orders/status-payment/${orderId}`,
       getAll: (orderId: any) => `/orders/store/${orderId}`,
-      checkout: (storeId: any) =>  `/orders/checkout/${storeId}`,
+      checkout: (storeId: any) => `/orders/checkout/${storeId}`,
       initiate: "/orders/initiate",
       pending: "/orders/pending",
       status: (orderCode: string) => `/orders/status/${orderCode}`,
@@ -99,12 +99,17 @@ export const config = {
     },
     payment: {
       base: (storeId: any) => `/payment/store/${storeId}`,
-      update: (id: any) => `payments/${id}`,
+      update: (id: any) => `payment/${id}`,
       upload: (orderCode: any) => `/payment/${orderCode}/proof`,
     },
     inventoryJournal: {
       totalIn: (inventoryId: any) => `inventory-journals/${inventoryId}/in`,
       totalOut: (inventoryId: any) => `inventory-journals/${inventoryId}/out`,
+    },
+    voucher: {
+      base: "/vouchers",
+      create: "vouchers/create",
+      update: (voucerId: any) => `vouchers/${voucerId}`,
     },
   },
 };

@@ -71,9 +71,10 @@ class CartAPI {
   async bulkDeleteCartItem(userId: number, inventoryIds: number[]) {
     try {
       const response = await axiosInstance.delete(
-        config.endpoints.cart.delete, {
-          data: {userId, inventoryIds}
-          },
+        config.endpoints.cart.delete,
+        {
+          data: { userId, inventoryIds },
+        }
       );
       return response.data.data;
     } catch (error) {
@@ -82,7 +83,7 @@ class CartAPI {
       }
     }
   }
-  
+
   async deleteCartItem(cartId: number) {
     try {
       const response = await axiosInstance.delete(
