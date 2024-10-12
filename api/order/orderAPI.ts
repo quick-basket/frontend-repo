@@ -155,6 +155,19 @@ class OrderAPI {
             }
         }
     }
+
+    async markOrderAsShipped(orderCode: string) {
+        try {
+            const response = await axiosInstance.post(
+                config.endpoints.order.ship(orderCode),
+            )
+            return response.data.data;
+        } catch (error) {
+            if (isAxiosError(error) && error.response) {
+                throw new Error(error.response.data.message);
+            }
+        }
+    }
 }
 
 const orderAPI = new OrderAPI();
