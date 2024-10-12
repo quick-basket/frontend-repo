@@ -1,58 +1,60 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
 
-export async function middleware(request: NextRequest) {
-  const session = await auth();
-
-  console.log("Session from middleware", session);
-
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    if (!session) {
-      console.log("No session, redirecting to login");
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    const userRole = session.user?.role;
-    console.log("User Role:", userRole);
-
-    if (userRole === "user") {
-      console.log("User role detected, redirecting to home page");
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    if (userRole !== "super_admin" && userRole !== "store_admin") {
-      console.log(
-        "User does not have a valid role, redirecting to unauthorized"
-      );
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
-    }
-
-    // If it's a store_admin trying to access general dashboard
-    if (userRole === "store_admin") {
-      const storeId = session.user.store_id;
-      if (!storeId) {
-        console.log("store admin doesn't have a store id");
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
-      }
-      if (request.nextUrl.pathname === "/dashboard") {
-        console.log(`store admin redirected to store dashboard: ${storeId}`);
-        return NextResponse.redirect(
-          new URL(`/dashboard/stores/${storeId}`, request.url)
-        );
-      }
-    }
-  }
-
-  return NextResponse.next();
-}
+// export { auth as middleware } from "@/auth"
+import {NextResponse} from "next/server";
+import { auth } from "@/auth"; // Make sure this path is correct
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/login",
-    "/register",
-    "/user/:path*",
-    "/events/:path*",
-  ],
-};
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+}
+
+export default auth((req) => {
+    const { nextUrl } = req
+    const isLoggedIn = !!req.auth
+
+    // Public routes accessible to all users
+    const publicRoutes = ['/login', '/register', '/reset-password', '/']
+    if (publicRoutes.includes(nextUrl.pathname)) {
+        return NextResponse.next()
+    }
+
+    // Routes that require authentication
+    if (!isLoggedIn) {
+        return NextResponse.redirect(new URL('/login', nextUrl))
+    }
+
+    // Role-based access control
+    const { role, store_id } = req.auth?.user || {}
+
+    if (nextUrl.pathname.startsWith('/dashboard')) {
+        if (role === 'super_admin') {
+            // Super admins can access all dashboard routes
+            return NextResponse.next()
+        } else if (role === 'store_admin') {
+            // Check if the route is a store-specific dashboard
+            if (nextUrl.pathname.startsWith('/dashboard/stores/')) {
+                // Extract store ID from the URL
+                const urlStoreId = nextUrl.pathname.split('/').pop()
+
+                // Check if the store admin is accessing their assigned store
+                if (urlStoreId === store_id?.toString()) {
+                    return NextResponse.next()
+                } else {
+                    // Redirect to the correct store dashboard if not matching
+                    return NextResponse.redirect(new URL(`/dashboard/stores/${store_id}`, nextUrl))
+                }
+            } else if (nextUrl.pathname === '/dashboard') {
+                // Redirect store admins to their specific store dashboard from the main dashboard
+                return NextResponse.redirect(new URL(`/dashboard/stores/${store_id}`, nextUrl))
+            } else {
+                // For other dashboard routes, redirect to their store dashboard
+                return NextResponse.redirect(new URL(`/dashboard/stores/${store_id}`, nextUrl))
+            }
+        } else {
+            // For other roles, redirect to home page
+            return NextResponse.redirect(new URL('/', nextUrl))
+        }
+    }
+
+    // Allow access to other routes
+    return NextResponse.next()
+})
