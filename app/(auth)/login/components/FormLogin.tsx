@@ -30,7 +30,7 @@ const FormLogin = () => {
   const onSubmit = async (data: FormData) => {
     try {
       const result = await signIn("credentials", {
-        username: data.email,
+        email: data.email,
         password: data.password,
         redirect: false,
       });
@@ -46,12 +46,6 @@ const FormLogin = () => {
       } else {
         clearLocationData();
 
-        // const updatedSession = await fetch("/api/auth/session").then((res) =>
-        //   res.json()
-        // );
-        //
-        // console.log("FETCHING FROM AUTH SESSION: ", updatedSession);
-
         await swalAlert({
           title: "Success",
           icon: "success",
@@ -60,13 +54,8 @@ const FormLogin = () => {
           showConfirmButton: false,
         });
 
-        // if (updatedSession?.user?.scope === "super_admin") {
-        //   router.push("/dashboard");
-        // } else if (updatedSession?.user?.scope === "store_admin") {
-        //   router.push("/dashboard/stores/1");
-        // } else {
-        //   router.push("/");
-        // }
+        await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+        router.replace('/dashboard');
       }
     } catch (error) {
       console.error("An error occurred during sign in:", error);
