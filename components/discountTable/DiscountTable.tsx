@@ -7,6 +7,8 @@ import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
 import FormAddDiscount from "./FormAddDiscount";
 import { swalAlert } from "@/utils/alert/swalAlert";
+import Spinner from "../spinner/Spinner";
+import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
 
 interface DiscountTableProps {
   storeId: string;
@@ -37,22 +39,24 @@ const DiscountTable = ({ storeId }: DiscountTableProps) => {
     setIsDialogOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("are you surer want to delete this product?")) {
-      deleteDiscount(
-        { id },
-        {
-          onSuccess: () => {
-            swalAlert({
-              title: "Success",
-              icon: "success",
-              text: "Store Deleted",
-              timer: 1500,
-              showConfirmButton: false,
-            }).then(() => {});
-          },
-        }
-      );
+  const handleDelete = async (id: string) => {
+    const result = await confirmAlert(
+      "Delete discount",
+      "Are ypu sure delete this discount?"
+    );
+    if (result) {
+      try {
+        await deleteDiscount({ id });
+        notify({
+          text: "Store successfully deleted",
+          type: "success",
+        });
+      } catch (error) {
+        notify({
+          text: "Failed to delete store",
+          type: "error",
+        });
+      }
     }
   };
 
@@ -107,7 +111,7 @@ const DiscountTable = ({ storeId }: DiscountTableProps) => {
         </Button>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         discount && (
           <DataTable

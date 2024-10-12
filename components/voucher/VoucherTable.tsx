@@ -9,6 +9,8 @@ import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
 import { swalAlert } from "@/utils/alert/swalAlert";
 import FormAddVoucher from "./FormAddVouchers";
+import Spinner from "../spinner/Spinner";
+import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
 
 const VoucherTable = () => {
   const {
@@ -30,22 +32,24 @@ const VoucherTable = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (voucherId: string) => {
-    if (window.confirm("are you surer want to delete this product?")) {
-      deleteVoucher(
-        { voucherId },
-        {
-          onSuccess: () => {
-            swalAlert({
-              title: "Success",
-              icon: "success",
-              text: "Store Deleted",
-              timer: 1500,
-              showConfirmButton: false,
-            }).then(() => {});
-          },
-        }
-      );
+  const handleDelete = async (voucherId: string) => {
+    const result = await confirmAlert(
+      "Delete voucher",
+      "Are ypu sure delete this voucher?"
+    );
+    if (result) {
+      try {
+        await deleteVoucher({ voucherId });
+        notify({
+          text: "Store successfully deleted",
+          type: "success",
+        });
+      } catch (error) {
+        notify({
+          text: "Failed to delete store",
+          type: "error",
+        });
+      }
     }
   };
 
@@ -105,7 +109,7 @@ const VoucherTable = () => {
         </Button>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         vouchers && (
           <DataTable

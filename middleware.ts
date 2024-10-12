@@ -1,12 +1,11 @@
-// export { auth as middleware } from "@/auth"
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/auth"; // Make sure this path is correct
+import { auth } from "@/auth";
 
 export async function middleware(request: NextRequest) {
   const session = await auth();
 
-  console.log("Session from middleware", session); // Debugging statement
+  console.log("Session from middleware", session);
 
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
     if (!session) {
@@ -14,14 +13,15 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const userRoles = session.user?.role;
-    console.log("User Roles:", userRoles); // Debugging statement
+    const userRole = session.user?.role;
+    console.log("User Role:", userRole);
 
-    // Ensure that userRoles is treated as an array for consistency
-    const hasValidRole =
-      userRoles === "super_admin" || userRoles === "store_admin";
+    if (userRole === "user") {
+      console.log("User role detected, redirecting to home page");
+      return NextResponse.redirect(new URL("/", request.url));
+    }
 
-    if (!hasValidRole) {
+    if (userRole !== "super_admin" && userRole !== "store_admin") {
       console.log(
         "User does not have a valid role, redirecting to unauthorized"
       );
@@ -29,12 +29,18 @@ export async function middleware(request: NextRequest) {
     }
 
     // If it's a store_admin trying to access general dashboard
-    if (
-      userRoles === "store_admin" &&
-      request.nextUrl.pathname === "/dashboard"
-    ) {
-      console.log("Store admin redirected to store dashboard");
-      return NextResponse.redirect(new URL("/dashboard/store/1", request.url));
+    if (userRole === "store_admin") {
+      const storeId = session.user.store_id;
+      if (!storeId) {
+        console.log("store admin doesn't have a store id");
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
+      if (request.nextUrl.pathname === "/dashboard") {
+        console.log(`store admin redirected to store dashboard: ${storeId}`);
+        return NextResponse.redirect(
+          new URL(`/dashboard/stores/${storeId}`, request.url)
+        );
+      }
     }
   }
 

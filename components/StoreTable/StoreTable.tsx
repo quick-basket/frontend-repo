@@ -8,6 +8,7 @@ import { FormDataStore, StoreType } from "@/types/store/type";
 import { swalAlert } from "@/utils/alert/swalAlert";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
 
 const StoreTable = () => {
   const {
@@ -29,22 +30,24 @@ const StoreTable = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this store?")) {
-      deleteStore(
-        { id },
-        {
-          onSuccess: () => {
-            swalAlert({
-              title: "Success",
-              icon: "success",
-              text: "Store Deleted",
-              timer: 1500,
-              showConfirmButton: false,
-            }).then(() => {});
-          },
-        }
-      );
+  const handleDelete = async (id: string) => {
+    const result = await confirmAlert(
+      "Delete Store",
+      "Are ypu sure delete this store?"
+    );
+    if (result) {
+      try {
+        await deleteStore({ id });
+        notify({
+          text: "Store successfully deleted",
+          type: "success",
+        });
+      } catch (error) {
+        notify({
+          text: "Failed to delete store",
+          type: "error",
+        });
+      }
     }
   };
 
@@ -98,7 +101,7 @@ const StoreTable = () => {
         </Button>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         stores && (
           <DataTable

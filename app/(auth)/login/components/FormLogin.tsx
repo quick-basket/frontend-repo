@@ -46,11 +46,9 @@ const FormLogin = () => {
       } else {
         clearLocationData();
 
-        // const updatedSession = await fetch("/api/auth/session").then((res) =>
-        //   res.json()
-        // );
-        //
-        // console.log("FETCHING FROM AUTH SESSION: ", updatedSession);
+        const updatedSession = await fetch("/api/auth/session").then((res) =>
+          res.json()
+        );
 
         await swalAlert({
           title: "Success",
@@ -60,10 +58,18 @@ const FormLogin = () => {
           showConfirmButton: false,
         });
 
-        // if (updatedSession?.user?.scope === "super_admin") {
+        router.push("/dashboard");
+
+        // if (updatedSession?.user?.role === "super_admin") {
         //   router.push("/dashboard");
-        // } else if (updatedSession?.user?.scope === "store_admin") {
-        //   router.push("/dashboard/stores/1");
+        // } else if (updatedSession?.user?.role === "store_admin") {
+        //   const storeId = updatedSession.user.store_id;
+        //   if (storeId) {
+        //     router.push(`dashboard/stores/${storeId}`);
+        //   } else {
+        //     console.log("store admin doesn't have a store_id");
+        //     router.push("/unauthorized");
+        //   }
         // } else {
         //   router.push("/");
         // }

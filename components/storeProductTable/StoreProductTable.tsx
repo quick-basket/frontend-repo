@@ -8,6 +8,8 @@ import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
 import FormAddStoreProduct from "./FormAddStoreProduct";
 import { swalAlert } from "@/utils/alert/swalAlert";
+import Spinner from "../spinner/Spinner";
+import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
 
 interface StoreTableProps {
   storeId: string;
@@ -38,23 +40,24 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
     setIsDialogOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("are you surer want to delete this product?")) {
-      console.log("deletting product with id", id);
-      deleteStoreProduct(
-        { id },
-        {
-          onSuccess: () => {
-            swalAlert({
-              title: "Success",
-              icon: "success",
-              text: "Store Deleted",
-              timer: 1500,
-              showConfirmButton: false,
-            }).then(() => {});
-          },
-        }
-      );
+  const handleDelete = async (id: string) => {
+    const result = await confirmAlert(
+      "Delete product",
+      "Are ypu sure delete this product?"
+    );
+    if (result) {
+      try {
+        await deleteStoreProduct({ id });
+        notify({
+          text: "Store successfully deleted",
+          type: "success",
+        });
+      } catch (error) {
+        notify({
+          text: "Failed to delete store",
+          type: "error",
+        });
+      }
     }
   };
 
@@ -109,7 +112,7 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
         </Button>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         products && (
           <DataTable

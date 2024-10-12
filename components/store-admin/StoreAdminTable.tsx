@@ -11,6 +11,8 @@ import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { swalAlert } from "@/utils/alert/swalAlert";
 import FormAddStoreAdmin from "./FormAddStoreAdmins";
+import Spinner from "../spinner/Spinner";
+import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
 
 interface StoreAdminTableProps {
   storeAdminId: string;
@@ -36,22 +38,25 @@ const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("are you surer want to delete this product?")) {
-      deleteStoreAdmin(
-        { id },
-        {
-          onSuccess: () => {
-            swalAlert({
-              title: "Success",
-              icon: "success",
-              text: "Store Deleted",
-              timer: 1500,
-              showConfirmButton: false,
-            }).then(() => {});
-          },
-        }
-      );
+  const handleDelete = async (id: string) => {
+    const result = await confirmAlert(
+      "delete this store admin?",
+      "Are you sure delete this store admin?"
+    );
+
+    if (result) {
+      try {
+        await deleteStoreAdmin({ id });
+        notify({
+          text: "Store successfully deleted",
+          type: "success",
+        });
+      } catch (error) {
+        notify({
+          text: "Failed to delete store",
+          type: "error",
+        });
+      }
     }
   };
 
@@ -111,7 +116,7 @@ const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
         </Button>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         storeAdmins && (
           <DataTable

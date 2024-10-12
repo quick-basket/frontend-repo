@@ -1,6 +1,7 @@
 import useOrder from "@/hooks/order/useOrder";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
+import Spinner from "../spinner/Spinner";
 
 interface OrderTableProps {
   storeId: string;
@@ -14,7 +15,7 @@ const OrderTable = ({ storeId }: OrderTableProps) => {
         <h1 className="text-2xl font-bold">Orders</h1>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         <div>{order && <DataTable columns={columns()} data={order} />}</div>
       )}
