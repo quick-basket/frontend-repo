@@ -86,6 +86,7 @@ export const config = {
       pending: "/orders/pending",
       status: (orderCode: string) => `/orders/status/${orderCode}`,
       cancel: (orderCode: string) => `/orders/cancel/${orderCode}`,
+      ship: (orderCode:string) => `/orders/${orderCode}/ship`,
     },
     sales: {
       totalAmountAllStore: "orders/total-amounts-all-store",
