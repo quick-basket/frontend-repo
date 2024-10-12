@@ -1,5 +1,5 @@
 export const config = {
-  BBASE_URL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080/api/v1",
+  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080/api/v1",
   endpoints: {
     auth: {
       login: "/auth/login",
