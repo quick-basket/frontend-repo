@@ -37,5 +37,5 @@ export function useLogout() {
         };
 
         return logout();
-    }, [clearLocationData, queryClient]);
+    }, [clearLocationData, queryClient, setIsLoggedIn]);
 }
