@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import Cookies from 'js-cookie';
 import {config} from "@/constants/url";
 import {getSession} from "next-auth/react";
 
@@ -24,19 +23,30 @@ const axiosInstance: AxiosInstance = axios.create({
     },
 });
 
-axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-    const fullUrl = `${config.baseURL}${config.url}`;
+const fetchSession = async () => {
+    try {
+        const response = await fetch('/api/auth/session');
+        if (!response.ok) {
+            throw new Error('Failed to fetch session');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching session:', error);
+        return null;
+    }
+};
 
+axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     const isProtectedRoute = !publicEndpoints.some(endpoint => config.url?.startsWith(endpoint));
 
     if (isProtectedRoute) {
         try {
-            const session = await getSession();
+            const session = await fetchSession();
             console.log('Session:', session);
 
-            if (session?.accessToken) {
+            if (session?.token) {
                 // Remove any surrounding quotes and "Bearer " prefix if present
-                const cleanToken = session.accessToken.replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
+                const cleanToken = session.token.replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
 
                 config.headers = config.headers || {};
                 config.headers.Authorization = `Bearer ${cleanToken}`;
