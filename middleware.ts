@@ -1,9 +1,9 @@
 // export { auth as middleware } from "@/auth"
-import {NextRequest, NextResponse} from "next/server";
+import { NextResponse} from "next/server";
 import { auth } from "@/auth"; // Make sure this path is correct
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    matcher: ['/((?!api/auth|_next/static|_next/image|favicon.ico).*)'],
 }
 
 export default auth((req) => {

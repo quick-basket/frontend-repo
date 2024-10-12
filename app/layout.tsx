@@ -2,7 +2,6 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/utils/provider/ReactQueryProvider";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {auth} from "@/auth";
 import {SessionProvider} from "next-auth/react";
 import {LocationProvider} from "@/hooks/context/LocationProvider";
@@ -30,7 +29,6 @@ export default async function RootLayout({
                     </body>
                 </LocationProvider>
             </SessionProvider>
-            <ReactQueryDevtools initialIsOpen={true}/>
         </ReactQueryProvider>
         </html>
     );
