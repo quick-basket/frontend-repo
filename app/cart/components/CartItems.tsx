@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2, Truck } from "lucide-react";
 import { CartItem, FormCartItem } from "@/types/cart/type";
 import useCart from "@/hooks/cart/useCart";
 import Image from "next/image";
+import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
 
 interface CartItemsProps {
   items: CartItem[];
@@ -24,13 +25,17 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
     deleteCart({ id });
   };
 
-  const handleDeleteAll = () => {
-    if (
-      window.confirm(
-        "Apakah Anda yakin ingin menghapus semua item di keranjang?"
-      )
-    ) {
+  const handleDeleteAll = async () => {
+    const result = await confirmAlert(
+      "are you sure??",
+      "this will delete all cart items"
+    );
+    if (result) {
       deleteAllCart();
+      notify({
+        text: "deleted all carts",
+        type: "success",
+      });
     }
   };
   return (

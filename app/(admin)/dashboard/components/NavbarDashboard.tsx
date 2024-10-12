@@ -35,7 +35,6 @@ const NavbarDashboard: React.FC<Props> = ({ onMenuClick }) => {
             <Menu />
           </Button>
           <h1 className="text-lg md:text-xl font-semibold">DASHBOARD</h1>
-          <h1 className="text-lg md:text-xl font-semibold">DASHBOARD</h1>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

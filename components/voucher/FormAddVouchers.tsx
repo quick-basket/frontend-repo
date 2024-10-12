@@ -101,7 +101,7 @@ const FormAddVoucher: React.FC<Props> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="productId">Product</Label>
+            <Label htmlFor="productId">Product (Optional)</Label>
             <Select
               onValueChange={(value) =>
                 setValue("productId", parseInt(value, 10))

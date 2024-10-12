@@ -1,6 +1,7 @@
 import useJournal from "@/hooks/journal/useJournal";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
+import Spinner from "../spinner/Spinner";
 
 interface JournalTableProps {
   storeId: string;
@@ -15,7 +16,7 @@ const JournalTable = ({ storeId }: JournalTableProps) => {
         <h1 className="text-2xl font-bold">Journals</h1>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <Spinner fullScreen={true} size="large" />
       ) : (
         journal && <DataTable columns={columns()} data={journal} />
       )}

@@ -81,7 +81,7 @@ const PaymentTable = ({ storeId }: PaymentTableProps) => {
         <h1 className="text-2xl font-bold">Payment Manual</h1>
       </div>
       {isLoading ? (
-        <Spinner />
+        <Spinner fullScreen={true} size="large" />
       ) : (
         payment && (
           <DataTable

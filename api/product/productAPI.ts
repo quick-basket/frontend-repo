@@ -34,16 +34,27 @@ class ProductAPI {
 
   async getProductDisplay(
     storeId: string,
-    page: number
+    page: number,
+    size: number = 6,
+    name?: string,
+    categoryName?: string
   ): Promise<ProductDisplayResponse> {
     try {
+      let url = `${config.endpoints.products.getAllProducts(
+        storeId
+      )}?page=${page}&size=${size}`;
+
+      if (name) {
+        url += `&name=${name}`;
+      }
+
+      if (categoryName) {
+        url += `&categoryName=${categoryName}`;
+      }
+
       const response = await axiosInstance.get<
         ApiResponse<ProductDisplayResponse>
-      >(
-        `${config.endpoints.products.getAllProducts(
-          storeId
-        )}?page=${page}&size=6`
-      );
+      >(url);
       return response.data.data;
     } catch (error) {
       if (isAxiosError(error) && error.response) {
