@@ -97,7 +97,7 @@ const PaymentMethodDialog: React.FC<PaymentMethodDialogProps> = ({
                                 <div key={method.id} className="flex items-center space-x-3 p-3 border rounded-lg">
                                     <RadioGroupItem value={method.id} id={method.id} />
                                     <Label htmlFor={method.id} className="flex items-center space-x-3 flex-grow cursor-pointer">
-                                        <Image width={40} height={40} src={method.icon} alt={method.name} className="w-10 h-10" />
+                                        <img width={40} height={40} src={method.icon} alt={method.name} className="w-10 h-10" />
                                         <span className="font-medium">{method.name}</span>
                                     </Label>
                                 </div>
