@@ -10,7 +10,7 @@ interface OrderPriceProps extends Summary{
     pendingOrder?: DataTransaction | null;
 }
 
-const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shippingCost, onPaymentClick, pendingOrder}) => {
+const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shippingCost, voucher, onPaymentClick, pendingOrder}) => {
     const {
         isLoading,
         error,
@@ -23,28 +23,39 @@ const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shipp
     return (
         <div className="rounded-lg shadow p-4 w-full mt-4 lg:mt-0">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
                 <div className="flex justify-between">
                     <p>Subtotal</p>
                     <p>{formatToIDR(subtotal)}</p>
                 </div>
-                <div className="flex justify-between">
-                    <p>Discount</p>
-                    <p>{formatToIDR(discount)}</p>
-                </div>
+                {discount > 0 && (
+                    <div className="flex justify-between text-green-600 font-medium">
+                        <p>Discount</p>
+                        <p>- {formatToIDR(discount)}</p>
+                    </div>
+                )}
+                {voucher > 0 && (
+                    <div className="flex justify-between text-blue-600 font-medium">
+                        <p>Voucher</p>
+                        <p>- {formatToIDR(voucher)}</p>
+                    </div>
+                )}
                 <div className="flex justify-between">
                     <p>Shipping</p>
                     <p>{formatToIDR(shippingCost)}</p>
                 </div>
-                <div className="flex justify-between font-bold">
+                <div className="h-px bg-gray-200 my-2"></div>
+                <div className="flex justify-between font-bold text-lg">
                     <p>Total Purchase</p>
                     <p>{formatToIDR(total + shippingCost)}</p>
                 </div>
             </div>
             <button
                 onClick={onPaymentClick}
-                className={`w-full text-white py-2 rounded-lg mt-4 ${
-                    pendingOrder ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-600 hover:bg-red-700'
+                className={`w-full text-white py-3 rounded-lg mt-6 transition duration-300 ease-in-out ${
+                    pendingOrder
+                        ? 'bg-yellow-500 hover:bg-yellow-600'
+                        : 'bg-red-600 hover:bg-red-700'
                 }`}
             >
                 {pendingOrder ? 'Resume Pending Payment' : 'Pay Now'}
