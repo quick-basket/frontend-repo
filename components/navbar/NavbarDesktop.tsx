@@ -173,7 +173,7 @@ const NavbarDesktop = () => {
           </div>
           <div className="flex gap-6 items-center">
             <Link href="/cart">
-              <CartIcon />
+              <CartIcon isMobile={false} />
             </Link>
             <div className="flex items-center space-x-4 ml-4">
               {renderAuthSection()}
