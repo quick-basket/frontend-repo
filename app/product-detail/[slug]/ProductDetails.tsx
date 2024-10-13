@@ -57,24 +57,24 @@ const ProductDetails: React.FC<ProductDetailProps> = ({ product }) => {
         {/* Left column: Images */}
         <div className="md:w-1/3">
           <div className="mb-4">
-            <Image
+            <img
               src={mainImage}
               alt={product.name}
               width={400}
               height={400}
-              objectFit="contain"
+              style={{objectFit: "contain"}}
               className="rounded-lg w-full"
             />
           </div>
           <div className="flex gap-2 overflow-x-auto">
             {product.imageUrls.map((img, index) => (
-              <Image
+              <img
                 key={index}
                 src={img}
                 alt={`${product.name} - Image ${index + 1}`}
                 width={80}
                 height={80}
-                objectFit="cover"
+                style={{objectFit: "contain"}}
                 className={`rounded cursor-pointer ${
                   mainImage === img ? "border-2 border-red-600" : ""
                 }`}

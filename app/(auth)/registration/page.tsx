@@ -152,12 +152,11 @@ const Registration = () => {
                 </div>
             </div>
             <div className="hidden bg-muted lg:block">
-                <Image
+                <img
                     src="/logo-transformed.webp"
                     alt="Image"
-                    width="1920"
-                    height="1080"
-                    priority={true}
+                    width={1920}
+                    height={1080}
                     className="h-full w-full object-contain mix-blend-normal"
                 />
             </div>
