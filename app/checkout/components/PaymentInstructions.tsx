@@ -211,15 +211,15 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
         if (!transactionData.midtransResponse || Object.keys(transactionData.midtransResponse).length === 0) {
             return (
                 <div className="text-center">
-                    <h3 className="text-xl font-semibold mb-4">Manual Bank Transfer Instructions</h3>
-                    <p className="mb-2">Please transfer to the following bank account:</p>
-                    <p className="text-2xl font-bold mb-2">BCA 1234567890</p>
-                    <p className="mb-4">Account Name: Quick Basket</p>
+                    <h3 className="text-lg md:text-xl font-semibold mb-4">Manual Bank Transfer Instructions</h3>
+                    <p className="mb-2 text-sm md:text-base">Please transfer to the following bank account:</p>
+                    <p className="text-xl md:text-2xl font-bold mb-2">BCA 1234567890</p>
+                    <p className="mb-4 text-sm md:text-base">Account Name: Quick Basket</p>
                     <Button
                         onClick={() => setIsUploadDialogOpen(true)}
-                        className="mb-4"
+                        className="mb-4 text-sm md:text-base"
                     >
-                        <Upload className="mr-2 h-4 w-4"/> Upload Payment Proof
+                        <Upload className="mr-2 h-3 w-3 md:h-4 md:w-4"/> Upload Payment Proof
                     </Button>
                 </div>
             );
@@ -230,9 +230,8 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
             const qrCodeUrl = midtransResponse.actions?.find(action => action.name === 'generate-qr-code')?.url;
             return (
                 <div className="text-center">
-                    <h3 className="text-xl font-semibold mb-4">Scan QR Code to Pay with GoPay</h3>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    {qrCodeUrl && <img src={qrCodeUrl} alt="GoPay QR Code" className="mx-auto h-48 w-48 mb-4"/>}
+                    <h3 className="text-lg md:text-xl font-semibold mb-4">Scan QR Code to Pay with GoPay</h3>
+                    {qrCodeUrl && <img src={qrCodeUrl} alt="GoPay QR Code" className="mx-auto h-36 w-36 md:h-48 md:w-48 mb-4"/>}
                 </div>
             );
         }
@@ -242,82 +241,83 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
             const bank = midtransResponse.va_numbers?.[0]?.bank.toUpperCase();
             return (
                 <div className="text-center">
-                    <h3 className="text-xl font-semibold mb-4">Bank Transfer Instructions</h3>
-                    <p className="mb-2">Please transfer to the following Virtual Account:</p>
-                    <p className="text-2xl font-bold mb-2">{bank} {vaNumber}</p>
+                    <h3 className="text-lg md:text-xl font-semibold mb-4">Bank Transfer Instructions</h3>
+                    <p className="mb-2 text-sm md:text-base">Please transfer to the following Virtual Account:</p>
+                    <p className="text-xl md:text-2xl font-bold mb-2">{bank} {vaNumber}</p>
                     <Button
                         onClick={() => {
                             navigator.clipboard.writeText(vaNumber || '');
                             notify({ text: 'VA Number copied to clipboard', type: 'success' });
                         }}
-                        className="mb-4"
+                        className="mb-4 text-sm md:text-base"
                     >
-                        <Copy className="mr-2 h-4 w-4"/> Copy VA Number
+                        <Copy className="mr-2 h-3 w-3 md:h-4 md:w-4"/> Copy VA Number
                     </Button>
                 </div>
             );
         }
 
         return null;
-    }, [transactionData]);
+    }, [transactionData, setIsUploadDialogOpen, notify]);
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-center">Payment Instructions</h2>
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-center">Payment Instructions</h2>
             {renderPaymentInstructions()}
-            <div className="mt-6 p-4 bg-blue-50 rounded-md">
+            <div className="mt-4 md:mt-6 p-3 md:p-4 bg-blue-50 rounded-md">
                 <div className="flex items-center justify-between mb-2">
-                    <span className="font-semibold">Total Amount:</span>
-                    <span className="text-xl font-bold">
+                    <span className="font-semibold text-sm md:text-base">Total Amount:</span>
+                    <span className="text-lg md:text-xl font-bold">
                         Rp {transactionData.order.totalAmount.toLocaleString('id-ID')}
                     </span>
                 </div>
                 {!isManualPayment && (
                     <div className="flex items-center justify-between">
-                        <span className="font-semibold">Time Remaining:</span>
-                        <span className="text-xl font-bold flex items-center">
-                            <Clock className="mr-2 h-5 w-5 text-blue-500"/>
+                        <span className="font-semibold text-sm md:text-base">Time Remaining:</span>
+                        <span className="text-lg md:text-xl font-bold flex items-center">
+                            <Clock className="mr-2 h-4 w-4 md:h-5 md:w-5 text-blue-500"/>
                             {timeLeft}
                         </span>
                     </div>
                 )}
             </div>
-            <div className="mt-6 flex space-x-4">
+            <div className="mt-4 md:mt-6 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
                 <Button
                     onClick={handleCheckStatus}
-                    className="flex-1"
+                    className="w-full md:flex-1 text-sm md:text-base"
                     variant="outline"
                     disabled={isCheckingStatus || isCancelLoading}
                 >
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isCheckingStatus ? 'animate-spin' : ''}`}/>
+                    <RefreshCw className={`mr-2 h-3 w-3 md:h-4 md:w-4 ${isCheckingStatus ? 'animate-spin' : ''}`}/>
                     {isCheckingStatus ? 'Checking...' : 'Check Status'}
                 </Button>
                 <Button
                     onClick={handleCancelTransaction}
                     variant="destructive"
-                    className="flex-1"
+                    className="w-full md:flex-1 text-sm md:text-base"
                     disabled={isCancelLoading || isCheckingStatus}
                 >
-                    <AlertCircle className="mr-2 h-4 w-4"/>
+                    <AlertCircle className="mr-2 h-3 w-3 md:h-4 md:w-4"/>
                     {isCancelLoading ? 'Cancelling...' : 'Cancel Transaction'}
                 </Button>
             </div>
-            <p className="mt-4 text-sm text-gray-600 text-center">
+            <p className="mt-4 text-xs md:text-sm text-gray-600 text-center">
                 Please complete the payment before the time expires. If you have any issues, please contact our support.
             </p>
 
             <AlertDialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
-                <AlertDialogContent>
+                <AlertDialogContent className="max-w-[90vw] md:max-w-[500px]">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Upload Payment Proof</AlertDialogTitle>
-                        <AlertDialogDescription>
+                        <AlertDialogTitle className="text-lg md:text-xl">Upload Payment Proof</AlertDialogTitle>
+                        <AlertDialogDescription className="text-sm md:text-base">
                             Please select an image file of your payment proof.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <Input type="file" accept="image/*" onChange={handleFileChange}/>
+                    <Input type="file" accept="image/*" onChange={handleFileChange} className="text-sm md:text-base"/>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleUploadProof} disabled={!selectedFile}>
+                        <AlertDialogCancel className="text-sm md:text-base">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleUploadProof} disabled={!selectedFile}
+                                           className="text-sm md:text-base">
                             Upload
                         </AlertDialogAction>
                     </AlertDialogFooter>

@@ -3,9 +3,11 @@ import {config} from "@/constants/url";
 import {CheckoutType, OrderStatus, OrderType, PaymentStatus} from "@/types/order/type";
 
 class OrderAPI {
-    async getCheckoutSummary(storeId: number) {
+    async getCheckoutSummary(storeId: number, userVoucherId?: number) {
         try {
-            const response = await axiosInstance.get(config.endpoints.order.checkout(storeId));
+            const params = userVoucherId ? {userVoucherId}:{}
+            const response = await axiosInstance.get(config.endpoints.order.checkout(storeId),
+                {params});
             return response.data.data;
         } catch (error) {
             if (isAxiosError(error) && error.response) {
