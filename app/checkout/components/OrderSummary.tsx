@@ -78,7 +78,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({recipient, items, applyVouch
                 {items.map((item, index) => (
                     <div key={index} className="flex items-center justify-between py-2">
                         <div className="flex items-center">
-                            <Image width={100} height={100} src={item.image} alt={item.name}
+                            <img width={100} height={100} src={item.image} alt={item.name}
                                    className="w-16 h-16 object-cover mr-4"/>
                             <div>
                                 <p className="font-medium">{item.name}</p>

@@ -44,10 +44,9 @@ export default function CarouselImage() {
                         <CarouselItem key={item.id} className="sm:basis-full md:basis-1/2">
                             <Link href={item.link}>
                                 <div className="relative w-full pb-[56.25%]">
-                                    <Image
+                                    <img
                                         src={item.imageUrl}
                                         alt={item.alt}
-                                        fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         style={{objectFit: "cover"}}
                                         className="rounded-lg"
