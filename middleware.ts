@@ -12,7 +12,7 @@ export default auth((req) => {
     const isLoggedIn = !!req.auth
 
     // Public routes accessible to all users
-    const publicRoutes = ['/login', '/register', '/reset-password', '/']
+    const publicRoutes = ['/login', '/registration', '/reset-password', '/verify']
     if (publicRoutes.includes(nextUrl.pathname)) {
         return NextResponse.next()
     }

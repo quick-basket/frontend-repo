@@ -109,7 +109,7 @@ const Registration = () => {
                                     {...register("phone", {
                                         required: "Phone number is required",
                                         pattern: {
-                                            value: /^\+?[1-9]\d{1,14}$/,
+                                            value: /^(\+?62|0)[1-9]\d{7,11}$/,
                                             message: "Invalid phone number",
                                         },
                                     })}
@@ -145,7 +145,7 @@ const Registration = () => {
                     )}
                     <div className="mt-4 text-center text-sm">
                         Already have an account?{" "}
-                        <Link href="#" className="underline">
+                        <Link href="/login" className="underline">
                             Login
                         </Link>
                     </div>

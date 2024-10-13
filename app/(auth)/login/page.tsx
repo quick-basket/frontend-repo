@@ -26,15 +26,12 @@ function Login() {
                         </p>
                     </div>
                     <FormLogin/>
-                    <Button variant="outline" className="w-full" value="github">
-                        Login with GitHub
-                    </Button>
                     <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
                         Login with Google
                     </Button>
                     <div className="mt-4 text-center text-sm">
                         Don&apos;t have an account?{" "}
-                        <Link href="/registration" className="underline">
+                        <Link href="/registration" target={"_blank"} className="underline">
                             Sign up
                         </Link>
                     </div>

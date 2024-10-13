@@ -45,14 +45,14 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
         onClick={handleDeleteAll}
       >
         <Trash2 className="mr-2" size={20} />
-        Hapus Semua
+        Delete All Items
       </button>
       <div className="bg-white p-4 rounded-lg shadow">
         <div className="flex items-center mb-4">
           <Truck className="mr-2" size={20} />
-          <span className="font-semibold">Stok dari Toko</span>
+          <span className="font-semibold">Stock from the store</span>
         </div>
-        <div className="text-sm text-gray-600 mb-4">Pengiriman Hari ini</div>
+        <div className="text-sm text-gray-600 mb-4">Same Day Delivery</div>
         {items.map((item) => (
           <div
             key={item.id}
