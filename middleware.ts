@@ -12,14 +12,14 @@ export default auth((req) => {
     const isLoggedIn = !!req.auth
 
     // Public routes accessible to all users
-    const publicRoutes = ['/login', '/registration', '/reset-password', '/verify']
+    const publicRoutes = ['/login', '/registration', '/reset-password', '/verify', '/', '/unauthorized']
     if (publicRoutes.includes(nextUrl.pathname)) {
         return NextResponse.next()
     }
 
     // Routes that require authentication
     if (!isLoggedIn) {
-        return NextResponse.redirect(new URL('/login', nextUrl))
+        return NextResponse.redirect(new URL('/unauthorized', nextUrl))
     }
 
     // Role-based access control
@@ -39,19 +39,19 @@ export default auth((req) => {
                 if (urlStoreId === store_id?.toString()) {
                     return NextResponse.next()
                 } else {
-                    // Redirect to the correct store dashboard if not matching
-                    return NextResponse.redirect(new URL(`/dashboard/stores/${store_id}`, nextUrl))
+                    // Redirect to unauthorized page
+                    return NextResponse.redirect(new URL('/unauthorized', nextUrl))
                 }
             } else if (nextUrl.pathname === '/dashboard') {
                 // Redirect store admins to their specific store dashboard from the main dashboard
                 return NextResponse.redirect(new URL(`/dashboard/stores/${store_id}`, nextUrl))
             } else {
-                // For other dashboard routes, redirect to their store dashboard
-                return NextResponse.redirect(new URL(`/dashboard/stores/${store_id}`, nextUrl))
+                // For other dashboard routes, redirect to unauthorized page
+                return NextResponse.redirect(new URL('/unauthorized', nextUrl))
             }
         } else {
-            // For other roles, redirect to home page
-            return NextResponse.redirect(new URL('/', nextUrl))
+            // For other roles, redirect to unauthorized page
+            return NextResponse.redirect(new URL('/unauthorized', nextUrl))
         }
     }
 

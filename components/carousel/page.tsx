@@ -43,7 +43,7 @@ export default function CarouselImage() {
                     {banners.map((item) => (
                         <CarouselItem key={item.id} className="sm:basis-full md:basis-1/2">
                             <Link href={item.link}>
-                                <div className="relative w-full pb-[56.25%]">
+                                <div className="relative w-full">
                                     <img
                                         src={item.imageUrl}
                                         alt={item.alt}
