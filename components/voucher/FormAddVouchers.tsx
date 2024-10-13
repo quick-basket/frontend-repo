@@ -13,10 +13,6 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import productAPI from "@/api/product/productAPI";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
 
 interface Props {
   title: string;
@@ -41,7 +37,10 @@ const FormAddVoucher: React.FC<Props> = ({
     setValue,
     formState: { errors },
   } = useForm<FormVoucherData>({
-    defaultValues: voucher,
+    defaultValues: voucher || {
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: new Date().toISOString().split("T")[0],
+    },
   });
   const [products, setProducts] = useState<{ id: number; name: string }[]>([]);
 
@@ -49,7 +48,6 @@ const FormAddVoucher: React.FC<Props> = ({
     const fetchProducts = async () => {
       try {
         const response = await productAPI.getProductList();
-        console.log("result", response);
         setProducts(response);
       } catch (error) {
         console.error("Failed to fetch products", error);
@@ -62,20 +60,28 @@ const FormAddVoucher: React.FC<Props> = ({
     if (voucher) {
       Object.entries(voucher).forEach(([key, value]) => {
         if (value !== null) {
-          setValue(key as keyof FormVoucherData, value as any);
+          if (key === "startDate" || key === "endDate") {
+            const localDate = new Date(value as string)
+              .toISOString()
+              .split("T")[0];
+            setValue(key as keyof FormVoucherData, localDate);
+          } else {
+            setValue(key as keyof FormVoucherData, value as any);
+          }
         }
-        console.log("value", key, value);
       });
-      console.log("voucher results", voucher);
     } else {
       reset();
     }
   }, [voucher, setValue, reset]);
 
   const handleFormSubmit = (data: FormVoucherData) => {
-    console.log("data 1", data);
-
-    onSubmit(data);
+    const formattedData = {
+      ...data,
+      startDate: `${data.startDate}T00:00:00Z`,
+      endDate: `${data.endDate}T23:59:59Z`,
+    };
+    onSubmit(formattedData);
     onClose();
   };
 
@@ -213,30 +219,10 @@ const FormAddVoucher: React.FC<Props> = ({
 
           <div className="space-y-2">
             <Label htmlFor="startDate">Start Date</Label>
-            <Controller
-              name="startDate"
-              control={control}
-              rules={{ required: "Start Date is required" }}
-              render={({ field }) => (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {field.value
-                        ? format(new Date(field.value), "PPP")
-                        : "Pick a date"}
-                      <CalendarIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString())}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
+            <Input
+              id="startDate"
+              type="date"
+              {...register("startDate", { required: "Start Date is required" })}
             />
             {errors.startDate && (
               <p className="text-sm text-red-500">{errors.startDate.message}</p>
@@ -245,30 +231,10 @@ const FormAddVoucher: React.FC<Props> = ({
 
           <div className="space-y-2">
             <Label htmlFor="endDate">End Date</Label>
-            <Controller
-              name="endDate"
-              control={control}
-              rules={{ required: "End Date is required" }}
-              render={({ field }) => (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {field.value
-                        ? format(new Date(field.value), "PPP")
-                        : "Pick a date"}
-                      <CalendarIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString())}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
+            <Input
+              id="endDate"
+              type="date"
+              {...register("endDate", { required: "End Date is required" })}
             />
             {errors.endDate && (
               <p className="text-sm text-red-500">{errors.endDate.message}</p>
