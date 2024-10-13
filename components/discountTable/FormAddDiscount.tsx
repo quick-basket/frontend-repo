@@ -75,10 +75,10 @@ const FormAddDiscount: React.FC<Props> = ({
       Object.entries(discount).forEach(([key, value]) => {
         if (value !== null) {
           if (key === "startDate" || key === "endDate") {
-            setValue(
-              key as keyof FormDiscountData,
-              new Date(value as string).toISOString().split("T")[0] as any
-            );
+            const localDate = new Date(value as string)
+              .toISOString()
+              .split("T")[0];
+            setValue(key as keyof FormDiscountData, localDate);
           } else {
             setValue(key as keyof FormDiscountData, value as any);
           }
@@ -92,8 +92,8 @@ const FormAddDiscount: React.FC<Props> = ({
   const handleFormSubmit = (data: FormDiscountData) => {
     const formattedData = {
       ...data,
-      startDate: new Date(data.startDate + "T00:00:00Z").toISOString(),
-      endDate: new Date(data.endDate + "T23:59:59Z").toISOString(),
+      startDate: `${data.startDate}T00:00:00Z`,
+      endDate: `${data.endDate}T00:00:00Z`,
     };
     onSubmit(formattedData);
     onClose();
