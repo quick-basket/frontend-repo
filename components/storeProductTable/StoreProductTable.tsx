@@ -1,7 +1,7 @@
 import useProductList from "@/hooks/product-list/useProductList";
 import useStoreProduct from "@/hooks/stores/useStoreProduct";
 import { FormStoreProduct, StoreProduct } from "@/types/store-product/type";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { DataTable } from "../ui/DataTable";
@@ -20,6 +20,7 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
     data: products,
     isLoading,
     error,
+    refetch,
     createStoreProduct,
     updateStoreProduct,
     deleteStoreProduct,
@@ -28,6 +29,11 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
   const [selectedProduct, setSelectedProduct] = useState<
     StoreProduct | undefined
   >(undefined);
+  useEffect(() => {
+    if (storeId) {
+      refetch();
+    }
+  }, [storeId]);
 
   const handleEdit = (products: StoreProduct) => {
     const { id, ...StoreProduct } = products;

@@ -1,11 +1,18 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { FormDataStore, StoreType } from "@/types/store/type";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Edit, Trash } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronFirst,
+  ChevronRight,
+  Edit,
+  Trash,
+} from "lucide-react";
 
 export const columns = (
   onEdit: (store: StoreType) => void,
-  onDelete: (id: string) => void
+  onDelete: (id: string) => void,
+  onClick: (id: string) => void
 ): ColumnDef<StoreType>[] => [
   {
     accessorKey: "name",
@@ -96,6 +103,13 @@ export const columns = (
             onClick={() => onDelete(row.original.id)}
           >
             <Trash className="h-4 w-4 mr-1" /> Delete
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onClick(row.original.id)}
+          >
+            <ChevronRight className="h-4 w-4 mr-1" /> Go to Store
           </Button>
         </div>
       );

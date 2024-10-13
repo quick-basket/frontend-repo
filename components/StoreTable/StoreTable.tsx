@@ -9,6 +9,7 @@ import { swalAlert } from "@/utils/alert/swalAlert";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
+import { useRouter } from "next/navigation";
 
 const StoreTable = () => {
   const {
@@ -23,6 +24,7 @@ const StoreTable = () => {
   const [selectedStore, setSelectedStore] = useState<FormDataStore | undefined>(
     undefined
   );
+  const router = useRouter();
 
   const handleEdit = (store: StoreType) => {
     const { id, createdAt, updatedAt, ...formDataStore } = store;
@@ -49,6 +51,10 @@ const StoreTable = () => {
         });
       }
     }
+  };
+
+  const handleClick = (id: string) => {
+    router.push(`/dashboard/stores/${id}`);
   };
 
   const handleDialogClose = () => {
@@ -105,7 +111,7 @@ const StoreTable = () => {
       ) : (
         stores && (
           <DataTable
-            columns={columns(handleEdit, handleDelete)}
+            columns={columns(handleEdit, handleDelete, handleClick)}
             data={stores}
           />
         )
