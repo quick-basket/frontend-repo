@@ -99,6 +99,14 @@ const FormAddDiscount: React.FC<Props> = ({
     onClose();
   };
 
+  const handleDateSelect = (
+    date: Date | null,
+    fieldName: "startDate" | "endDate"
+  ) => {
+    console.log(`${fieldName} selected:`, date);
+    setValue(fieldName, date ? date.toISOString() : "");
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
@@ -251,7 +259,9 @@ const FormAddDiscount: React.FC<Props> = ({
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString())}
+                      onSelect={(date) =>
+                        handleDateSelect(date || null, "startDate")
+                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -283,7 +293,9 @@ const FormAddDiscount: React.FC<Props> = ({
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString())}
+                      onSelect={(date) =>
+                        handleDateSelect(date || null, "endDate")
+                      }
                       initialFocus
                     />
                   </PopoverContent>
