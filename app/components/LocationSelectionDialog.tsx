@@ -17,6 +17,7 @@ import {confirmAlert} from "@/utils/alert/notiflixConfig";
 import userAddressAPI from "@/api/user/userAddressAPI";
 import {useQueryClient} from "@tanstack/react-query";
 import {queryKeys} from "@/constants/queryKey";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 interface LocationSelectionDialogProps {
     isOpen: boolean;
@@ -88,79 +89,81 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
     return (
         <>
             <Dialog open={isOpen} onOpenChange={handleDialogClose}>
-                <DialogContent className="w-[90vw] max-w-[600px] rounded-lg">
-                    <DialogHeader>
+                <DialogContent className="w-full sm:max-w-[425px] h-[90vh] flex flex-col p-0">
+                    <DialogHeader className="p-6 pb-2">
                         <DialogTitle className="text-xl font-bold">Choose Your Location</DialogTitle>
                         <DialogDescription>
                             Select your current location or choose from your saved addresses.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="mt-4 space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-                        <div className="p-4 border rounded-lg">
-                            <div className="flex justify-between items-start">
-                                <div className="flex flex-col gap-1">
+                    <ScrollArea className="flex-grow px-6">
+                        <div className="space-y-4 pb-6">
+                            <div className="p-4 border rounded-lg">
+                                <div className="flex justify-between items-center">
                                     <span className="font-semibold">Use Current Location</span>
+                                    <Button variant="outline" size="sm" onClick={handleSelectCurrentLocation}>
+                                        <Crosshair className="mr-2 h-4 w-4" />
+                                        Select
+                                    </Button>
                                 </div>
-                                <Button variant="outline" size="sm" onClick={handleSelectCurrentLocation}>
-                                    <Crosshair className="mr-2 h-4 w-4"/>
-                                    Select
-                                </Button>
                             </div>
-                        </div>
-                        {isLoading ? (
-                            <div>Loading addresses...</div>
-                        ) : error ? (
-                            <div>Error loading addresses: {error.message}</div>
-                        ) : userAddresses && userAddresses.length > 0 ? (
-                            userAddresses.map((address: UserAddressType) => (
-                                <div key={address.id} className="p-4 border rounded-lg">
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex flex-col gap-1">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-semibold">{address.address.split(',')[0]}</span>
-                                                {address.isPrimary && (
-                                                    <span
-                                                        className="px-2 py-1 text-xs font-medium text-white bg-red-600 rounded-full">
-                                                        Primary Address
-                                                    </span>
-                                                )}
+                            {isLoading ? (
+                                <div>Loading addresses...</div>
+                            ) : error ? (
+                                <div>Error loading addresses: {error.message}</div>
+                            ) : userAddresses && userAddresses.length > 0 ? (
+                                userAddresses.map((address: UserAddressType) => (
+                                    <div key={address.id} className="p-4 border rounded-lg">
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-semibold">{address.address.split(',')[0]}</span>
+                                                    {address.isPrimary && (
+                                                        <span className="px-2 py-1 text-xs font-medium text-white bg-red-600 rounded-full">
+                                                            Primary
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => handleEditAddress(address)}
+                                                    >
+                                                        <Edit className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => handleDeleteAddress(address)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
                                             </div>
                                             <span className="text-sm">{address.city}</span>
                                             <span className="text-sm text-gray-500">{address.postalCode}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => handleEditAddress(address)}
-                                            >
-                                                <Edit className="h-4 w-4"/>
-                                            </Button>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => handleDeleteAddress(address)}
-                                            >
-                                                <Trash2 className="h-4 w-4"/>
-                                            </Button>
                                             <Button
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => handleSelectAddress(address)}
+                                                className="w-full mt-2"
                                             >
                                                 Select
                                             </Button>
                                         </div>
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div>No addresses found. Add a new address below.</div>
-                        )}
+                                ))
+                            ) : (
+                                <div>No addresses found. Add a new address below.</div>
+                            )}
+                        </div>
+                    </ScrollArea>
+                    <div className="p-6 pt-2">
+                        <Button onClick={handleAddAddress} className="w-full">
+                            Add New Address
+                        </Button>
                     </div>
-                    <Button onClick={handleAddAddress} className="mt-4">
-                        Add New Address
-                    </Button>
                 </DialogContent>
             </Dialog>
             <AddUserAddressDialog
@@ -170,7 +173,7 @@ const LocationSelectionDialog: React.FC<LocationSelectionDialogProps> = ({isOpen
                 editingAddress={editingAddress}
             />
         </>
-    )
+    );
 };
 
 export default LocationSelectionDialog;
