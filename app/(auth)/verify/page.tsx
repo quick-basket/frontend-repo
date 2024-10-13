@@ -35,7 +35,7 @@ const Verify = () => {
     useEffect(() => {
         const checkCodeValidity = async () => {
             console.log(verificationCode);
-            if (verificationCode){
+            if (verificationCode) {
                 try {
                     const response = await AuthAPI.verifyCode(verificationCode);
                     console.log("RESPONSE", response);
@@ -89,36 +89,39 @@ const Verify = () => {
                             </AlertDescription>
                         </Alert>
                     ) : (
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    {...register("password", validationPassword)}
-                                    className={errors.password ? "border-red-500" : ""}
-                                />
-                                {errors.password && (
-                                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Confirm Password</Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="password"
-                                    {...register("confirmPassword", validationPassword)}
-                                    className={errors.password ? "border-red-500" : ""}
-                                />
-                                {errors.password && (
-                                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                                )}
-                            </div>
-                            <Button type="submit"
-                                    className="w-full">
-                                Set Password
-                            </Button>
-                        </form>
+                        <>
+                            <p className="pb-4 font-medium">Set Your Password</p>
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="email">Password</Label>
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        {...register("password", validationPassword)}
+                                        className={errors.password ? "border-red-500" : ""}
+                                    />
+                                    {errors.password && (
+                                        <p className="text-sm text-red-500">{errors.password.message}</p>
+                                    )}
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="password">Confirm Password</Label>
+                                    <Input
+                                        id="confirmPassword"
+                                        type="password"
+                                        {...register("confirmPassword", validationPassword)}
+                                        className={errors.password ? "border-red-500" : ""}
+                                    />
+                                    {errors.password && (
+                                        <p className="text-sm text-red-500">{errors.password.message}</p>
+                                    )}
+                                </div>
+                                <Button type="submit"
+                                        className="w-full">
+                                    Set Password
+                                </Button>
+                            </form>
+                        </>
                     )
                 }
             </div>
