@@ -14,6 +14,9 @@ const Checkout = () => {
         data: checkoutData,
         isLoading: isCheckoutLoading,
         error: checkoutError,
+        applyVoucher,
+        selectedUserVoucher,
+        isApplyingVoucher
     } = useCheckout();
 
     const {
@@ -52,7 +55,11 @@ const Checkout = () => {
         <div className="container mx-auto max-w-6xl py-8 px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:space-x-8">
                 <div className="md:w-4/5">
-                    <OrderSummary recipient={recipient} items={items}/>
+                    <OrderSummary recipient={recipient}
+                                  items={items}
+                                  applyVoucher={applyVoucher}
+                                  selectedVoucherId={selectedUserVoucher}
+                                  isApplyingVoucher={isApplyingVoucher} />
                 </div>
                 <div className="md:w-1/3 mt-8 md:mt-0">
                     <OrderPrice {...summary} onPaymentClick={handleShowPaymentMethod} pendingOrder={pendingOrder} />
