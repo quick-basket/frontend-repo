@@ -54,7 +54,10 @@ const FormAddDiscount: React.FC<Props> = ({
     reset,
     setValue,
   } = useForm<FormDiscountData>({
-    defaultValues: discount || {},
+    defaultValues: discount || {
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+    },
   });
 
   const [products, setProducts] = useState<
@@ -104,7 +107,7 @@ const FormAddDiscount: React.FC<Props> = ({
     fieldName: "startDate" | "endDate"
   ) => {
     console.log(`${fieldName} selected:`, date);
-    setValue(fieldName, date ? date.toISOString() : "");
+    setValue(fieldName, date ? date.toISOString() : new Date().toISOString());
   };
 
   return (
@@ -255,12 +258,15 @@ const FormAddDiscount: React.FC<Props> = ({
                       <CalendarIcon className="ml-2 h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date) =>
                         handleDateSelect(date || null, "startDate")
+                      }
+                      disabled={(date) =>
+                        date < new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
                     />
