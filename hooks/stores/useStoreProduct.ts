@@ -8,7 +8,7 @@ import exp from "constants";
 const useStoreProduct = (id?: string) => {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery<StoreProduct[], Error>({
+  const { data, isLoading, error, refetch } = useQuery<StoreProduct[], Error>({
     queryKey: [queryKeys.productStoreList.GET_PRODUCTS],
     queryFn: async () => await storeProductAPI.getStoreProductList(id!),
     enabled: !!id,
@@ -88,6 +88,7 @@ const useStoreProduct = (id?: string) => {
     data,
     isLoading,
     error,
+    refetch,
     createStoreProduct: createStoreProductMutation.mutate,
     updateStoreProduct: editStoreProductMutation.mutate,
     deleteStoreProduct: deleteStoreProductMutation.mutate,

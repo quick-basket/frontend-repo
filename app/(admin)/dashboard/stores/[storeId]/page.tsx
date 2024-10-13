@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavbarDashboard from "../../components/NavbarDashboard";
 import StoreProductTable from "@/components/storeProductTable/StoreProductTable";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Sidebar from "./components/Sidebar";
 import salesAPI from "@/api/sales/salesAPI";
 // import SalesCard from "./components/SalesCard";
@@ -15,6 +15,12 @@ const Stores = () => {
   const params = useParams();
   const storeId = params.storeId as any;
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  useEffect(() => {
+    if (storeId) {
+      router.refresh();
+    }
+  }, [storeId]);
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       <Sidebar
