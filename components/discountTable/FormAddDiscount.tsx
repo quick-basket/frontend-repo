@@ -16,16 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { DiscountList, FormDiscountData } from "@/types/discount/type";
-import storeProductAPI from "@/api/store/storeProductAPI";
+import { FormDiscountData } from "@/types/discount/type";
 import discountAPI from "@/api/discount/discountAPI";
 
 interface Props {
@@ -54,8 +45,8 @@ const FormAddDiscount: React.FC<Props> = ({
     setValue,
   } = useForm<FormDiscountData>({
     defaultValues: discount || {
-      startDate: new Date().toISOString(),
-      endDate: new Date().toISOString(),
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: new Date().toISOString().split("T")[0],
     },
   });
 
@@ -71,7 +62,6 @@ const FormAddDiscount: React.FC<Props> = ({
         const response = await discountAPI.getStoreProductListNotInDiscount(
           storeId
         );
-        console.log("result", response);
         setProducts(response);
       } catch (error) {
         console.error("Failed to fetch products", error);
@@ -84,29 +74,29 @@ const FormAddDiscount: React.FC<Props> = ({
     if (discount) {
       Object.entries(discount).forEach(([key, value]) => {
         if (value !== null) {
-          setValue(key as keyof FormDiscountData, value as any);
+          if (key === "startDate" || key === "endDate") {
+            setValue(
+              key as keyof FormDiscountData,
+              new Date(value as string).toISOString().split("T")[0] as any
+            );
+          } else {
+            setValue(key as keyof FormDiscountData, value as any);
+          }
         }
-        console.log("value", key, value);
       });
-      console.log("discsount resutl", discount);
     } else {
       reset();
     }
   }, [discount, setValue, reset]);
 
   const handleFormSubmit = (data: FormDiscountData) => {
-    console.log("data 1", data);
-
-    onSubmit(data);
+    const formattedData = {
+      ...data,
+      startDate: new Date(data.startDate + "T00:00:00Z").toISOString(),
+      endDate: new Date(data.endDate + "T23:59:59Z").toISOString(),
+    };
+    onSubmit(formattedData);
     onClose();
-  };
-
-  const handleDateSelect = (
-    date: Date | null,
-    fieldName: "startDate" | "endDate"
-  ) => {
-    console.log(`${fieldName} selected:`, date);
-    setValue(fieldName, date ? date.toISOString() : new Date().toISOString());
   };
 
   return (
@@ -241,71 +231,24 @@ const FormAddDiscount: React.FC<Props> = ({
             )}
           </div>
 
-          <div className="relative space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="startDate">Start Date</Label>
-            <Controller
-              name="startDate"
-              control={control}
-              rules={{ required: "Start Date is required" }}
-              render={({ field }) => (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {field.value
-                        ? format(new Date(field.value), "PPP")
-                        : "Pick a date"}
-                      <CalendarIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) =>
-                        handleDateSelect(date || null, "startDate")
-                      }
-                      disabled={(date) =>
-                        date < new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
+            <Input
+              id="startDate"
+              type="date"
+              {...register("startDate", { required: "Start Date is required" })}
             />
             {errors.startDate && (
               <p className="text-red-500">{errors.startDate.message}</p>
             )}
           </div>
 
-          <div className="relative space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="endDate">End Date</Label>
-            <Controller
-              name="endDate"
-              control={control}
-              rules={{ required: "End Date is required" }}
-              render={({ field }) => (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {field.value
-                        ? format(new Date(field.value), "PPP")
-                        : "Pick a date"}
-                      <CalendarIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) =>
-                        handleDateSelect(date || null, "endDate")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
+            <Input
+              id="endDate"
+              type="date"
+              {...register("endDate", { required: "End Date is required" })}
             />
             {errors.endDate && (
               <p className="text-red-500">{errors.endDate.message}</p>
