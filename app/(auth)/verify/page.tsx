@@ -3,7 +3,6 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from "next/navigation";
 import {useForm} from "react-hook-form";
-import {swalAlert} from "@/utils/alert/swalAlert";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
@@ -12,6 +11,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {TriangleAlert} from "lucide-react";
 import Spinner from "@/components/spinner/Spinner";
 import {validationPassword} from "@/utils/validation";
+import {confirmAlert, notify} from "@/utils/alert/notiflixConfig";
 
 interface FormData {
     password: string
@@ -54,24 +54,21 @@ const Verify = () => {
     const onSubmit = async (data: FormData) => {
         try {
             const response = await AuthAPI.setPassword(data.password, data.confirmPassword, verificationCode as string);
-            await swalAlert({
-                icon: "success",
-                title: "Register Success",
-                text: "Click the button to go to homepage",
-                showConfirmButton: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    router.push("/");
-                }
-            })
+
+            const isConfirmed = await confirmAlert(
+                "Register Success",
+                "Click the button to go to login page"
+            );
+
+            if (isConfirmed) {
+                router.push("/login");
+            }
         } catch (error: any) {
-            await swalAlert({
-                icon: "error",
-                title: "Error",
+            notify({
                 text: error.message,
-                showConfirmButton: false,
-                timer: 2000
-            })
+                type: 'error',
+                timeout: 2000
+            });
         }
     }
 
