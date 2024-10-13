@@ -26,7 +26,6 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { DiscountList, FormDiscountData } from "@/types/discount/type";
 import storeProductAPI from "@/api/store/storeProductAPI";
-import { Value } from "@radix-ui/react-select";
 import discountAPI from "@/api/discount/discountAPI";
 
 interface Props {
@@ -54,7 +53,10 @@ const FormAddDiscount: React.FC<Props> = ({
     reset,
     setValue,
   } = useForm<FormDiscountData>({
-    defaultValues: discount || {},
+    defaultValues: discount || {
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+    },
   });
 
   const [products, setProducts] = useState<
@@ -104,7 +106,7 @@ const FormAddDiscount: React.FC<Props> = ({
     fieldName: "startDate" | "endDate"
   ) => {
     console.log(`${fieldName} selected:`, date);
-    setValue(fieldName, date ? date.toISOString() : "");
+    setValue(fieldName, date ? date.toISOString() : new Date().toISOString());
   };
 
   return (
@@ -239,7 +241,7 @@ const FormAddDiscount: React.FC<Props> = ({
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="relative space-y-2">
             <Label htmlFor="startDate">Start Date</Label>
             <Controller
               name="startDate"
@@ -255,12 +257,15 @@ const FormAddDiscount: React.FC<Props> = ({
                       <CalendarIcon className="ml-2 h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="w-auto p-0 z-50" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date) =>
                         handleDateSelect(date || null, "startDate")
+                      }
+                      disabled={(date) =>
+                        date < new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
                     />
@@ -273,7 +278,7 @@ const FormAddDiscount: React.FC<Props> = ({
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="relative space-y-2">
             <Label htmlFor="endDate">End Date</Label>
             <Controller
               name="endDate"
@@ -289,7 +294,7 @@ const FormAddDiscount: React.FC<Props> = ({
                       <CalendarIcon className="ml-2 h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="w-auto p-0 z-50">
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
@@ -307,7 +312,7 @@ const FormAddDiscount: React.FC<Props> = ({
             )}
           </div>
 
-          <Button type="submit">{discount ? "Update" : "Add"}</Button>
+          <Button type="submit">{isEditMode ? "Update" : "Submit"}</Button>
         </form>
       </DialogContent>
     </Dialog>
