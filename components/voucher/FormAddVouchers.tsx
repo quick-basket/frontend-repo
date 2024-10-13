@@ -61,7 +61,10 @@ const FormAddVoucher: React.FC<Props> = ({
       Object.entries(voucher).forEach(([key, value]) => {
         if (value !== null) {
           if (key === "startDate" || key === "endDate") {
-            const localDate = new Date(value as string)
+            const date = new Date(value as string);
+            const localDate = new Date(
+              date.getTime() - date.getTimezoneOffset() * 60000
+            )
               .toISOString()
               .split("T")[0];
             setValue(key as keyof FormVoucherData, localDate);
@@ -78,8 +81,8 @@ const FormAddVoucher: React.FC<Props> = ({
   const handleFormSubmit = (data: FormVoucherData) => {
     const formattedData = {
       ...data,
-      startDate: `${data.startDate}T00:00:00Z`,
-      endDate: `${data.endDate}T23:59:59Z`,
+      startDate: new Date(`${data.startDate}T00:00:00`).toISOString(),
+      endDate: new Date(`${data.endDate}T23:59:59`).toISOString(),
     };
     onSubmit(formattedData);
     onClose();
