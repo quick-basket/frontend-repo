@@ -21,3 +21,12 @@ export type FormVoucherData = {
   startDate: string;
   endDate: string;
 };
+
+export type UserVoucherResponseDto = {
+  id: number;
+  userId: number;
+  voucherId: number;
+  name: string;
+  isUsed: boolean;
+  usedAt: Date;
+};

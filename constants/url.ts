@@ -109,6 +109,7 @@ export const config = {
     },
     voucher: {
       base: "/vouchers",
+      getByUserId: "/vouchers/userId",
       create: "vouchers/create",
       update: (voucerId: any) => `vouchers/${voucerId}`,
     },

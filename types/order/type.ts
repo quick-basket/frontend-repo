@@ -4,6 +4,8 @@ export interface CheckoutType {
   storeName: string;
   recipient: Recipient;
   items: Item[];
+  appliedVoucherId: number;
+  appliedVoucherCode: string;
   summary: Summary;
   shippingMethod: string;
   orderCode: string;
@@ -32,6 +34,7 @@ export interface Item {
 export interface Summary {
   subtotal: number;
   discount: number;
+  voucher: number;
   shippingCost: number;
   total: number;
 }

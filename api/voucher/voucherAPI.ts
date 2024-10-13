@@ -14,6 +14,17 @@ class VoucherAPI {
     }
   }
 
+  async getVoucherListByUserId() {
+    try {
+      const response = await axiosInstance.get(config.endpoints.voucher.getByUserId);
+      return response.data.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+    }
+  }
+
   async createVoucher(voucherData: FormVoucherData) {
     try {
       const response = await axiosInstance.post(
