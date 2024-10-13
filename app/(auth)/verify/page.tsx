@@ -3,7 +3,6 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from "next/navigation";
 import {useForm} from "react-hook-form";
-import {swalAlert} from "@/utils/alert/swalAlert";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
@@ -12,6 +11,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {TriangleAlert} from "lucide-react";
 import Spinner from "@/components/spinner/Spinner";
 import {validationPassword} from "@/utils/validation";
+import {confirmAlert, notify} from "@/utils/alert/notiflixConfig";
 
 interface FormData {
     password: string
@@ -35,7 +35,7 @@ const Verify = () => {
     useEffect(() => {
         const checkCodeValidity = async () => {
             console.log(verificationCode);
-            if (verificationCode){
+            if (verificationCode) {
                 try {
                     const response = await AuthAPI.verifyCode(verificationCode);
                     console.log("RESPONSE", response);
@@ -54,24 +54,21 @@ const Verify = () => {
     const onSubmit = async (data: FormData) => {
         try {
             const response = await AuthAPI.setPassword(data.password, data.confirmPassword, verificationCode as string);
-            await swalAlert({
-                icon: "success",
-                title: "Register Success",
-                text: "Click the button to go to homepage",
-                showConfirmButton: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    router.push("/");
-                }
-            })
+
+            const isConfirmed = await confirmAlert(
+                "Register Success",
+                "Click the button to go to login page"
+            );
+
+            if (isConfirmed) {
+                router.push("/login");
+            }
         } catch (error: any) {
-            await swalAlert({
-                icon: "error",
-                title: "Error",
+            notify({
                 text: error.message,
-                showConfirmButton: false,
-                timer: 2000
-            })
+                type: 'error',
+                timeout: 2000
+            });
         }
     }
 
@@ -92,36 +89,39 @@ const Verify = () => {
                             </AlertDescription>
                         </Alert>
                     ) : (
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    {...register("password", validationPassword)}
-                                    className={errors.password ? "border-red-500" : ""}
-                                />
-                                {errors.password && (
-                                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Confirm Password</Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="password"
-                                    {...register("confirmPassword", validationPassword)}
-                                    className={errors.password ? "border-red-500" : ""}
-                                />
-                                {errors.password && (
-                                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                                )}
-                            </div>
-                            <Button type="submit"
-                                    className="w-full">
-                                Set Password
-                            </Button>
-                        </form>
+                        <>
+                            <p className="pb-4 font-medium">Set Your Password</p>
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="email">Password</Label>
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        {...register("password", validationPassword)}
+                                        className={errors.password ? "border-red-500" : ""}
+                                    />
+                                    {errors.password && (
+                                        <p className="text-sm text-red-500">{errors.password.message}</p>
+                                    )}
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="password">Confirm Password</Label>
+                                    <Input
+                                        id="confirmPassword"
+                                        type="password"
+                                        {...register("confirmPassword", validationPassword)}
+                                        className={errors.password ? "border-red-500" : ""}
+                                    />
+                                    {errors.password && (
+                                        <p className="text-sm text-red-500">{errors.password.message}</p>
+                                    )}
+                                </div>
+                                <Button type="submit"
+                                        className="w-full">
+                                    Set Password
+                                </Button>
+                            </form>
+                        </>
                     )
                 }
             </div>
