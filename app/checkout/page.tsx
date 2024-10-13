@@ -4,7 +4,6 @@ import OrderSummary from "@/app/checkout/components/OrderSummary";
 import OrderPrice from "@/app/checkout/components/OrderPrice";
 import useCheckout from "@/hooks/order/useCheckout";
 import Spinner from "@/components/spinner/Spinner";
-import {mapTransactionStatusToPaymentStatus, PaymentStatus} from "@/types/order/type";
 import PaymentMethodDialog from "@/app/checkout/components/PaymentMethodDialog";
 import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import {Button} from "@/components/ui/button";
