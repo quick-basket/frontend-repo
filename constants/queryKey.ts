@@ -47,5 +47,6 @@ export const queryKeys = {
   },
   voucher: {
     GET_VOUCHER: "GET_VOUCHER",
+    GET_VOUCHER_BY_USER: "GET_VOUCHER_BY_USER",
   },
 };
