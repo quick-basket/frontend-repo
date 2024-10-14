@@ -43,8 +43,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <Link href={"/dashboard/products"}>
               <SidebarItem icon={<span>📦</span>} text="Products" />
             </Link>
-            <SidebarItem icon={<span>📜</span>} text="Orders" />
-            <SidebarItem icon={<span>👥</span>} text="Customers" />
+            <Link href={"/dashboard/categories"}>
+              <SidebarItem icon={<span>📜</span>} text="Categories" />
+            </Link>
             <Link href={"/dashboard/store-admins"}>
               <SidebarItem icon={<span>📦</span>} text="Store Admins" />
             </Link>

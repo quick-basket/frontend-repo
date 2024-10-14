@@ -31,7 +31,8 @@ export const queryKeys = {
     GET_CARTS: "GET_CARTS",
   },
   checkout: {
-    GET_CHECKOUT_SUMMARY: (storeId:any) =>  `GET_CHECKOUT_SUMMARY_STOREID_${storeId}`,
+    GET_CHECKOUT_SUMMARY: (storeId: any) =>
+      `GET_CHECKOUT_SUMMARY_STOREID_${storeId}`,
   },
   order: {
     GET_ORDER: "GET_ORDER",
@@ -48,5 +49,8 @@ export const queryKeys = {
   voucher: {
     GET_VOUCHER: "GET_VOUCHER",
     GET_VOUCHER_BY_USER: "GET_VOUCHER_BY_USER",
+  },
+  category: {
+    GET_CATEGORY: "GET_CATEGORY",
   },
 };
