@@ -1,5 +1,5 @@
 export const config = {
-  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080/api/v1",
+  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   endpoints: {
     auth: {
       login: "/auth/login",
@@ -48,6 +48,7 @@ export const config = {
     },
     category: {
       base: "/category",
+      update: (id: any) => `/category/${id}`,
     },
     location: {
       getNearestStore: "/location/nearest-store",

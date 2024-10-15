@@ -147,8 +147,6 @@ class ProductAPI {
           },
         }
       );
-
-      console.log("Product updated successfully:", response.data);
       return response.data;
     } catch (error) {
       if (isAxiosError(error) && error.response) {

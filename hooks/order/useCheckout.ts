@@ -7,6 +7,7 @@ import orderAPI from "@/api/order/orderAPI";
 import {useCallback, useEffect, useState} from "react";
 import {useLocationContext} from "@/hooks/context/LocationProvider";
 import {notify} from "@/utils/alert/notiflixConfig";
+import {useRouter} from "next/navigation";
 
 const CHECKOUT_STORAGE_KEY = 'checkoutData';
 const SNAP_TOKEN_KEY = 'SNAP_TOKEN';
@@ -16,6 +17,7 @@ const useCheckout = () => {
     const [localData, setLocalData] = useState<CheckoutType | null>(null);
     const [storedToken, setStoredToken] = useState<{ token: string; orderId: number } | null>(null);
     const [selectedUserVoucher, setSelectedUserVoucher] = useState<number | null>(null)
+    const router = useRouter();
 
     const {selectedStoreId} = useLocationContext();
 
@@ -64,7 +66,6 @@ const useCheckout = () => {
             localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(newData));
             setSelectedUserVoucher(newData.appliedVoucherId);
             notify({text: "Voucher Applied", type:"success"})
-
         },
     });
 
@@ -89,7 +90,6 @@ const useCheckout = () => {
 
     const clearAllQueries = useCallback(async () => {
         queryClient.clear();
-        console.log("Cleared all queries from React Query cache");
     }, [queryClient]);
 
     const invalidateCheckout = useCallback(async () => {

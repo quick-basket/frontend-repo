@@ -94,8 +94,6 @@ const OrderList = () => {
                     text: `Failed to mark order!, ${error.message}`,
                     type: "error"
                 })
-                console.log("error: ", error)
-
             }
         })
     }

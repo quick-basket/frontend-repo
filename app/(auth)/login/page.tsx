@@ -11,7 +11,7 @@ function Login() {
 
     const handleGoogleSignIn = async () => {
         await signIn('google', {
-            callbackUrl: '/',
+            callbackUrl: '/dashboard',
         });
     }
 
@@ -38,7 +38,7 @@ function Login() {
                 </div>
             </div>
             <div className="hidden bg-muted lg:block">
-                <img
+                <Image
                     src="/logo-transformed.webp"
                     alt="Image"
                     width={1920}

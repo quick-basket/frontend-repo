@@ -30,7 +30,6 @@ const AvatarUploadDialog: React.FC<Props> = ({currentAvatar}) => {
     }
 
     const handleUpload = async () => {
-        console.log("button click", selectedFile)
         if (selectedFile) {
             try {
                 editProfileImage({file: selectedFile, previewUrl: previewImage as string});
@@ -50,7 +49,6 @@ const AvatarUploadDialog: React.FC<Props> = ({currentAvatar}) => {
                 })
             }
         }
-        console.log(selectedFile)
     }
 
     return (

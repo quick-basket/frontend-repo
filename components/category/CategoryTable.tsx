@@ -1,59 +1,45 @@
-import useProductList from "@/hooks/product-list/useProductList";
-import useStoreProduct from "@/hooks/stores/useStoreProduct";
-import { FormStoreProduct, StoreProduct } from "@/types/store-product/type";
-import React, { useEffect, useState } from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { DataTable } from "../ui/DataTable";
 import { columns } from "./columns";
-import FormAddStoreProduct from "./FormAddStoreProduct";
 import { swalAlert } from "@/utils/alert/swalAlert";
 import Spinner from "../spinner/Spinner";
 import { confirmAlert, notify } from "@/utils/alert/notiflixConfig";
+import useCategory from "@/hooks/cart/category/useCategory";
+import FormAddCategory from "./FormAddCategory";
+import { CategoryType } from "@/types/category/type";
 
-interface StoreTableProps {
-  storeId: string;
-}
-
-const StoreProductTable = ({ storeId }: StoreTableProps) => {
+const CategoryTable = () => {
   const {
-    data: products,
+    data: categories,
     isLoading,
     error,
-    refetch,
-    createStoreProduct,
-    updateStoreProduct,
-    deleteStoreProduct,
-  } = useStoreProduct(storeId);
+    createCategory,
+    updateCategory,
+    deleteCategory,
+  } = useCategory();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<
-    StoreProduct | undefined
+  const [selectedCategory, setSelectedCategory] = useState<
+    CategoryType | undefined
   >(undefined);
-  useEffect(() => {
-    if (storeId) {
-      refetch();
-    }
-  }, [storeId]);
 
-  const handleEdit = (products: StoreProduct) => {
-    const { id, ...StoreProduct } = products;
-    setSelectedProduct({ ...StoreProduct, id } as StoreProduct);
+  const handleEdit = (categories: CategoryType) => {
+    const { id, ...CategoryType } = categories;
+    setSelectedCategory({ ...CategoryType, id } as CategoryType);
     setIsDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setSelectedProduct(undefined);
-    setIsDialogOpen(false);
   };
 
   const handleDelete = async (id: string) => {
     const result = await confirmAlert(
-      "Delete product",
-      "Are ypu sure delete this product?"
+      "Delete Category",
+      "Are ypu sure delete this Category?"
     );
     if (result) {
       try {
-        await deleteStoreProduct({ id });
+        await deleteCategory({ id });
         notify({
           text: "Store successfully deleted",
           type: "success",
@@ -67,19 +53,25 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
     }
   };
 
-  const handleFormSubmit = (data: FormStoreProduct) => {
-    if (selectedProduct) {
-      updateStoreProduct(
+  const handleDialogClose = () => {
+    setSelectedCategory(undefined);
+    setIsDialogOpen(false);
+  };
+
+  const handleFormSubmit = (data: CategoryType) => {
+
+    if (selectedCategory) {
+      updateCategory(
         {
-          id: selectedProduct.id,
-          productData: data,
+          id: selectedCategory.id,
+          categoryData: data,
         },
         {
-          onSuccess: (updatedProduct) => {
+          onSuccess: (updatedCategory) => {
             swalAlert({
               title: "Success",
               icon: "success",
-              text: "Product Updated",
+              text: "Category Updated",
               timer: 1500,
               showConfirmButton: false,
             }).then(() => {
@@ -87,12 +79,12 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
             });
           },
           onError: (error) => {
-            console.error("Error updating product:", error);
+            console.error("Error updating Category:", error);
           },
         }
       );
     } else {
-      createStoreProduct(data, {
+      createCategory(data, {
         onSuccess: () => {
           swalAlert({
             title: "Success",
@@ -110,25 +102,24 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
   return (
     <div className="container mx-auto pb-10 pt-4">
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Product</h1>
+        <h1 className="text-2xl font-bold">Categories</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Product
+          <Plus className="mr-2 h-4 w-4" /> Add New Category
         </Button>
       </div>
       {isLoading ? (
         <Spinner fullScreen={true} size="large" />
       ) : (
-        products && (
+        categories && (
           <DataTable
             columns={columns(handleEdit, handleDelete)}
-            data={products}
+            data={categories}
           />
         )
       )}
-
-      <FormAddStoreProduct
-        title={selectedProduct ? "Edit Store" : "Add Store"}
-        product={selectedProduct}
+      <FormAddCategory
+        title={selectedCategory ? "Edit Category" : "Add Category"}
+        category={selectedCategory}
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleFormSubmit}
@@ -137,4 +128,4 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
   );
 };
 
-export default StoreProductTable;
+export default CategoryTable;

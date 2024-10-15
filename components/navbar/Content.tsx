@@ -16,8 +16,6 @@ const Content: React.FC<DrawerContentProps> = ({onClose}) => {
         return <div className="flex justify-center items-center h-full">Loading...</div>;
     }
 
-    console.log("DATA SESSION", session);
-
     return (
         <div className="h-full flex flex-col p-4">
             <Button variant="ghost" size="icon" onClick={onClose} className="self-end mb-4">

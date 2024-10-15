@@ -7,8 +7,6 @@ import Spinner from "@/components/spinner/Spinner";
 
 const Dashboard = () => {
     const {data: session, status} = useSession()
-    console.log("SESSION", session)
-    console.log("SESSION from useSession", status)
 
     if (status == "loading") return <Spinner/>
 

@@ -49,7 +49,6 @@ const PaymentTable = ({ storeId }: PaymentTableProps) => {
         },
         {
           onSuccess: (updatedPayment) => {
-            console.log("Payment updated:", updatedPayment);
             swalAlert({
               title: "Success",
               icon: "success",

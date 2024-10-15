@@ -18,8 +18,6 @@ export default function Home() {
   const { data: session } = useSession();
   const [showLocationDialog, setShowLocationDialog] = useState(false);
 
-  console.log(session);
-
   useEffect(() => {
     if (!isLoading && isLoggedIn && !selectedStoreId) {
       // Delay showing the dialog to ensure it appears after any login alerts

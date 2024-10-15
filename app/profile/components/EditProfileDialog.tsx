@@ -13,7 +13,6 @@ const EditProfileDialog = () => {
     const {editProfileData} = useUpdateProfile();
 
     const handleSaveChanges = () => {
-        console.log({name, phone})
         editProfileData({name, phone}, {
             onSuccess: () => {
                 swalAlert({
@@ -23,7 +22,6 @@ const EditProfileDialog = () => {
                     timer: 2000,
                     showConfirmButton: false,
                 }).then(r => {
-                    console.log("success")
                 })
             }
         })

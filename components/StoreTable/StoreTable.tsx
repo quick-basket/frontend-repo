@@ -96,7 +96,6 @@ const StoreTable = () => {
       });
     }
   };
-  // console.log("Data stores", stores);
 
   return (
     <div className="container mx-auto pb-10 pt-4">

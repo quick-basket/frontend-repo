@@ -69,8 +69,6 @@ const DiscountTable = ({ storeId }: DiscountTableProps) => {
         },
         {
           onSuccess: (updatedProduct) => {
-            console.log("Product updated:", updatedProduct);
-
             swalAlert({
               title: "Success",
               icon: "success",

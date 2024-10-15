@@ -59,8 +59,6 @@ const ProductTable = () => {
   };
 
   const handleFormSubmit = (data: FormDataProduct) => {
-    console.log("Submitting form data:", data);
-
     if (selectedProduct) {
       updateProductList(
         {
@@ -69,8 +67,6 @@ const ProductTable = () => {
         },
         {
           onSuccess: (updatedProduct) => {
-            console.log("Product updated:", updatedProduct);
-
             swalAlert({
               title: "Success",
               icon: "success",
