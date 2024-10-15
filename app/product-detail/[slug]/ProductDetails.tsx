@@ -57,7 +57,7 @@ const ProductDetails: React.FC<ProductDetailProps> = ({ product }) => {
         {/* Left column: Images */}
         <div className="md:w-1/3">
           <div className="mb-4">
-            <img
+            <Image
               src={mainImage}
               alt={product.name}
               width={400}
@@ -68,7 +68,7 @@ const ProductDetails: React.FC<ProductDetailProps> = ({ product }) => {
           </div>
           <div className="flex gap-2 overflow-x-auto">
             {product.imageUrls.map((img, index) => (
-              <img
+              <Image
                 key={index}
                 src={img}
                 alt={`${product.name} - Image ${index + 1}`}

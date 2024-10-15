@@ -42,8 +42,6 @@ axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig
     if (isProtectedRoute) {
         try {
             const session = await fetchSession();
-            console.log('Session:', session);
-
             if (session?.token) {
                 // Remove any surrounding quotes and "Bearer " prefix if present
                 const cleanToken = session.token.replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
@@ -51,7 +49,6 @@ axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig
                 config.headers = config.headers || {};
                 config.headers.Authorization = `Bearer ${cleanToken}`;
             } else {
-                console.log('No session token available');
                 // You might want to handle this case, perhaps by redirecting to login
             }
         } catch (error) {

@@ -76,7 +76,6 @@ const FormAddStore: React.FC<Props> = ({title, store, onSubmit, onClose, isOpen}
         try {
             const geoData = await locationAPI.reverseGeocode(location[0], location[1]);
             const {display_name, address} = geoData;
-            console.log("geoData", geoData)
 
             setValue('address', display_name || '');
             setValue('city', address.city || address.county || '');

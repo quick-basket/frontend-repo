@@ -8,6 +8,9 @@ import PaymentMethodDialog from "@/app/checkout/components/PaymentMethodDialog";
 import usePaymentProcess from "@/hooks/payment/usePaymentProcess";
 import {Button} from "@/components/ui/button";
 import {DataTransaction} from "@/types/payment/type";
+import {useQueryClient} from "@tanstack/react-query";
+import {queryKeys} from "@/constants/queryKey";
+import {useLocationContext} from "@/hooks/context/LocationProvider";
 
 const Checkout = () => {
     const {
@@ -25,6 +28,14 @@ const Checkout = () => {
         pendingOrderError,
         initiateTrx
     } = usePaymentProcess();
+
+    const queryClient = useQueryClient();
+    const {selectedStoreId} = useLocationContext()
+
+    const latestCheckoutData = queryClient.getQueryData([
+        queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId),
+        selectedUserVoucher
+    ]) || checkoutData;
 
     useEffect(() => {
         setTransactionData(undefined)
@@ -62,7 +73,7 @@ const Checkout = () => {
                                   isApplyingVoucher={isApplyingVoucher} />
                 </div>
                 <div className="md:w-1/3 mt-8 md:mt-0">
-                    <OrderPrice {...summary} onPaymentClick={handleShowPaymentMethod} pendingOrder={pendingOrder} />
+                    <OrderPrice {...latestCheckoutData.summary} onPaymentClick={handleShowPaymentMethod} pendingOrder={pendingOrder} />
                     <PaymentMethodDialog
                         isOpen={isPaymentDialogOpen}
                         onClose={handleClosePaymentDialog}

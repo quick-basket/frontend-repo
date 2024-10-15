@@ -19,7 +19,6 @@ interface Props {
 
 const NavbarDashboard: React.FC<Props> = ({ onMenuClick }) => {
   const { data: profile, isLoading, error } = useProfileDetails();
-  console.log(profile);
 
   return (
     <div className="py-4 px-4 md:px-10 bg-white shadow w-full">

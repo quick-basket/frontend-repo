@@ -59,7 +59,6 @@ const CategoryTable = () => {
   };
 
   const handleFormSubmit = (data: CategoryType) => {
-    console.log("Submitting form data:", data);
 
     if (selectedCategory) {
       updateCategory(
@@ -69,8 +68,6 @@ const CategoryTable = () => {
         },
         {
           onSuccess: (updatedCategory) => {
-            console.log("Category updated:", updatedCategory);
-
             swalAlert({
               title: "Success",
               icon: "success",

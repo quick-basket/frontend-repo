@@ -18,9 +18,9 @@ export default auth((req) => {
     }
 
     // Routes that require authentication
-    if (!isLoggedIn) {
-        return NextResponse.redirect(new URL('/unauthorized', nextUrl))
-    }
+    // if (!isLoggedIn) {
+    //     return NextResponse.redirect(new URL('/unauthorized', nextUrl))
+    // }
 
     // Role-based access control
     const { role, store_id } = req.auth?.user || {}
@@ -51,7 +51,7 @@ export default auth((req) => {
             }
         } else {
             // For other roles, redirect to unauthorized page
-            return NextResponse.redirect(new URL('/unauthorized', nextUrl))
+            return NextResponse.redirect(new URL('/', nextUrl))
         }
     }
 

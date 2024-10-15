@@ -20,10 +20,6 @@ export const getUserLocation = (options: GeolocationOptions = {}): Promise<Coord
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
-                console.log("Successfully retrieved coordinates:");
-                console.log(`Latitude: ${latitude}`);
-                console.log(`Longitude: ${longitude}`);
-
                 // Return the coordinates in the correct format (longitude first)
                 resolve({ longitude, latitude });
             },

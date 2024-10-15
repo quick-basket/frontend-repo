@@ -22,7 +22,7 @@ const OrderPrice: React.FC<OrderPriceProps> = ({subtotal, total, discount, shipp
 
     return (
         <div className="rounded-lg shadow p-4 w-full mt-4 lg:mt-0">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <h2 className="text-xl font-bold mb-4">Order Price</h2>
             <div className="space-y-3">
                 <div className="flex justify-between">
                     <p>Subtotal</p>

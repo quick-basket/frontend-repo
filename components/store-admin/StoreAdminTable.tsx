@@ -69,8 +69,6 @@ const StoreAdminTable = ({ storeAdminId }: StoreAdminTableProps) => {
         },
         {
           onSuccess: (updatedProduct) => {
-            console.log("Product updated:", updatedProduct);
-
             swalAlert({
               title: "Success",
               icon: "success",

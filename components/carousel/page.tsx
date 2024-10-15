@@ -44,7 +44,9 @@ export default function CarouselImage() {
                         <CarouselItem key={item.id} className="sm:basis-full md:basis-1/2">
                             <Link href={item.link}>
                                 <div className="relative w-full">
-                                    <img
+                                    <Image
+                                        width={1200}
+                                        height={1200}
                                         src={item.imageUrl}
                                         alt={item.alt}
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
