@@ -39,7 +39,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
     const { bulkDeleteCartMutation } = useCart();
     const queryClient = useQueryClient();
     const router = useRouter();
-    const { invalidateCheckout, clearAllQueries } = useCheckout();
+    const { invalidateCheckout, clearAllQueries, selectedUserVoucher } = useCheckout();
     const { checkPaymentStatus, uploadPaymentProof } = usePaymentProcess(transactionData.order.orderCode);
     const {cancelOrderMutation, isCancelLoading} = useOrder()
 
@@ -74,6 +74,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
         setIsCheckingStatus(true);
         try {
             const updatedStatus = await checkPaymentStatus();
+            console.log("Updated status: ", updatedStatus);
             if (updatedStatus) {
                 const { orderStatus } = updatedStatus.order;
                 switch (orderStatus) {
@@ -86,7 +87,9 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                         // Perform all cleanup operations
                         await Promise.all([
                             (async () => {
-                                const checkoutData = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]);
+                                const checkoutDataWithVoucher = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]);
+                                const checkoutDataWithoutVoucher = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId), selectedUserVoucher]);
+                                const checkoutData = checkoutDataWithoutVoucher || checkoutDataWithVoucher;
                                 if (checkoutData) {
                                     const inventoryIds = checkoutData.items.map(item => item.inventoryId);
                                     await bulkDeleteCartMutation({userId: checkoutData.userId, inventoryIds});
@@ -106,7 +109,9 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                         // Perform all cleanup operations
                         await Promise.all([
                             (async () => {
-                                const checkoutData = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]);
+                                const checkoutDataWithVoucher = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]);
+                                const checkoutDataWithoutVoucher = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId), selectedUserVoucher]);
+                                const checkoutData = checkoutDataWithoutVoucher || checkoutDataWithVoucher;
                                 if (checkoutData) {
                                     const inventoryIds = checkoutData.items.map(item => item.inventoryId);
                                     await bulkDeleteCartMutation({userId: checkoutData.userId, inventoryIds});
@@ -137,19 +142,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
         } finally {
             setIsCheckingStatus(false);
         }
-    }, [bulkDeleteCartMutation, checkPaymentStatus, clearAllQueries, invalidateCheckout, onPaymentSuccess, queryClient, router, selectedStoreId]);
-
-    const handlePaymentSuccess = async () => {
-        const checkoutData = queryClient.getQueryData<CheckoutType>([queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]);
-        if (checkoutData) {
-            const inventoryIds = checkoutData.items.map(item => item.inventoryId);
-            await bulkDeleteCartMutation({userId: checkoutData.userId, inventoryIds});
-        }
-        await invalidateCheckout();
-        await clearAllQueries();
-        router.push("/");
-        setTimeout(onPaymentSuccess, 100);
-    };
+    }, [bulkDeleteCartMutation, checkPaymentStatus, clearAllQueries, invalidateCheckout, onPaymentSuccess, queryClient, router, selectedStoreId, selectedUserVoucher]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -256,7 +249,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
         }
 
         return null;
-    }, [transactionData, setIsUploadDialogOpen, notify]);
+    }, [transactionData, setIsUploadDialogOpen]);
 
     return (
         <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
