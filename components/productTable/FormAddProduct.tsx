@@ -94,15 +94,12 @@ const FormAddProduct: React.FC<Props> = ({
   };
 
   const handleRemoveImage = (imageId: number, imageUrl: string) => {
-    console.log("Removing image with ID:", imageId);
-
     setImagesToDelete((prev) => [...prev, imageId]);
 
     if (product && product.imageUrls) {
       const updatedImageUrls = currentImageUrls.filter(
         (url) => url !== imageUrl
       );
-      console.log("Updated image URLs:", updatedImageUrls);
       setCurrentImageUrls(updatedImageUrls);
       setValue("imageUrls", updatedImageUrls); // Update the form state
     }

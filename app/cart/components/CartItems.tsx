@@ -58,7 +58,7 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
             key={item.id}
             className="flex flex-col sm:flex-row items-start sm:items-center mb-4 pb-4 border-b"
           >
-            <img
+            <Image
               src={item.imageUrls?.[0] || "/default-image-url.jpg"}
               width={100}
               height={100}

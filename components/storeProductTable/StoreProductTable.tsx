@@ -76,8 +76,6 @@ const StoreProductTable = ({ storeId }: StoreTableProps) => {
         },
         {
           onSuccess: (updatedProduct) => {
-            console.log("Product updated:", updatedProduct);
-
             swalAlert({
               title: "Success",
               icon: "success",

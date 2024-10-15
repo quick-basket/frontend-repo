@@ -182,7 +182,6 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
             await cancelOrderMutation({ orderCode: transactionData.order.orderCode })
             notify({ text: 'Order cancelled successfully', type: 'success' });
 
-            console.log("delete successfull")
             // Perform cleanup operations
             await Promise.all([
                 (async () => {
@@ -207,7 +206,6 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
     };
 
     const renderPaymentInstructions = useCallback(() => {
-        console.log("transaction data", transactionData)
         if (!transactionData.midtransResponse || Object.keys(transactionData.midtransResponse).length === 0) {
             return (
                 <div className="text-center">

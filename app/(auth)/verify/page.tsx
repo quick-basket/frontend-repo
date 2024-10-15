@@ -22,7 +22,6 @@ const Verify = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const verificationCode = searchParams.get("code");
-    console.log('VERIFICATION CODE', verificationCode);
 
     const [isCodeValid, setIsCodeValid] = useState<boolean | null>(null)
 
@@ -34,11 +33,9 @@ const Verify = () => {
 
     useEffect(() => {
         const checkCodeValidity = async () => {
-            console.log(verificationCode);
             if (verificationCode) {
                 try {
                     const response = await AuthAPI.verifyCode(verificationCode);
-                    console.log("RESPONSE", response);
                     setIsCodeValid(response.data)
                 } catch (error) {
                     setIsCodeValid(false)

@@ -18,7 +18,6 @@ const ResetPasswordRequest = () => {
     const onSubmit = async (data: FormData) => {
         try {
             const response = await AuthAPI.requestResetPassword(data.email);
-            console.log("RESPONSE DATA", response);
 
             if (!response.success) {
                 await swalAlert({

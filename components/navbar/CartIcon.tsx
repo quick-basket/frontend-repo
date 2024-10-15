@@ -8,7 +8,6 @@ interface IconProps {
 
 const CartIcon: React.FC<IconProps> = ({isMobile}) => {
     const {data: cartItems} = useCart();
-    console.log("cart items", cartItems)
     const itemCount = cartItems?.length || 0;
 
     return (

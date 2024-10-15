@@ -58,7 +58,6 @@ class AuthAPI {
                 }
                 throw new Error(error.response.data.message || 'Registration failed');
             } else {
-                console.log("ERROR", error)
                 throw new Error('An unexpected error occurred');
             }
         }
@@ -110,10 +109,8 @@ class AuthAPI {
             const response = await axiosInstance.post(config.endpoints.auth.requestReset, null, {
                 params: {email}
             })
-            console.log("response", response);
             return response.data;
         } catch (error) {
-            console.log(error);
             if (isAxiosError(error) && error.response) {
                 throw new Error(error.response.data.message || 'Reset Password Failed');
             }

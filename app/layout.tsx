@@ -5,6 +5,7 @@ import ReactQueryProvider from "@/utils/provider/ReactQueryProvider";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { LocationProvider } from "@/hooks/context/LocationProvider";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default async function RootLayout({
             <body className={inter.className}>{children}</body>
           </LocationProvider>
         </SessionProvider>
+        <ReactQueryDevtools initialIsOpen={true}/>
       </ReactQueryProvider>
     </html>
   );

@@ -34,11 +34,9 @@ const ResetPassword = () => {
 
     useEffect(() => {
         const checkCodeValidity = async () => {
-            console.log(verificationCode);
             if (verificationCode) {
                 try {
                     const response = await AuthAPI.verifyResetPassword(verificationCode);
-                    console.log("RESPONSE", response);
                     setIsCodeValid(response.data);
                 } catch (error) {
                     setIsCodeValid(false);

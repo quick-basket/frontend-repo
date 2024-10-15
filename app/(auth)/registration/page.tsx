@@ -28,7 +28,6 @@ const Registration = () => {
 
         try {
             const response = await AuthAPI.registration(data);
-            console.log("RESPONSE", response);
 
             if (!response.success) {
                 await swalAlert({
@@ -152,7 +151,7 @@ const Registration = () => {
                 </div>
             </div>
             <div className="hidden bg-muted lg:block">
-                <img
+                <Image
                     src="/logo-transformed.webp"
                     alt="Image"
                     width={1920}
