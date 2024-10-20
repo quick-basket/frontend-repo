@@ -7,10 +7,12 @@ import orderAPI from "@/api/order/orderAPI";
 import {useCallback, useState} from "react";
 import {useLocationContext} from "@/hooks/context/LocationProvider";
 import {notify} from "@/utils/alert/notiflixConfig";
+import {useRouter} from "next/navigation";
 
 const useCheckout = () => {
     const queryClient = useQueryClient();
     const [selectedUserVoucher, setSelectedUserVoucher] = useState<number | null>(null)
+    const router = useRouter();
 
     const {selectedStoreId} = useLocationContext();
     const queryKey = [queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId), selectedUserVoucher];
