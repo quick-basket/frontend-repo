@@ -1,99 +1,53 @@
-// import { OrderList, OrderStatusUpdate } from "@/types/order/type";
-// import { Controller, useForm } from "react-hook-form";
-// import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-// import { Label } from "../ui/label";
-// import { Input } from "../ui/input";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "../ui/select";
-// import { Button } from "../ui/button";
-// import { useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import {OrderType} from "@/types/order/type";
 
-// interface Props {
-//   title: string;
-//   order?: OrderList;
-//   onSubmit: (data: OrderList) => void;
-//   isOpen: boolean;
-//   onClose: () => void;
-//   storeId: string;
-// }
+interface FormEditOrderProps {
+  isOpen: boolean;
+  onClose: () => void;
+  order: OrderType | null;
+  onUpdateStatus: (orderId: string, newStatus: string) => Promise<void>;
+}
 
-// const FormEditOrder: React.FC<Props> = ({
-//   title,
-//   order,
-//   onSubmit,
-//   isOpen,
-//   onClose,
-//   storeId,
-// }) => {
-//   const {
-//     register,
-//     handleSubmit,
-//     control,
-//     formState: { errors },
-//     reset,
-//     setValue,
-//   } = useForm<OrderStatusUpdate>({
-//     defaultValues: order || {},
-//   });
+const FormEditOrder: React.FC<FormEditOrderProps> = ({ isOpen, onClose, order, onUpdateStatus }) => {
+  const [isUpdating, setIsUpdating] = useState(false);
 
-//   useEffect(() => {
-//     if (order) {
-//       Object.entries(order).forEach(([key, value]) => {
-//         if (value !== null) {
-//           setValue(key as keyof OrderStatusUpdate, value as any);
-//         }
-//         console.log("value", key, value);
-//       });
-//       console.log("discsount resutl", order);
-//     } else {
-//       reset();
-//     }
-//   }, [order, setValue, reset]);
+  const handleUpdateStatus = async () => {
+    if (!order) return;
+    setIsUpdating(true);
+    try {
+      await onUpdateStatus(order.id, 'SHIPPED');
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
-//   const handleFormSubmit = (data: OrderStatusUpdate) => {
-//     onSubmit(data);
-//     onClose();
-//   };
+  return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Update Order Status</DialogTitle>
+            <DialogDescription>
+              Set the status of order {order?.orderCode} to Delivered?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p><strong>Current Status:</strong> {order?.orderStatus}</p>
+            <p><strong>Total Amount:</strong> {order?.totalAmount}</p>
+            <p><strong>Store:</strong> {order?.storeName}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={onClose}>Cancel</Button>
+            <Button onClick={handleUpdateStatus} disabled={isUpdating}>
+              {isUpdating ? 'Updating...' : 'Set as Shipped'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+  );
+};
 
-//   return (
-//     <Dialog open={isOpen} onOpenChange={onClose}>
-//       <DialogContent>
-//         <DialogHeader>
-//           <DialogTitle>{title}</DialogTitle>
-//         </DialogHeader>
-//         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-//           <div className="space-y-2">
-//             <Label htmlFor="status">Status</Label>
-//             <Controller
-//               rules={{ required: "Type is required" }}
-//               render={({ field }) => (
-//                 <Select onValueChange={field.onChange} value={field.name}>
-//                   <SelectTrigger>
-//                     <SelectValue placeholder="Select discount type" />
-//                   </SelectTrigger>
-//                   <SelectContent>
-//                     <SelectItem value="PERCENTAGE">Percentage</SelectItem>
-//                     <SelectItem value="FIXED">Fixed</SelectItem>
-//                     <SelectItem value="BUY_ONE_GET_ONE">
-//                       Buy One Get One
-//                     </SelectItem>
-//                   </SelectContent>
-//                 </Select>
-//               )}
-//             />
-//             {errors.id && <p className="text-red-500">{errors.id.message}</p>}
-//           </div>
-
-//           <Button type="submit">{order ? "Update" : "Add"}</Button>
-//         </form>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
-
-// export default FormEditOrder;
+export default FormEditOrder;

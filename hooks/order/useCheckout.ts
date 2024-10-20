@@ -88,9 +88,9 @@ const useCheckout = () => {
         }
     }, []);
 
-    const clearAllQueries = useCallback(async () => {
-        queryClient.clear();
-    }, [queryClient]);
+    const clearAllQueries = async () => {
+        queryClient.clear()
+    }
 
     const invalidateCheckout = useCallback(async () => {
         localStorage.removeItem(CHECKOUT_STORAGE_KEY);
@@ -101,7 +101,7 @@ const useCheckout = () => {
         });
         await clearAllQueries();
         await refetch()
-    }, [queryClient, selectedStoreId, clearAllQueries, refetch]);
+    }, [queryClient, selectedStoreId, refetch]);
 
     const updateOrderStatus = useMutation<OrderType, Error, { orderId: string, status: PaymentStatus }>({
         mutationFn: ({orderId, status}) => orderAPI.updateOrderAfterPayment(orderId, status),

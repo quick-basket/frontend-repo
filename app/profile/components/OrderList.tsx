@@ -154,7 +154,7 @@ const OrderList = () => {
                                 <p className="text-sm text-gray-600">
                                     Payment Status: <span className="font-medium">{order.payment.paymentStatus}</span>
                                 </p>
-                                {order.orderStatus === "DELIVERED" && (
+                                {order.orderStatus === "SHIPPED" && (
                                     <Button
                                         onClick={() => handleOrderReceived(order.orderCode)}
                                         className="bg-green-500 hover:bg-green-600 text-white"
