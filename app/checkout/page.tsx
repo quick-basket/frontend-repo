@@ -38,6 +38,12 @@ const Checkout = () => {
     ]) || checkoutData;
 
     useEffect(() => {
+        queryClient.invalidateQueries({
+            queryKey: [queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId)]
+        })
+    }, [queryClient, selectedStoreId]);
+
+    useEffect(() => {
         setTransactionData(undefined)
     }, [checkoutError]);
 
@@ -49,7 +55,10 @@ const Checkout = () => {
     if (pendingOrderError) return <div>Error: {pendingOrderError.message}</div>;
     if (!checkoutData) return <div>Data not available</div>;
 
-    const {recipient, items, summary} = checkoutData;
+    const {recipient, items, summary} = latestCheckoutData;
+    console.log("latestCheckoutData", latestCheckoutData);
+    console.log("CheckoutData", checkoutData);
+    console.log("selected voucher", selectedUserVoucher);
 
     const handleShowPaymentMethod = () => {
         if (pendingOrder) {

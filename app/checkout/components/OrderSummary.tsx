@@ -27,7 +27,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({recipient, items, applyVouch
         applyVoucher(voucherId);
     }
 
-
     return (
         <div className="rounded-lg shadow p-4 w-full">
             <h1 className="text-xl font-bold mb-4">Order Summary</h1>

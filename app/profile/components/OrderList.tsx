@@ -8,6 +8,8 @@ import {Skeleton} from "@/components/ui/skeleton";
 import useReceiveOrder from "@/hooks/order/useReceiveOrder";
 import {notify} from "@/utils/alert/notiflixConfig";
 import {Loader2} from "lucide-react";
+import {useQueryClient} from "@tanstack/react-query";
+import {queryKeys} from "@/constants/queryKey";
 
 const OrderList = () => {
     const {
@@ -24,6 +26,7 @@ const OrderList = () => {
     } = usePaginatedUserOrders();
 
     const {receiveOrder} = useReceiveOrder()
+    const queryClient = useQueryClient();
 
     if (isError && error) return <div className="text-red-500 font-semibold">Error: {error.message}</div>;
     if (!orders || orders.length === 0) return <div className="text-gray-500 italic">No orders found.</div>;
@@ -100,6 +103,11 @@ const OrderList = () => {
 
     return (
         <div className="space-y-6">
+            <Button variant={"ghost"} onClick={() => queryClient.invalidateQueries({
+                queryKey: [queryKeys.order.GET_USER_ORDERS]
+            })}>
+                Refresh
+            </Button>
             {isPending ? (
                 [...Array(3)].map((_, index) => <OrderSkeleton key={index}/>)
             ) : (
