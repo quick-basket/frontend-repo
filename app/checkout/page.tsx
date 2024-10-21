@@ -56,9 +56,6 @@ const Checkout = () => {
     if (!checkoutData) return <div>Data not available</div>;
 
     const {recipient, items, summary} = latestCheckoutData;
-    console.log("latestCheckoutData", latestCheckoutData);
-    console.log("CheckoutData", checkoutData);
-    console.log("selected voucher", selectedUserVoucher);
 
     const handleShowPaymentMethod = () => {
         if (pendingOrder) {

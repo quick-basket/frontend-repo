@@ -32,18 +32,6 @@ const useCheckout = () => {
             const result = await orderAPI.getCheckoutSummary(parseInt(selectedStoreId!), voucherId!);
             return result;
         },
-        onMutate: async (newVoucherId) => {
-            await queryClient.cancelQueries({queryKey});
-
-            const previousData = queryClient.getQueryData<CheckoutType>(queryKey);
-            const newQueryKey = [queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId), newVoucherId];
-            queryClient.setQueryData(newQueryKey, (old: CheckoutType | undefined) => ({
-                ...old,
-                appliedVoucherId: newVoucherId,
-            }));
-
-            return {previousData, previousQueryKey: queryKey};
-        },
         onSuccess: (newData, newVoucherId) => {
             const newQueryKey = [queryKeys.checkout.GET_CHECKOUT_SUMMARY(selectedStoreId), newVoucherId];
             queryClient.setQueryData(newQueryKey, newData);
