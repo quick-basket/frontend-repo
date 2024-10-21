@@ -15,9 +15,9 @@ const useOrder = (id?: string) => {
     const updateOrderMutation = useMutation<
         OrderType,
         Error,
-        { orderData: OrderType; id: string }
+        { orderStatus: string; id: string }
     >({
-        mutationFn: ({orderData, id}) => orderAPI.updateOrder(orderData, id),
+        mutationFn: ({orderStatus, id}) => orderAPI.updateOrder(orderStatus, id),
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 queryKey: [queryKeys.order.GET_ORDER],

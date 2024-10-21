@@ -98,6 +98,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                             invalidateCheckout(),
                             clearAllQueries()
                         ]);
+                        localStorage.removeItem("checkoutData")
                         router.push("/");
 
                         // Delay onPaymentSuccess to ensure navigation has started
@@ -122,6 +123,7 @@ const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                         ]);
 
                         // Navigate to home page
+                        localStorage.removeItem("checkoutData")
                         router.push("/");
 
                         // Delay onPaymentSuccess to ensure navigation has started

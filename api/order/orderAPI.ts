@@ -56,11 +56,13 @@ class OrderAPI {
         }
     }
 
-    async updateOrder(orderStatus: OrderType, id: string) {
+    async updateOrder(orderStatus: string, id: string) {
         try {
             const response = await axiosInstance.put(
                 config.endpoints.order.update(id),
-                orderStatus
+                {
+                    newStatus: orderStatus
+                }
             );
             return response.data.data;
         } catch (error) {
