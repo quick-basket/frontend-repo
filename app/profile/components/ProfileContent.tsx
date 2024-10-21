@@ -9,6 +9,7 @@ import useProfileDetails from "@/hooks/users/useProfileDetails";
 import EditProfileDialog from "@/app/profile/components/EditProfileDialog";
 import AvatarUploadDialog from "@/app/profile/components/AvatarUploadDialog";
 import VerificationStatus from "@/app/profile/components/VerificationStatus";
+import Link from "next/link";
 
 const ProfileContent = () => {
     const {data, isLoading, error} = useProfileDetails();
@@ -60,8 +61,13 @@ const ProfileContent = () => {
                     </div>
                 </div>
                 <div>
-                   <VerificationStatus isVerified={data!.verified} onResendVerification={handleResendVerification}/>
+                    <VerificationStatus isVerified={data!.verified} onResendVerification={handleResendVerification}/>
                 </div>
+                <Link href={"/reset-password/request"}>
+                    <div className="underline cursor-pointer hover:bg-gray-200 mt-4 w-fit p-2 rounded-md">
+                        Reset Password
+                    </div>
+                </Link>
             </form>
         </div>
     );
